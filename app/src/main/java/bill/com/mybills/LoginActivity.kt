@@ -1,24 +1,21 @@
 package bill.com.mybills
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 
-import kotlinx.android.synthetic.main.activity_main.*
-
-class MainActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_main)
-		setSupportActionBar(toolbar)
+		setContentView(R.layout.activity_login)
+		//setSupportActionBar(toolbar)
 
-		fab.setOnClickListener { view ->
+		/*fab.setOnClickListener { view ->
 			Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 					.setAction("Action", null).show()
-		}
+		}*/
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
