@@ -1,9 +1,13 @@
 package bill.com.mybills
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import bill.com.mybills.ui.activity.MainActivity
+import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
 
@@ -16,6 +20,16 @@ class LoginActivity : AppCompatActivity() {
 			Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 					.setAction("Action", null).show()
 		}*/
+		initEventsListeners()
+	}
+
+	private fun initEventsListeners() {
+		btn_login?.setOnClickListener { onClickEditProfileButton(it) }
+	}
+
+	private fun onClickEditProfileButton(view: View) {
+		val intent = Intent(applicationContext, MainActivity::class.java)
+		startActivity(intent)
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
