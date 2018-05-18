@@ -22,6 +22,7 @@ import java.util.List;
 import bill.com.mybills.R;
 import bill.com.mybills.model.ItemObject;
 import bill.com.mybills.ui.adapter.CustomAdapter;
+import bill.com.mybills.ui.fragment.BillFragment;
 import bill.com.mybills.ui.fragment.DefaultFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new DefaultFragment();
                 break;
             case 1:
-                fragment = new DefaultFragment();
+                fragment = new BillFragment();
                 break;
             case 2:
                 fragment = new DefaultFragment();
