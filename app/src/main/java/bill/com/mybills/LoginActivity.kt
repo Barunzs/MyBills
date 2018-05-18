@@ -43,7 +43,8 @@ class LoginActivity : AppCompatActivity() {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		return when (item.itemId) {
-			R.id.action_settings -> true
+			R.id.action_share -> true
+			R.id.action_preview -> true
 			else -> super.onOptionsItemSelected(item)
 		}
 	}

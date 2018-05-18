@@ -14,9 +14,10 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -48,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:text="Siliguri-734003 Darjeeling"
                 android:textAppearance="@style/TextAppearance.AppCompat"
                 app:layout_constraintEnd_toEndOf="@+id/cancelGoalWarningTextView"
@@ -191,8 +192,8 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:focusable="false"
                 android:inputType="number"
-                android:text="25"
                 android:visibility="visible"
                 app:layout_constraintBaseline_toBaselineOf="@+id/sGst"
                 app:layout_constraintEnd_toEndOf="@+id/amtofgold"
@@ -205,12 +206,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="SGST 1.5%"
+                android:text="CGST 1.5%"
                 android:textStyle="bold"
                 android:visibility="visible"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="@+id/textView49"
                 app:layout_constraintTop_toBottomOf="@+id/sGst" />
+
+
 
             <EditText
                 android:id="@+id/makingCharge"
@@ -229,152 +232,80 @@
                 android:id="@+id/cgstrate"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
+                android:focusable="false"
                 android:inputType="number"
-                android:text="25"
                 android:visibility="visible"
                 app:layout_constraintBaseline_toBaselineOf="@+id/cGst"
                 app:layout_constraintEnd_toEndOf="@+id/amtofgold"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/cGst" />
 
-            <View
-                android:id="@+id/view3"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="32dp"
-                android:background="@color/black"
-                app:layout_constraintEnd_toEndOf="@+id/rateofgold"
-                app:layout_constraintStart_toStartOf="@+id/textView43"
-                app:layout_constraintTop_toBottomOf="@+id/cGst" />
 
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/cGst"
+                app:layout_constraintVertical_bias="0.3" />
 
             <TextView
-                android:id="@+id/textView53"
+                android:id="@+id/totalAmt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
                 android:text="Total"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="@+id/textView43"
-                app:layout_constraintTop_toBottomOf="@+id/view3" />
+                android:textStyle="bold"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view" />
 
             <TextView
                 android:id="@+id/total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text=""
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/black"
-                app:layout_constraintBaseline_toBaselineOf="@+id/textView53"
-                app:layout_constraintEnd_toEndOf="@+id/view3"
-                app:layout_constraintHorizontal_bias=".95"
-                app:layout_constraintStart_toEndOf="@+id/textView53"
-                tools:text="$40000" />
-
-            <TextView
-                android:id="@+id/textView21"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="32dp"
-                android:gravity="center_horizontal"
-                app:layout_constraintBottom_toTopOf="@+id/textView33"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Rs 100000"
+                android:textStyle="bold"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                android:textAlignment="textEnd"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView53" />
-
-            <TextView
-                android:id="@+id/textView33"
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:layout_marginBottom="8dp"
-                android:text="These is a computer Generated Bill "
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintBottom_toTopOf="@+id/generatebill"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintHorizontal_bias="0.75"
+                app:layout_constraintStart_toStartOf="@+id/totalAmt"
+                app:layout_constraintTop_toBottomOf="@+id/view"
+                tools:text="Rs 100000" />
 
             <Button
                 android:id="@+id/generatebill"
-                android:layout_width="128dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
                 android:text="Generate Bill"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/addnext"
-                app:layout_constraintHorizontal_bias="0.2"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <Button
-                android:id="@+id/addnext"
-                android:layout_width="128dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Add Next"
-                app:layout_constraintBaseline_toBaselineOf="@+id/generatebill"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.2"
-                app:layout_constraintStart_toEndOf="@+id/generatebill" />
-
-
-            <ImageView
-                android:id="@+id/next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:src="@android:drawable/ic_media_next"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/previous"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:src="@android:drawable/ic_media_previous"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
+                app:layout_constraintTop_toBottomOf="@+id/totalAmt"
+                app:layout_constraintVertical_bias="0.75"
+                tools:visibility="visible" />
 
         </android.support.constraint.ConstraintLayout>
 
     </ScrollView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/share"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:src="@android:drawable/ic_menu_share"
-        app:backgroundTint="@android:color/black"
-        app:elevation="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1"
-        app:rippleColor="@color/white" />
 
 </android.support.constraint.ConstraintLayout>

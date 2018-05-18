@@ -45,7 +45,7 @@
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:paddingStart="0dp"
-                    android:src="@drawable/img_profile_picture_placeholder"
+                    android:src="@drawable/akash"
                     android:transitionName="@string/profiletransition"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"

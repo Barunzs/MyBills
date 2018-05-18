@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList = findViewById(R.id.left_drawer);
 
         List<ItemObject> listViewItems = new ArrayList<>();
-        listViewItems.add(new ItemObject("My Profile", R.drawable.img_profile_picture_placeholder));
+        listViewItems.add(new ItemObject("My Profile", R.drawable.akash));
         listViewItems.add(new ItemObject("Scan", R.drawable.imageone));
         listViewItems.add(new ItemObject("Generate Bill", R.drawable.imagetwo));
         listViewItems.add(new ItemObject("My Transaction", R.drawable.imagethree));
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_share) {
             return true;
         }
         if (mDrawerToggle.onOptionsItemSelected(item)) {
