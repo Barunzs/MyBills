@@ -1,6 +1,7 @@
 package bill.com.mybills.ui.activity;
 
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import bill.com.mybills.LoginActivity;
 import bill.com.mybills.R;
 import bill.com.mybills.model.ItemObject;
 import bill.com.mybills.ui.adapter.CustomAdapter;
@@ -30,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-    private String[]titles = {"Nigeria", "Ghana", "Senegal", "Togo"};
+    private String[] titles = {"Nigeria", "Ghana", "Senegal", "Togo"};
     private CharSequence mTitle;
     private CharSequence mDrawerTitle;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -52,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
         List<ItemObject> listViewItems = new ArrayList<>();
         listViewItems.add(new ItemObject("My Profile", R.drawable.akash));
-        listViewItems.add(new ItemObject("Scan", R.drawable.imageone));
-        listViewItems.add(new ItemObject("Generate Bill", R.drawable.imagetwo));
+        listViewItems.add(new ItemObject("Generate Bill", R.drawable.imageone));
+        listViewItems.add(new ItemObject("Scan Barcode", R.drawable.imagetwo));
         listViewItems.add(new ItemObject("My Transaction", R.drawable.imagethree));
         listViewItems.add(new ItemObject("Settings", R.drawable.imagethree));
         listViewItems.add(new ItemObject("Logout", R.drawable.imagefour));
@@ -94,31 +96,37 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void selectItemFragment(int position){
+    private void selectItemFragment(int position) {
 
         Fragment fragment = null;
         FragmentManager fragmentManager = getSupportFragmentManager();
-        switch(position) {
-            default:
+        switch (position) {
             case 0:
-                fragment = new DefaultFragment();
+                fragment = new EditProfile();
                 break;
             case 1:
                 fragment = new BillFragment();
                 break;
             case 2:
-                fragment = new EditProfile();
+                fragment = new DefaultFragment();
                 break;
             case 3:
                 fragment = new DefaultFragment();
                 break;
+            default:
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                break;
         }
-        fragmentManager.beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
+        if(fragment!=null){
+            fragmentManager.beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
+            mDrawerList.setItemChecked(position, true);
+            //setTitle(titles[position]);
+            mDrawerLayout.closeDrawer(mDrawerList);
+        }
 
-        mDrawerList.setItemChecked(position, true);
-        setTitle(titles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
     }
+
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
@@ -144,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
