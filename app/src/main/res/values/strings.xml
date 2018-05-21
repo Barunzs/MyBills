@@ -10,4 +10,13 @@
     <string name="profiletransition">profiletransition</string>
     <string name="scan">Scan</string>
     <string name="header">Anushka Jewellers</string>
+    <string name="label_first_name">First Name</string>
+    <string name="label_last_name">Last Name</string>
+    <string name="label_mobile_number">Mobile Number</string>
+    <string name="hint_enter_first_name">Enter your first name</string>
+    <string name="hint_enter_last_name">Enter your last name</string>
+    <string name="hint_enter_mobile_number">Enter your mobile number</string>
+    <string name="hint_enter_number">Enter number here</string>
+    <string name="default_country_code">+91</string>
+    <string name="label_emailAddress">Enter your email address</string>
 </resources>

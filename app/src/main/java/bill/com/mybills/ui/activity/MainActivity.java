@@ -24,6 +24,7 @@ import bill.com.mybills.model.ItemObject;
 import bill.com.mybills.ui.adapter.CustomAdapter;
 import bill.com.mybills.ui.fragment.BillFragment;
 import bill.com.mybills.ui.fragment.DefaultFragment;
+import bill.com.mybills.ui.fragment.EditProfile;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new BillFragment();
                 break;
             case 2:
-                fragment = new DefaultFragment();
+                fragment = new EditProfile();
                 break;
             case 3:
                 fragment = new DefaultFragment();
