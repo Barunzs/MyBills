@@ -30,7 +30,7 @@ class LoginActivity : AppCompatActivity() {
 			input_email.error = "Email may not be empty"
 			return
 		}
-		if(input_password.text.isEmpty()){
+		if (input_password.text.isEmpty()) {
 			input_password.requestFocus()
 			input_password.error = "Password may not be empty"
 			return
