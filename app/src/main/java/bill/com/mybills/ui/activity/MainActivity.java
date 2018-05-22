@@ -22,6 +22,7 @@ import java.util.List;
 
 import bill.com.mybills.LoginActivity;
 import bill.com.mybills.R;
+import bill.com.mybills.config.AppDAL;
 import bill.com.mybills.model.ItemObject;
 import bill.com.mybills.ui.adapter.CustomAdapter;
 import bill.com.mybills.ui.fragment.BillFragment;
@@ -37,12 +38,13 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence mDrawerTitle;
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar topToolBar;
+    private AppDAL appDAL = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        appDAL = new AppDAL(getApplicationContext());
         mTitle = mDrawerTitle = getTitle();
         topToolBar = findViewById(R.id.toolbar2);
         setSupportActionBar(topToolBar);
@@ -53,12 +55,12 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList = findViewById(R.id.left_drawer);
 
         List<ItemObject> listViewItems = new ArrayList<>();
-        listViewItems.add(new ItemObject("My Profile", R.drawable.akash));
-        listViewItems.add(new ItemObject("Generate Bill", R.drawable.imageone));
-        listViewItems.add(new ItemObject("Scan Barcode", R.drawable.imagetwo));
-        listViewItems.add(new ItemObject("My Transaction", R.drawable.imagethree));
-        listViewItems.add(new ItemObject("Settings", R.drawable.imagethree));
-        listViewItems.add(new ItemObject("Logout", R.drawable.imagefour));
+        listViewItems.add(new ItemObject("My Profile", R.drawable.img_profile_picture_placeholder));
+        listViewItems.add(new ItemObject("Generate Bill", android.R.drawable.ic_menu_agenda));
+        listViewItems.add(new ItemObject("Scan Barcode", android.R.drawable.ic_popup_sync));
+        listViewItems.add(new ItemObject("My Transaction", android.R.drawable.ic_menu_recent_history));
+        listViewItems.add(new ItemObject("Settings", android.R.drawable.ic_menu_info_details));
+        listViewItems.add(new ItemObject("Logout", android.R.drawable.ic_lock_power_off));
 
         mDrawerList.setAdapter(new CustomAdapter(this, listViewItems));
 
@@ -116,9 +118,11 @@ public class MainActivity extends AppCompatActivity {
             default:
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
+                appDAL.setLoginSucess(false);
+                finish();
                 break;
         }
-        if(fragment!=null){
+        if (fragment != null) {
             fragmentManager.beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
             mDrawerList.setItemChecked(position, true);
             //setTitle(titles[position]);

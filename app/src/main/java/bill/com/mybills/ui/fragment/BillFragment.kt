@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Environment
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.text.Editable
@@ -119,7 +120,8 @@ internal class BillFragment : Fragment() {
 			df.roundingMode = RoundingMode.CEILING
 			total.text = SpannableStringBuilder("Rs " + df.format(totalAmt))
 		} catch (e: NumberFormatException) {
-			Toast.makeText(context, "Please Enter all Fields", Toast.LENGTH_LONG).show()
+			Snackbar.make(view, "Please Enter all Fields", Snackbar.LENGTH_LONG)
+					.setAction("Action", null).show()
 		}
 	}
 

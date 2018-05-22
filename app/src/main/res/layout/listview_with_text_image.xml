@@ -9,7 +9,6 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView"
         style="@android:style/Widget.ActionButton"
-        android:background="@drawable/ic_filled_circle_light_grey"
         android:paddingEnd="0dp"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
