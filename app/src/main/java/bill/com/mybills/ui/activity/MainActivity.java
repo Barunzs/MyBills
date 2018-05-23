@@ -23,11 +23,11 @@ import java.util.List;
 import bill.com.mybills.LoginActivity;
 import bill.com.mybills.R;
 import bill.com.mybills.config.AppDAL;
-import bill.com.mybills.model.ItemObject;
+import bill.com.mybills.model.MenuItemObject;
 import bill.com.mybills.ui.adapter.CustomAdapter;
 import bill.com.mybills.ui.fragment.BillFragment;
 import bill.com.mybills.ui.fragment.DefaultFragment;
-import bill.com.mybills.ui.fragment.EditProfile;
+import bill.com.mybills.ui.fragment.EditProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar topToolBar;
     private AppDAL appDAL = null;
+    private Fragment fragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +55,13 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerList = findViewById(R.id.left_drawer);
 
-        List<ItemObject> listViewItems = new ArrayList<>();
-        listViewItems.add(new ItemObject("My Profile", R.drawable.img_profile_picture_placeholder));
-        listViewItems.add(new ItemObject("Generate Bill", android.R.drawable.ic_menu_agenda));
-        listViewItems.add(new ItemObject("Scan Barcode", android.R.drawable.ic_popup_sync));
-        listViewItems.add(new ItemObject("My Transaction", android.R.drawable.ic_menu_recent_history));
-        listViewItems.add(new ItemObject("Settings", android.R.drawable.ic_menu_info_details));
-        listViewItems.add(new ItemObject("Logout", android.R.drawable.ic_lock_power_off));
+        List<MenuItemObject> listViewItems = new ArrayList<>();
+        listViewItems.add(new MenuItemObject("My Profile", R.drawable.img_profile_picture_placeholder));
+        listViewItems.add(new MenuItemObject("Generate Bill", android.R.drawable.ic_menu_agenda));
+        listViewItems.add(new MenuItemObject("Scan Barcode", android.R.drawable.ic_popup_sync));
+        listViewItems.add(new MenuItemObject("My Transaction", android.R.drawable.ic_menu_recent_history));
+        listViewItems.add(new MenuItemObject("Settings", android.R.drawable.ic_menu_info_details));
+        listViewItems.add(new MenuItemObject("Logout", android.R.drawable.ic_lock_power_off));
 
         mDrawerList.setAdapter(new CustomAdapter(this, listViewItems));
 
@@ -100,14 +101,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void selectItemFragment(int position) {
 
-        Fragment fragment = null;
         FragmentManager fragmentManager = getSupportFragmentManager();
         switch (position) {
             case 0:
-                fragment = new EditProfile();
+                fragment = new EditProfileFragment();
+                fragmentManager.beginTransaction().replace(R.id.main_fragment_container, fragment,
+                        EditProfileFragment.Companion.getTAG()).commit();
                 break;
             case 1:
                 fragment = new BillFragment();
+                fragmentManager.beginTransaction().replace(R.id.main_fragment_container, fragment,
+                        BillFragment.Companion.getTAG()).commit();
                 break;
             case 2:
                 fragment = new DefaultFragment();
@@ -123,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         if (fragment != null) {
-            fragmentManager.beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
             mDrawerList.setItemChecked(position, true);
             //setTitle(titles[position]);
             mDrawerLayout.closeDrawer(mDrawerList);
@@ -151,17 +154,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+        /*BillFragment billFragment = (BillFragment) getSupportFragmentManager().findFragmentByTag(BillFragment.Companion.getTAG());*/
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        return !drawerOpen && super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -170,15 +174,21 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
+            return true;
+        }
+        if(id==R.id.action_preview){
+            Intent intent = new Intent(getApplicationContext(), PreviewActivity.class);
+            startActivity(intent);
             return true;
         }
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
+
+
+
 }

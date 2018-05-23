@@ -1,11 +1,11 @@
 package bill.com.mybills.model;
 
-public class ItemObject {
+public class MenuItemObject {
 
     private String name;
     private int imageId;
 
-    public ItemObject(String name, int imageId) {
+    public MenuItemObject(String name, int imageId) {
         this.name = name;
         this.imageId = imageId;
     }

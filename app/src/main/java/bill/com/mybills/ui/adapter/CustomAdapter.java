@@ -11,14 +11,14 @@ import android.widget.TextView;
 import java.util.List;
 
 import bill.com.mybills.R;
-import bill.com.mybills.model.ItemObject;
+import bill.com.mybills.model.MenuItemObject;
 
 public class CustomAdapter extends BaseAdapter {
 
     private LayoutInflater lInflater;
-    private List<ItemObject> listStorage;
+    private List<MenuItemObject> listStorage;
 
-    public CustomAdapter(Context context, List<ItemObject> customizedListView) {
+    public CustomAdapter(Context context, List<MenuItemObject> customizedListView) {
         lInflater =(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         listStorage = customizedListView;
     }

@@ -14,12 +14,16 @@ import android.support.v4.content.ContextCompat
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import bill.com.mybills.R
+import bill.com.mybills.config.AppDAL
 import bill.com.mybills.model.Item
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.itextpdf.text.*
 import com.itextpdf.text.html.WebColors
 import com.itextpdf.text.pdf.PdfPCell
@@ -38,11 +42,15 @@ import java.util.*
 
 internal class BillFragment : Fragment() {
 
-
 	private var path: String? = null
 	private lateinit var dir: File
 	private lateinit var file: File
-	private val TAG = "BillFragment"
+	private var appDAL: AppDAL? = null
+
+	companion object {
+		val TAG = BillFragment.javaClass.name
+
+	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		return inflater.inflate(R.layout.fragment_bill, container, false)
@@ -51,6 +59,7 @@ internal class BillFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		//creating new file path
+		appDAL = context?.let { AppDAL(it) }
 		path = Environment.getExternalStorageDirectory().absolutePath + "/Trinity/PDF Files";
 		dir = File(path)
 		if (dir.exists()) {
@@ -114,11 +123,18 @@ internal class BillFragment : Fragment() {
 
 	private fun generateBill(view: View) {
 		try {
-			val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), makingCharge.text.toString().toDouble())
+			val item = Item(particular?.text.toString(),weight.text.toString().toDouble(),rateofgold.text.toString().toDouble(),weight.text.toString().toDouble()*rateofgold.text.toString().toDouble(),makingCharge.text.toString().toDouble())
 			val totalAmt = (item.weight * item.goldRate) + makingCharge.text.toString().toDouble() + sgstrate.text.toString().toDouble() + cgstrate.text.toString().toDouble()
 			val df = DecimalFormat("#.##")
 			df.roundingMode = RoundingMode.CEILING
 			total.text = SpannableStringBuilder("Rs " + df.format(totalAmt))
+			val gson = Gson()
+			val type = object : TypeToken<Item>() {
+			}.type
+			val itemJson = gson.toJson(item, type)
+			Log.d(TAG, "itemJson::$itemJson")
+			appDAL?.billItemJson = itemJson
+			val itemJsonDB = appDAL?.billItemJson
 		} catch (e: NumberFormatException) {
 			Snackbar.make(view, "Please Enter all Fields", Snackbar.LENGTH_LONG)
 					.setAction("Action", null).show()
@@ -130,6 +146,7 @@ internal class BillFragment : Fragment() {
 		val fm = activity?.supportFragmentManager
 		fm?.popBackStackImmediate()
 	}
+
 
 
 	/*private fun addNewItem() {
@@ -209,13 +226,13 @@ internal class BillFragment : Fragment() {
 				val billdate = SimpleDateFormat("dd/MM/yyyy")
 				cell = PdfPCell()
 				cell?.addElement(Paragraph("DATE -" + billdate.format(Calendar.getInstance().getTime())))
-				cell?.setBorder(Rectangle.NO_BORDER)
+				cell?.border = Rectangle.NO_BORDER
 				pt.addCell(cell)
 
 				val pTable = PdfPTable(1)
 				pTable.widthPercentage = 100f
 				cell = PdfPCell()
-				cell?.setColspan(1)
+				cell?.colspan = 1
 				cell?.addElement(pt)
 				pTable.addCell(cell)
 
@@ -276,30 +293,30 @@ internal class BillFragment : Fragment() {
 				cell?.setBackgroundColor(myColor1)
 				ftable.addCell(cell)
 				cell = PdfPCell(Phrase(""))
-				cell?.setBorder(Rectangle.NO_BORDER)
-				cell?.setBackgroundColor(myColor1)
+				cell?.border = Rectangle.NO_BORDER
+				cell?.backgroundColor = myColor1
 				ftable.addCell(cell)
 				cell = PdfPCell(Phrase(""))
-				cell?.setBorder(Rectangle.NO_BORDER)
-				cell?.setBackgroundColor(myColor1)
+				cell?.border = Rectangle.NO_BORDER
+				cell?.backgroundColor = myColor1
 				ftable.addCell(cell)
 				cell = PdfPCell(Phrase(""))
-				cell?.setBorder(Rectangle.NO_BORDER)
-				cell?.setBackgroundColor(myColor1)
+				cell?.border = Rectangle.NO_BORDER
+				cell?.backgroundColor = myColor1
 				ftable.addCell(cell)
 				cell = PdfPCell(Phrase(""))
-				cell?.setBorder(Rectangle.NO_BORDER)
-				cell?.setBackgroundColor(myColor1)
+				cell?.border = Rectangle.NO_BORDER
+				cell?.backgroundColor = myColor1
 				ftable.addCell(cell)
 				cell = PdfPCell(Phrase(""))
-				cell?.setBorder(Rectangle.NO_BORDER)
-				cell?.setBackgroundColor(myColor1)
+				cell?.border = Rectangle.NO_BORDER
+				cell?.backgroundColor = myColor1
 				ftable.addCell(cell)
 				cell = PdfPCell(Paragraph("Footer"))
-				cell?.setColspan(6)
+				cell?.colspan = 6
 				ftable.addCell(cell)
 				cell = PdfPCell()
-				cell?.setColspan(6)
+				cell?.colspan = 6
 				cell?.addElement(ftable)
 				table.addCell(cell)
 				doc.add(table)

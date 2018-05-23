@@ -1,23 +1,39 @@
 package bill.com.mybills.model
 
-internal class Item {
+import android.os.Parcel
+import android.os.Parcelable
 
+internal data class Item( var particulars: String, var weight: Double, var goldRate: Double,var amtGold: Double,var makingCharge: Double) : Parcelable {
 
-    constructor(particulars: String?, weight: Double, goldRate: Double, makingCharge: Double) {
-        this.particulars = particulars
-        this.weight = weight
-        this.goldRate = goldRate
-        this.makingCharge = makingCharge
+    private constructor(parcel: Parcel) : this(
+            parcel.readString(),
+            parcel.readDouble(),
+            parcel.readDouble(),
+            parcel.readDouble(),
+            parcel.readDouble()) {
     }
 
-    public var particulars: String? = null
-    public var weight = 0.0
-    public var goldRate = 0.0
-    private var amtGold = 0.0
-    public var makingCharge = 0.0
-
-    public fun setAmtGold(amtGold:Double){
-        this.amtGold = amtGold
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(particulars)
+        parcel.writeDouble(weight)
+        parcel.writeDouble(goldRate)
+        parcel.writeDouble(amtGold)
+        parcel.writeDouble(makingCharge)
     }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Item> {
+        override fun createFromParcel(parcel: Parcel): Item {
+            return Item(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Item?> {
+            return arrayOfNulls(size)
+        }
+    }
+
 
 }
