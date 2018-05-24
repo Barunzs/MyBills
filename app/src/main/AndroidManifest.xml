@@ -29,7 +29,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dark" />
         <activity
-            android:name=".ui.activity.PreviewActivity"
+            android:name=".ui.activity.BillPreviewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dark" />
     </application>

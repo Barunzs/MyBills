@@ -4,6 +4,7 @@ package bill.com.mybills.ui.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -17,6 +18,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +27,7 @@ import bill.com.mybills.LoginActivity;
 import bill.com.mybills.R;
 import bill.com.mybills.config.AppDAL;
 import bill.com.mybills.model.MenuItemObject;
+import bill.com.mybills.task.LongOperation;
 import bill.com.mybills.ui.adapter.CustomAdapter;
 import bill.com.mybills.ui.fragment.BillFragment;
 import bill.com.mybills.ui.fragment.DefaultFragment;
@@ -40,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar topToolBar;
     private AppDAL appDAL = null;
     private Fragment fragment = null;
+    private String path= null;
+    private File dir;
+    private File file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,10 +183,21 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
+            path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Trinity/PDF Files";
+            dir = new File(path);
+            if (dir.exists()) {
+                dir.mkdirs();
+            }
+            try {
+                file = File.createTempFile("Bill" + "", ".pdf", getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            new LongOperation(MainActivity.this, file).execute();
             return true;
         }
         if(id==R.id.action_preview){
-            Intent intent = new Intent(getApplicationContext(), PreviewActivity.class);
+            Intent intent = new Intent(getApplicationContext(), BillPreviewActivity.class);
             startActivity(intent);
             return true;
         }
