@@ -53,7 +53,7 @@ internal class BillFragment : Fragment() {
             override fun afterTextChanged(makingCharge: Editable) {
 
                 try {
-                    gst = ((amtofgold.text.toString().toDouble() + makingCharge.toString().toDouble()) * 1.5) / 100;
+                    gst = ((amtofgold.text.toString().toDouble() + makingCharge.toString().toDouble()) * 1.5) / 100
                     sgstrate.setText(gst.toString())
                     cgstrate.setText(gst.toString())
                 } catch (e: NumberFormatException) {
@@ -98,7 +98,7 @@ internal class BillFragment : Fragment() {
 
     private fun generateBill(view: View) {
         try {
-            val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * rateofgold.text.toString().toDouble(), makingCharge.text.toString().toDouble())
+            val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() *(rateofgold.text.toString().toDouble()/10), makingCharge.text.toString().toDouble())
             val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst
             val df = DecimalFormat("#.##")
             df.roundingMode = RoundingMode.CEILING

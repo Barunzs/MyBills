@@ -18,6 +18,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,12 +28,14 @@ import java.util.List;
 import bill.com.mybills.LoginActivity;
 import bill.com.mybills.R;
 import bill.com.mybills.config.AppDAL;
+import bill.com.mybills.model.Item;
 import bill.com.mybills.model.MenuItemObject;
 import bill.com.mybills.task.LongOperation;
 import bill.com.mybills.ui.adapter.CustomAdapter;
 import bill.com.mybills.ui.fragment.BillFragment;
 import bill.com.mybills.ui.fragment.DefaultFragment;
 import bill.com.mybills.ui.fragment.EditProfileFragment;
+import bill.com.mybills.ui.fragment.MyProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar topToolBar;
     private AppDAL appDAL = null;
     private Fragment fragment = null;
-    private String path= null;
+    private String path = null;
     private File dir;
     private File file;
 
@@ -95,7 +99,9 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
+        fragment = new MyProfileFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment,
+                MyProfileFragment.Companion.getTAG()).commit();
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -193,10 +199,15 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            new LongOperation(MainActivity.this, file).execute();
+            String itemJsonDB = appDAL.getBillItemJson();
+            ArrayList billItemList= new ArrayList<Item>();
+            Gson gson = new Gson();
+            Item billItem = gson.fromJson(itemJsonDB, Item.class);
+            billItemList.add(billItem);
+            new LongOperation(MainActivity.this, file,billItemList).execute();
             return true;
         }
-        if(id==R.id.action_preview){
+        if (id == R.id.action_preview) {
             Intent intent = new Intent(getApplicationContext(), BillPreviewActivity.class);
             startActivity(intent);
             return true;
@@ -206,7 +217,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
 }
