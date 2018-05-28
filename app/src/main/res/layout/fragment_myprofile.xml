@@ -6,211 +6,228 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/userAccountContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/primary_light"
-        android:divider="@drawable/divider_vertical_16"
         android:orientation="vertical"
-        android:showDividers="middle|end">
-
-        <TextView
-            android:id="@+id/textView13"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginStart="32dp"
-            android:gravity="center_horizontal"
-            android:lineSpacingExtra="8sp"
-            android:text="Profile"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:paddingBottom="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <android.support.v7.widget.CardView
-            android:id="@+id/iplMagicPanel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/primary"
             app:cardCornerRadius="8dp"
             app:cardElevation="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/profileLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/primary"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
 
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/akash"
-                    android:padding="16dp" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profilePictureImageView"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/ic_filled_circle_light_grey"
+                    android:src="@drawable/img_profile_picture_placeholder"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/img_profile_picture_placeholder" />
 
-                <LinearLayout
+                <ProgressBar
+                    android:id="@+id/profilePictureUpdateProgressBar"
+                    style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Small"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
+                    android:indeterminate="true"
+                    android:minHeight="0dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/profilePictureImageView"
+                    app:layout_constraintEnd_toEndOf="@+id/profilePictureImageView"
+                    app:layout_constraintStart_toStartOf="@+id/profilePictureImageView"
+                    app:layout_constraintTop_toTopOf="@+id/profilePictureImageView" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:gravity="center_horizontal"
-                        android:text="Akash Prasad"
-                        android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/white"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/fullNameTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_horizontal"
+                    android:text="Akash Prasad"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/profilePictureImageView"
+                    tools:text="Firstname Lastname" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:lineSpacingExtra="4sp"
-                        android:lines="2"
-                        android:maxLines="2"
-                        android:text="Mobile: 9733620738"
-                        android:textColor="@color/white"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent">
+                <TextView
+                    android:id="@+id/phoneNumberTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_horizontal"
+                    android:text="+91 9876543210"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fullNameTextView"
+                    tools:text="+91 9876543210" />
 
-                    </TextView>
+                <TextView
+                    android:id="@+id/emailAddressTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_horizontal"
+                    android:text="akash.205@gmail.com"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/phoneNumberTextView"
+                    tools:text="example@abc.com"
+                    tools:visibility="visible" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:text="Email: akash.205@gmail.com"
-                        android:textColor="@color/white"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toStartOf="parent"
-                        tools:layout_editor_absoluteY="142dp" />
+            </android.support.constraint.ConstraintLayout>
 
-                </LinearLayout>
-            </LinearLayout>
 
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            android:id="@+id/quickPicksPanel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/primary"
             app:cardCornerRadius="8dp"
-            app:cardElevation="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:cardElevation="16dp">
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/businessLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
+                android:layout_height="match_parent">
 
                 <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/anuska_jweller"
-                    android:padding="16dp" />
+                    android:id="@+id/businessPictureImageView"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="16dp"
+                    android:src="@drawable/anuska_jweller"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/img_profile_picture_placeholder" />
 
-                <LinearLayout
+                <ProgressBar
+                    android:id="@+id/businessPictureUpdateProgressBar"
+                    style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Small"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:background="@color/primary"
-                    android:orientation="vertical">
+                    android:indeterminate="true"
+                    android:minHeight="0dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/businessPictureImageView"
+                    app:layout_constraintEnd_toEndOf="@+id/businessPictureImageView"
+                    app:layout_constraintStart_toStartOf="@+id/businessPictureImageView"
+                    app:layout_constraintTop_toTopOf="@+id/businessPictureImageView" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:gravity="center_horizontal"
-                        android:text="ANUSHKA JEWELLERS "
-                        android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/white"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/BusinessNameTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_horizontal"
+                    android:text="Anuskha Jwellery"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/businessPictureImageView"
+                    tools:text="Firstname Lastname" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:lineSpacingExtra="4sp"
-                        android:lines="2"
-                        android:maxLines="2"
-                        android:text="BALAJEE COMPLEX  CAMPASARI MORE  SILIGURI - 734003"
-                        android:textColor="@color/white"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                <TextView
+                    android:id="@+id/businessNumberTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_horizontal"
+                    android:text="Champasari More SIliguri-73392"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/BusinessNameTextView"
+                    tools:text="+91 9876543210" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:text="GSTIN - 19AFLPP9130J1ZW"
-                        android:textColor="@color/white"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toStartOf="parent"
-                        tools:layout_editor_absoluteY="142dp" />
+                <TextView
+                    android:id="@+id/businessGst"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="32dp"
+                    android:gravity="center_horizontal"
+                    android:text="GST IN-8382332923023"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/businessNumberTextView"
+                    tools:text="example@abc.com"
+                    tools:visibility="visible" />
 
-                </LinearLayout>
-            </LinearLayout>
+            </android.support.constraint.ConstraintLayout>
 
         </android.support.v7.widget.CardView>
 

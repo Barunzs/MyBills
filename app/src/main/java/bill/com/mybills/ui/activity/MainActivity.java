@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -69,7 +68,8 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList = findViewById(R.id.left_drawer);
 
         List<MenuItemObject> listViewItems = new ArrayList<>();
-        listViewItems.add(new MenuItemObject("My Profile", R.drawable.img_profile_picture_placeholder));
+        listViewItems.add(new MenuItemObject("My Profile",android.R.drawable.ic_menu_day));
+        listViewItems.add(new MenuItemObject("Edit Profile", R.drawable.img_profile_picture_placeholder));
         listViewItems.add(new MenuItemObject("Generate Bill", android.R.drawable.ic_menu_agenda));
         listViewItems.add(new MenuItemObject("Scan Barcode", android.R.drawable.ic_popup_sync));
         listViewItems.add(new MenuItemObject("My Transaction", android.R.drawable.ic_menu_recent_history));
