@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="32dp"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center_horizontal"
                 android:text="@string/header"
                 android:textAllCaps="true"
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="Siliguri-734003 Darjeeling"
                 android:textAppearance="@style/TextAppearance.AppCompat"
                 app:layout_constraintEnd_toEndOf="@+id/cancelGoalWarningTextView"
@@ -58,11 +58,33 @@
                 app:layout_constraintTop_toBottomOf="@+id/cancelGoalWarningTextView" />
 
             <TextView
+                android:id="@+id/customerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="64dp"
+                android:text="Customer Name"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/cancelGoalWarningTextView"
+                app:layout_constraintTop_toBottomOf="@+id/textView42"/>
+            <EditText
+                android:id="@+id/customerField"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:inputType="text"
+                android:maxLines="1"
+                app:layout_constraintBaseline_toBaselineOf="@+id/customerName"
+                app:layout_constraintEnd_toEndOf="@+id/weight"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/textView47"
+                tools:text="Shekar" />
+            <TextView
                 android:id="@+id/textView47"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="96dp"
                 android:text="Particulars of Ornament"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/cancelGoalWarningTextView"
@@ -73,8 +95,8 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:maxLines="1"
                 android:inputType="text"
+                android:maxLines="1"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView47"
                 app:layout_constraintEnd_toEndOf="@+id/weight"
                 app:layout_constraintHorizontal_bias="1.0"
@@ -253,7 +275,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cGst"/>
+                app:layout_constraintTop_toBottomOf="@+id/cGst" />
 
             <TextView
                 android:id="@+id/totalAmt"
@@ -261,10 +283,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="Total"
-                android:textStyle="bold"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.1"
                 app:layout_constraintHorizontal_chainStyle="packed"
@@ -276,10 +298,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:textAlignment="textStart"
-                android:textStyle="bold"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias=".7"
                 app:layout_constraintHorizontal_chainStyle="packed"
@@ -293,7 +315,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="32dp"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="Generate Bill"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -304,9 +326,30 @@
                 app:layout_constraintVertical_bias="0.75"
                 tools:visibility="visible" />
 
+            <TextView
+                android:id="@+id/productImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ornament Image"
+                android:textStyle="bold"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="@+id/cancelGoalWarningTextView"
+                app:layout_constraintTop_toBottomOf="@+id/textView42" />
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="100dp"
+                android:layout_height="42dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintBottom_toTopOf="@+id/weight"
+                app:layout_constraintEnd_toEndOf="@+id/weight"
+                app:layout_constraintHorizontal_bias=".95"
+                app:layout_constraintStart_toEndOf="@+id/textView47"
+                app:layout_constraintTop_toBottomOf="@+id/textView42"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@android:drawable/ic_menu_camera" />
+
         </android.support.constraint.ConstraintLayout>
-
     </ScrollView>
-
-
 </android.support.constraint.ConstraintLayout>

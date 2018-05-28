@@ -2,6 +2,7 @@
     <string name="app_name">ANUSHKA JEWELL</string>
     <string name="action_share">Share</string>
     <string name="action_preview">Preview</string>
+    <string name="action_add">Add New Item</string>
     <string name="hello_world">Hello world!</string>
     <string name="logo_desc">App logo</string>
     <string name="drawer_open">Open</string>

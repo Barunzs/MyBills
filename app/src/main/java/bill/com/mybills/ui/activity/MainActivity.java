@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import bill.com.mybills.LoginActivity;
 import bill.com.mybills.R;
@@ -36,6 +37,7 @@ import bill.com.mybills.ui.fragment.BillFragment;
 import bill.com.mybills.ui.fragment.DefaultFragment;
 import bill.com.mybills.ui.fragment.EditProfileFragment;
 import bill.com.mybills.ui.fragment.MyProfileFragment;
+import bill.com.mybills.ui.fragment.ScanFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         fragment = new MyProfileFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment,
@@ -106,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // make Toast when click
-                Toast.makeText(getApplicationContext(), "Position " + position, Toast.LENGTH_LONG).show();
                 selectItemFragment(position);
             }
         });
@@ -127,7 +128,9 @@ public class MainActivity extends AppCompatActivity {
                         BillFragment.Companion.getTAG()).commit();
                 break;
             case 2:
-                fragment = new DefaultFragment();
+                fragment = new ScanFragment();
+                fragmentManager.beginTransaction().replace(R.id.main_fragment_container, fragment,
+                        ScanFragment.Companion.getTAG()).commit();
                 break;
             case 3:
                 fragment = new DefaultFragment();

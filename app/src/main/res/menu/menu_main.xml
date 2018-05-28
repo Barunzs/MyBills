@@ -12,4 +12,9 @@
         android:orderInCategory="2"
         android:title="@string/action_preview"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_addnext"
+        android:orderInCategory="3"
+        android:title="@string/action_add"
+        app:showAsAction="never" />
 </menu>
