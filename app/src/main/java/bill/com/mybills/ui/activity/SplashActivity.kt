@@ -7,7 +7,10 @@ import android.support.v7.app.AppCompatActivity
 import bill.com.mybills.LoginActivity
 import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_splash.*
+
+
 
 
 class SplashActivity : AppCompatActivity() {
@@ -23,8 +26,8 @@ class SplashActivity : AppCompatActivity() {
 			}
 
 			override fun onFinish() {
-				val isLogin = appDAL.isLoginSucess
-				if (isLogin) {
+				val user = FirebaseAuth.getInstance().currentUser
+				if (user!=null) {
 					val intent = Intent(applicationContext, MainActivity::class.java)
 					startActivity(intent)
 					finish()

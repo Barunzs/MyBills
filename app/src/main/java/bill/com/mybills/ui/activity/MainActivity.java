@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private String path = null;
     private File dir;
     private File file;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(topToolBar);
         //topToolBar.setLogo(R.drawable.background);
         //topToolBar.setLogoDescription(getResources().getString(R.string.logo_desc));
-
+        mAuth = FirebaseAuth.getInstance();
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerList = findViewById(R.id.left_drawer);
 
@@ -138,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
             default:
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
-                appDAL.setLoginSucess(false);
+                mAuth.signOut();
                 finish();
                 break;
         }
