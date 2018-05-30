@@ -55,7 +55,7 @@ internal class BillFragment : Fragment() {
 	private var auth: FirebaseAuth? = null
 
 	companion object {
-		val TAG = BillFragment.javaClass.name
+		val TAG = BillFragment::class.java.simpleName
 
 	}
 
@@ -264,13 +264,7 @@ internal class BillFragment : Fragment() {
 	}
 
 
-	/*private fun addNewItem() {
-		val ft = fragmentManager?.beginTransaction()?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
-		val fragment = BillFragment()
-		ft?.add(R.id.frameLayout, fragment)
-		ft?.addToBackStack(null)
-		ft?.commit()
-	}*/
+
 
 
 }

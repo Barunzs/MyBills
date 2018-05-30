@@ -152,7 +152,7 @@ class LoginActivity : AppCompatActivity() {
 
 		if (input_email.text.isEmpty()) {
 			input_email.requestFocus()
-			input_email.error = "Email mail may not be empty"
+			input_email.error = "Email may not be empty"
 			return
 		}
 		if (input_password.text.isEmpty()) {
@@ -172,8 +172,8 @@ class LoginActivity : AppCompatActivity() {
 			if (task.isSuccessful) {
 				Log.d(TAG, "checking to see if user exists in firebase or not")
 				val result = task.result
-				if ((result != null && result!!.providers != null
-								&& result!!.providers!!.size > 0)) {
+				if ((result != null && result.providers != null
+								&& result.providers!!.size > 0)) {
 					Log.d(TAG, "User exists, trying to login using entered credentials")
 					performLogin(email, password);
 				} else {
@@ -196,7 +196,8 @@ class LoginActivity : AppCompatActivity() {
 		mAuth?.signInWithEmailAndPassword(email, password)
 				?.addOnCompleteListener(this, { task ->
 					if (task.isSuccessful) {
-
+						val user = task.result.user
+                        Log.d(TAG,"name::"+user.displayName)
 						val intent = Intent(applicationContext, MainActivity::class.java)
 						startActivity(intent)
 						finish()

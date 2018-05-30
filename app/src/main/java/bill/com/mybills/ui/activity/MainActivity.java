@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -120,22 +121,24 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         switch (position) {
             case 0:
+                fragment = new MyProfileFragment();
+                fragmentManager.beginTransaction().replace(R.id.main_fragment_container, fragment,
+                        MyProfileFragment.Companion.getTAG()).commit();
+                break;
+            case 1:
                 fragment = new EditProfileFragment();
                 fragmentManager.beginTransaction().replace(R.id.main_fragment_container, fragment,
                         EditProfileFragment.Companion.getTAG()).commit();
                 break;
-            case 1:
+            case 2:
                 fragment = new BillFragment();
                 fragmentManager.beginTransaction().replace(R.id.main_fragment_container, fragment,
                         BillFragment.Companion.getTAG()).commit();
                 break;
-            case 2:
+            case 3:
                 fragment = new ScanFragment();
                 fragmentManager.beginTransaction().replace(R.id.main_fragment_container, fragment,
                         ScanFragment.Companion.getTAG()).commit();
-                break;
-            case 3:
-                fragment = new DefaultFragment();
                 break;
             default:
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -217,11 +220,20 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+        if(id==R.id.action_addnext){
+            addNewItem();
+        }
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void addNewItem() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+        Fragment fragment = new BillFragment();
+        ft.add(R.id.main_fragment_container, fragment);
+        ft.commit();
+    }
 
 }
