@@ -20,9 +20,11 @@ import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +37,6 @@ import bill.com.mybills.model.MenuItemObject;
 import bill.com.mybills.task.LongOperation;
 import bill.com.mybills.ui.adapter.CustomAdapter;
 import bill.com.mybills.ui.fragment.BillFragment;
-import bill.com.mybills.ui.fragment.DefaultFragment;
 import bill.com.mybills.ui.fragment.EditProfileFragment;
 import bill.com.mybills.ui.fragment.MyProfileFragment;
 import bill.com.mybills.ui.fragment.ScanFragment;
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList = findViewById(R.id.left_drawer);
 
         List<MenuItemObject> listViewItems = new ArrayList<>();
-        listViewItems.add(new MenuItemObject("My Profile",android.R.drawable.ic_menu_day));
+        listViewItems.add(new MenuItemObject("My Profile", android.R.drawable.ic_menu_day));
         listViewItems.add(new MenuItemObject("Edit Profile", R.drawable.img_profile_picture_placeholder));
         listViewItems.add(new MenuItemObject("Generate Bill", android.R.drawable.ic_menu_agenda));
         listViewItems.add(new MenuItemObject("Scan Barcode", android.R.drawable.ic_popup_sync));
@@ -207,20 +208,20 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            String itemJsonDB = appDAL.getBillItemJson();
-            ArrayList billItemList= new ArrayList<Item>();
-            Gson gson = new Gson();
-            Item billItem = gson.fromJson(itemJsonDB, Item.class);
-            billItemList.add(billItem);
-            new LongOperation(MainActivity.this, file,billItemList).execute();
+            ArrayList billItemListObj = getBillItemList();
+            new LongOperation(MainActivity.this, file, billItemListObj).execute();
             return true;
         }
         if (id == R.id.action_preview) {
+            Bundle bundle = new Bundle();
+            ArrayList billItemListObj  = getBillItemList();
+            bundle.putParcelableArrayList("billItemList", billItemListObj);
             Intent intent = new Intent(getApplicationContext(), BillPreviewActivity.class);
+            intent.putExtras(bundle);
             startActivity(intent);
             return true;
         }
-        if(id==R.id.action_addnext){
+        if (id == R.id.action_addnext) {
             addNewItem();
         }
         if (mDrawerToggle.onOptionsItemSelected(item)) {
@@ -234,6 +235,25 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment = new BillFragment();
         ft.add(R.id.main_fragment_container, fragment);
         ft.commit();
+    }
+
+    private ArrayList<Item> getBillItemList(){
+        String itemListJsonDB = appDAL.getBillItemJson();
+        Type type = new TypeToken<ArrayList<String>>() {
+        }.getType();
+        Gson gson = new Gson();
+        ArrayList<String> billItemListJson = gson.fromJson(itemListJsonDB, type);
+        ArrayList billItemListObj = new ArrayList<Item>();
+        if (billItemListJson != null && billItemListJson.size() > 0) {
+            Type itemType = new TypeToken<Item>() {
+            }.getType();
+            Gson itemGson = new Gson();
+            for (String billItemObj : billItemListJson) {
+                Item billItem = itemGson.fromJson(billItemObj, itemType);
+                billItemListObj.add(billItem);
+            }
+        }
+        return  billItemListObj;
     }
 
 }

@@ -14,20 +14,22 @@ internal class MyProfileFragment : Fragment() {
 
 	private var storage: FirebaseStorage? = null
 	private var storageReference: StorageReference? = null
-    companion object {
-        val TAG = MyProfileFragment.javaClass.name
-    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+	companion object {
+		val TAG = MyProfileFragment::class.java.simpleName
+	}
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setHasOptionsMenu(true)
 		storage = FirebaseStorage.getInstance()
 		storageReference = storage?.reference
 
-    }
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_myprofile, container, false)
-    }
+	}
+
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+		return inflater.inflate(R.layout.fragment_myprofile, container, false)
+	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
@@ -40,8 +42,8 @@ internal class MyProfileFragment : Fragment() {
 		})
 	}
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu?.clear();
-    }
+	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+		super.onCreateOptionsMenu(menu, inflater);
+		menu?.clear();
+	}
 }

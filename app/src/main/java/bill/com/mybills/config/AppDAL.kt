@@ -13,6 +13,6 @@ internal class AppDAL(val context: Context)  {
 
 
 	var billItemJson: String
-		get() = billingSharedPref.getString("BILL_ITEM", null)
+		get() = billingSharedPref.getString("BILL_ITEM", String())
 		set(value) = billingSharedPref.edit().putString("BILL_ITEM", value).apply()
 }

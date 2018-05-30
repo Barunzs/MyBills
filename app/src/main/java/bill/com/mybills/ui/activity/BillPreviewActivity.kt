@@ -8,7 +8,6 @@ import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
 import bill.com.mybills.model.Item
 import bill.com.mybills.ui.adapter.BillPreviewAdapter
-import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_preview.*
 
 
@@ -23,13 +22,7 @@ class BillPreviewActivity : AppCompatActivity() {
         appDAL = applicationContext?.let { AppDAL(it) }
         billRecyclerView?.layoutManager = LinearLayoutManager(applicationContext)
         try {
-            val itemJsonDB = appDAL?.billItemJson
-            var billItemList: ArrayList<Item> = ArrayList()
-            val gson = Gson()
-            val billItem = gson.fromJson(itemJsonDB, Item::class.java)
-            billItemList.add(billItem)
-            billItemList.add(billItem)
-            billItemList.add(billItem)
+            var billItemList: ArrayList<Item> = this.intent.extras.getParcelableArrayList("billItemList");
             billPreviewAdapter = BillPreviewAdapter()
             billPreviewAdapter.billItemArray = billItemList
             billRecyclerView?.adapter = billPreviewAdapter

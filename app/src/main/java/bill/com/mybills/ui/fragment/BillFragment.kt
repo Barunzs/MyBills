@@ -53,6 +53,7 @@ internal class BillFragment : Fragment() {
 	private var storage: FirebaseStorage? = null
 	private var storageReference: StorageReference? = null
 	private var auth: FirebaseAuth? = null
+	private lateinit var billItemList: ArrayList<String>
 
 	companion object {
 		val TAG = BillFragment::class.java.simpleName
@@ -64,6 +65,7 @@ internal class BillFragment : Fragment() {
 		storage = FirebaseStorage.getInstance()
 		auth = FirebaseAuth.getInstance()
 		storageReference = storage?.reference
+		billItemList = ArrayList()
 	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -250,7 +252,20 @@ internal class BillFragment : Fragment() {
 			}.type
 			val itemJson = gson.toJson(item, type)
 			Log.d(TAG, "itemJson::$itemJson")
-			appDAL?.billItemJson = itemJson
+			// Get List from SharedPref before adding
+			val arrayListJson = appDAL?.billItemJson
+			if (arrayListJson.isNullOrEmpty()) {
+				billItemList.add(itemJson)
+			} else {
+				val type = object : TypeToken<ArrayList<String>>() {
+				}.type
+				val gson = Gson()
+				billItemList = gson.fromJson<java.util.ArrayList<String>>(arrayListJson, type)
+				billItemList.add(itemJson)
+			}
+			val jsonItemArraylist = gson.toJson(billItemList)
+			appDAL?.billItemJson = jsonItemArraylist
+
 		} catch (e: NumberFormatException) {
 			Snackbar.make(view, "Please Enter all Fields", Snackbar.LENGTH_LONG)
 					.setAction("Action", null).show()
@@ -262,9 +277,6 @@ internal class BillFragment : Fragment() {
 		val fm = activity?.supportFragmentManager
 		fm?.popBackStackImmediate()
 	}
-
-
-
 
 
 }
