@@ -46,4 +46,8 @@ internal class MyProfileFragment : Fragment() {
 		super.onCreateOptionsMenu(menu, inflater);
 		menu?.clear();
 	}
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
 }

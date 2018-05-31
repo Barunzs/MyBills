@@ -78,10 +78,10 @@ internal class BillFragment : Fragment() {
 		appDAL = context?.let { AppDAL(it) }
 		initEventsListeners()
 		storageReference?.child("photos/product_image-1027272193.jpg")?.downloadUrl?.addOnFailureListener({
-			Toast.makeText(context, "Error::" + it.localizedMessage, Toast.LENGTH_LONG).show()
+			//Toast.makeText(context, "Error::" + it.localizedMessage, Toast.LENGTH_LONG).show()
 		})?.addOnSuccessListener({
-			Toast.makeText(context, "Upload", Toast.LENGTH_LONG).show()
-			Picasso.with(context).load(it).into(image)
+			//Toast.makeText(context, "Upload", Toast.LENGTH_LONG).show()
+			//Picasso.with(context).load(it).into(image)
 		})
 	}
 
@@ -242,7 +242,7 @@ internal class BillFragment : Fragment() {
 
 	private fun generateBill(view: View) {
 		try {
-			val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble())
+			val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(),gst,gst,customerField.text.toString())
 			val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst
 			val df = DecimalFormat("#.##")
 			df.roundingMode = RoundingMode.CEILING
@@ -257,10 +257,10 @@ internal class BillFragment : Fragment() {
 			if (arrayListJson.isNullOrEmpty()) {
 				billItemList.add(itemJson)
 			} else {
-				val type = object : TypeToken<ArrayList<String>>() {
+				val arrayListType = object : TypeToken<ArrayList<String>>() {
 				}.type
-				val gson = Gson()
-				billItemList = gson.fromJson<java.util.ArrayList<String>>(arrayListJson, type)
+				val ArrayLisgson = Gson()
+				billItemList = ArrayLisgson.fromJson<java.util.ArrayList<String>>(arrayListJson, arrayListType)
 				billItemList.add(itemJson)
 			}
 			val jsonItemArraylist = gson.toJson(billItemList)
@@ -271,12 +271,5 @@ internal class BillFragment : Fragment() {
 					.setAction("Action", null).show()
 		}
 	}
-
-
-	private fun viewPrevious() {
-		val fm = activity?.supportFragmentManager
-		fm?.popBackStackImmediate()
-	}
-
 
 }

@@ -9,6 +9,7 @@ import bill.com.mybills.config.AppDAL
 import bill.com.mybills.model.Item
 import bill.com.mybills.ui.adapter.BillPreviewAdapter
 import kotlinx.android.synthetic.main.activity_preview.*
+import kotlinx.android.synthetic.main.fragment_bill.*
 
 
 class BillPreviewActivity : AppCompatActivity() {
@@ -22,7 +23,8 @@ class BillPreviewActivity : AppCompatActivity() {
         appDAL = applicationContext?.let { AppDAL(it) }
         billRecyclerView?.layoutManager = LinearLayoutManager(applicationContext)
         try {
-            var billItemList: ArrayList<Item> = this.intent.extras.getParcelableArrayList("billItemList");
+            var billItemList: ArrayList<Item> = this.intent.extras.getParcelableArrayList("billItemList")
+            //customer.text = billItemList[1].customerName
             billPreviewAdapter = BillPreviewAdapter()
             billPreviewAdapter.billItemArray = billItemList
             billRecyclerView?.adapter = billPreviewAdapter
