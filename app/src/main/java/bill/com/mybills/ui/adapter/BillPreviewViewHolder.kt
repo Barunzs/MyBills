@@ -12,6 +12,7 @@ internal class BillPreviewViewHolder(val parent: ViewGroup?) : RecyclerView.View
 	fun setBillItem(billItem: Item) {
 		itemView.itemName?.text = billItem.particulars
 		itemView.itemWeight?.text = billItem.weight.toString()
-		itemView.makingCharge?.text = billItem.amtGold.toString()
+		itemView.goldAmt?.text = billItem.amtGold.toString()
+		itemView.makingAmt?.text = billItem.makingCharge.toString()
 	}
 }

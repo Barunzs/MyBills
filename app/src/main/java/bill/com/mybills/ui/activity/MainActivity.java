@@ -4,7 +4,6 @@ package bill.com.mybills.ui.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -23,7 +22,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +32,6 @@ import bill.com.mybills.R;
 import bill.com.mybills.config.AppDAL;
 import bill.com.mybills.model.Item;
 import bill.com.mybills.model.MenuItemObject;
-import bill.com.mybills.task.LongOperation;
 import bill.com.mybills.ui.adapter.CustomAdapter;
 import bill.com.mybills.ui.fragment.BillFragment;
 import bill.com.mybills.ui.fragment.EditProfileFragment;
@@ -197,21 +194,6 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_share) {
-            path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Trinity/PDF Files";
-            dir = new File(path);
-            if (dir.exists()) {
-                dir.mkdirs();
-            }
-            try {
-                file = File.createTempFile("Bill" + "", ".pdf", getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            ArrayList billItemListObj = getBillItemList();
-            new LongOperation(MainActivity.this, file, billItemListObj).execute();
-            return true;
-        }
         if (id == R.id.action_preview) {
             Bundle bundle = new Bundle();
             ArrayList billItemListObj  = getBillItemList();

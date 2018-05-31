@@ -11,25 +11,20 @@ import android.widget.Toast
 import bill.com.mybills.R
 import bill.com.mybills.model.Item
 import com.itextpdf.text.*
+import com.itextpdf.text.BaseColor
 import com.itextpdf.text.html.WebColors
+import com.itextpdf.text.pdf.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.ref.WeakReference
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
-import com.itextpdf.text.BaseColor
-import com.itextpdf.text.FontFactory
-import com.itextpdf.text.pdf.*
-import android.R.attr.process
-import com.itextpdf.text.Phrase
-import kotlinx.android.synthetic.main.fragment_bill.*
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 
-internal class LongOperation(context: Context?, var file: File, var billItemList: ArrayList<Item>) : AsyncTask<String, Void, String>() {
+internal class CreatePDFTask(context: Context?, var file: File, var billItemList: ArrayList<Item>) : AsyncTask<String, Void, String>() {
 
     private var cell: PdfPCell? = null
     private var bgImage: Image? = null
@@ -243,7 +238,7 @@ internal class LongOperation(context: Context?, var file: File, var billItemList
             // close the document
             doc.close();
         }
-        return ""
+        return totalAmt.toString()
     }
 
     override fun onPostExecute(result: String) {
