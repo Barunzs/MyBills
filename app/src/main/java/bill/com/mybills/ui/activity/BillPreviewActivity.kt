@@ -22,14 +22,13 @@ class BillPreviewActivity : AppCompatActivity() {
 
 	private lateinit var billPreviewAdapter: BillPreviewAdapter
 	private var appDAL: AppDAL? = null
-
+	private var billItemList: ArrayList<Item> = ArrayList()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_preview)
 		appDAL = applicationContext?.let { AppDAL(it) }
 		billRecyclerView?.layoutManager = LinearLayoutManager(applicationContext)
-		var billItemList: ArrayList<Item> = ArrayList()
 		try {
 			billItemList = this.intent.extras.getParcelableArrayList("billItemList")
 			if (billItemList.size > 0) {
@@ -37,6 +36,7 @@ class BillPreviewActivity : AppCompatActivity() {
 				billPreviewAdapter = BillPreviewAdapter()
 				billPreviewAdapter.billItemArray = billItemList
 				billRecyclerView?.adapter = billPreviewAdapter
+				billRecyclerView.scrollToPosition(billItemList.size - 1);
 			} else {
 				tax.visibility = View.GONE
 				sendBill.visibility = View.GONE
@@ -44,8 +44,7 @@ class BillPreviewActivity : AppCompatActivity() {
 						.setAction("Action", null).show()
 				return
 			}
-
-		} catch (e: IllegalStateException) {
+		} catch (e: Throwable) {
 			Snackbar.make(billRecyclerView, "Please Generate Bill before Preview", Snackbar.LENGTH_LONG)
 					.setAction("Action", null).show()
 		}
@@ -56,12 +55,12 @@ class BillPreviewActivity : AppCompatActivity() {
 		var sgst = 0.0
 		for (item in billItemList) {
 			totalAmt += (item.cgst + item.sgst + item.amtGold + item.makingCharge)
-			cgst+= item.cgst
-			sgst+=item.sgst
+			cgst += item.cgst
+			sgst += item.sgst
 		}
 
 		totalAmount.text = "₹ " + df.format(totalAmt)
-		sgstAmt.text ="₹ " +  df.format(sgst)
+		sgstAmt.text = "₹ " + df.format(sgst)
 		cgstAmt.text = "₹ " + df.format(cgst)
 		sendBill.setOnClickListener { sendPDF(billItemList) }
 
@@ -75,10 +74,19 @@ class BillPreviewActivity : AppCompatActivity() {
 		}
 		try {
 			val file = File.createTempFile("Bill" + "", ".pdf", applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS))
-			CreatePDFTask(this@BillPreviewActivity, file, itemList).execute()
+			CreatePDFTask(this@BillPreviewActivity, file, itemList, progressPdf).execute()
+			sendBill.visibility = View.GONE
 		} catch (e: IOException) {
 			e.printStackTrace()
 		}
 
 	}
+
+	override fun onResume() {
+		super.onResume()
+		if (billItemList.size > 0)
+			sendBill.visibility = View.VISIBLE
+	}
+
+
 }

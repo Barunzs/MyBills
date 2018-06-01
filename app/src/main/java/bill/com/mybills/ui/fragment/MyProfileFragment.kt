@@ -47,7 +47,11 @@ internal class MyProfileFragment : Fragment() {
 		menu?.clear();
 	}
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
+
+	override fun onDestroyView() {
+		super.onDestroyView()
+
+	}
+
+
 }

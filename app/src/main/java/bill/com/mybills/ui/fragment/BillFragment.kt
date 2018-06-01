@@ -242,7 +242,7 @@ internal class BillFragment : Fragment() {
 
 	private fun generateBill(view: View) {
 		try {
-			val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(),gst,gst,customerField.text.toString())
+			val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString())
 			val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst
 			val df = DecimalFormat("#.##")
 			df.roundingMode = RoundingMode.CEILING
@@ -265,11 +265,11 @@ internal class BillFragment : Fragment() {
 			}
 			val jsonItemArraylist = gson.toJson(billItemList)
 			appDAL?.billItemJson = jsonItemArraylist
-
 		} catch (e: NumberFormatException) {
 			Snackbar.make(view, "Please Enter all Fields", Snackbar.LENGTH_LONG)
 					.setAction("Action", null).show()
 		}
 	}
+
 
 }

@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +48,6 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar topToolBar;
     private AppDAL appDAL = null;
     private Fragment fragment = null;
-    private String path = null;
-    private File dir;
-    private File file;
     private FirebaseAuth mAuth;
 
     @Override
@@ -214,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void addNewItem() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
-        Fragment fragment = new BillFragment();
+        fragment = new BillFragment();
         ft.add(R.id.main_fragment_container, fragment);
         ft.commit();
     }
@@ -238,4 +234,11 @@ public class MainActivity extends AppCompatActivity {
         return  billItemListObj;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(fragment instanceof BillFragment){
+            addNewItem();
+        }
+    }
 }
