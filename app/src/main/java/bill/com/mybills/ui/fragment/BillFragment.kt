@@ -38,6 +38,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 
 
 internal class BillFragment : Fragment() {
@@ -184,20 +186,21 @@ internal class BillFragment : Fragment() {
 				if (resultCode == Activity.RESULT_OK) {
 					capturedImageFile.let {
 						val optimizeGoalImage = optimizeGoalImage(it)
-						//it.delete()
-						//it.createNewFile()
-						/*val byteArrayOutputStream = FileOutputStream(it)
+						it.delete()
+						it.createNewFile()
+						val byteArrayOutputStream = FileOutputStream(it)
 						optimizeGoalImage.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
 						byteArrayOutputStream.flush()
 						byteArrayOutputStream.close()
-						image.setImageBitmap(optimizeGoalImage)*/
+						//image.setImageBitmap(optimizeGoalImage)
 						//val stream = ByteArrayOutputStream();
 						//optimizeGoalImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
 						//val byteArray = stream.toByteArray();
 						//optimizeGoalImage.recycle();
 						//uploadImage(byteArray)
 						val uri = Uri.fromFile(capturedImageFile)
-						val filePath = uri?.lastPathSegment?.let { it1 -> storageReference?.child("photos")?.child(it1) }
+						val customerName = customerField.text.toString()
+						val filePath = uri?.lastPathSegment?.let { it1 -> storageReference?.child(customerName + "/" + System.currentTimeMillis())?.child(it1) }
 						filePath?.putFile(uri)?.addOnFailureListener({
 							Toast.makeText(context, "Error::" + it.localizedMessage, Toast.LENGTH_LONG).show()
 						})?.addOnSuccessListener({
@@ -214,6 +217,9 @@ internal class BillFragment : Fragment() {
 	override fun onDestroy() {
 		super.onDestroy()
 	}
+
+	fun ClosedRange<Int>.random() =
+			ThreadLocalRandom.current().nextInt(endInclusive - start) + start
 
 	private fun optimizeGoalImage(imageFile: File): Bitmap {
 		val bmpOptions = BitmapFactory.Options()
@@ -242,6 +248,8 @@ internal class BillFragment : Fragment() {
 
 	private fun generateBill(view: View) {
 		try {
+			val randomVal = (0..10).random()
+			Log.d(TAG, "randomVal::$randomVal")
 			val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString())
 			val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst
 			val df = DecimalFormat("#.##")
