@@ -237,8 +237,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(fragment instanceof BillFragment){
+        /*if(fragment instanceof BillFragment){
             addNewItem();
-        }
+        }*/
     }
 }
