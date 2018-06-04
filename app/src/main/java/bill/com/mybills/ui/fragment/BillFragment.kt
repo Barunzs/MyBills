@@ -214,9 +214,6 @@ internal class BillFragment : Fragment() {
 		}
 	}
 
-	override fun onDestroy() {
-		super.onDestroy()
-	}
 
 	fun ClosedRange<Int>.random() =
 			ThreadLocalRandom.current().nextInt(endInclusive - start) + start
