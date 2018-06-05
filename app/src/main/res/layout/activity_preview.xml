@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:weightSum="4">
 
     <android.support.design.widget.AppBarLayout
@@ -17,7 +18,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:elevation="1dp"
             android:minHeight="?attr/actionBarSize">
 
@@ -30,11 +31,13 @@
                 <TextView
                     android:id="@+id/customer"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1.5"
-                    android:padding="8dp"
+                    android:paddingLeft="4dp"
+                    android:gravity="center|left"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="Pinky"/>
 
                 <TextView
                     android:id="@+id/date"
@@ -42,14 +45,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
                     android:padding="8dp"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    tools:text="Date:"/>
 
                 <TextView
                     android:id="@+id/datevalue"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="8dp" />
+                    android:padding="8dp"
+                    tools:text="12/3/1945"/>
             </LinearLayout>
 
         </android.support.v7.widget.Toolbar>
@@ -158,6 +163,7 @@
                     android:gravity="left|center"
                     android:padding="8dp"
                     android:text="Total"
+                    android:textStyle="bold"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <TextView
@@ -167,6 +173,7 @@
                     android:layout_weight=".9"
                     android:gravity="right|center"
                     android:text="120000"
+                    android:textStyle="bold"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
             </LinearLayout>
 

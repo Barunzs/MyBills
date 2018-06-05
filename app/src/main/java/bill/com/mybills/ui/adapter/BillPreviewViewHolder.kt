@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import bill.com.mybills.R
 import bill.com.mybills.model.Item
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.listview_bill_item.view.*
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -18,5 +19,6 @@ internal class BillPreviewViewHolder(val parent: ViewGroup?) : RecyclerView.View
 		itemView.itemWeight?.text = df.format(billItem.weight)
 		itemView.goldAmt?.text = "₹ " + df.format(billItem.amtGold)
 		itemView.makingAmt?.text = "₹ " + df.format(billItem.makingCharge)
+		Picasso.with(itemView.context).load(billItem.itemUri).into(itemView.productUploadIcon)
 	}
 }

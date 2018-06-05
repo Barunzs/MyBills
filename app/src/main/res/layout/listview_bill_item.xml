@@ -28,9 +28,9 @@
             android:layout_marginTop="16dp"
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text="Particular of Ornament"
+            android:text="Ornament"
             app:layout_constraintBottom_toTopOf="@+id/view4"
-            app:layout_constraintLeft_toRightOf="@+id/activityIcon"
+            app:layout_constraintLeft_toRightOf="@+id/productUploadIcon"
             app:layout_constraintRight_toLeftOf="@+id/itemName"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Saving" />
@@ -42,10 +42,11 @@
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
             android:text="Ring"
+            android:textStyle="bold"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Yesterday 03:16 PM" />
+            tools:text="Gold Ring with diamonds and iii" />
 
         <View
             android:id="@+id/view4"
@@ -143,18 +144,19 @@
             app:layout_constraintVertical_bias="0.0"
             tools:text="Success" />
 
-        <ImageView
-            android:id="@+id/activityIcon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginEnd="8dp"
-            android:visibility="gone"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/productUploadIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="4dp"
+            android:visibility="visible"
+            android:background="@drawable/ic_filled_circle_light_grey"
+            android:src="@drawable/img_profile_picture_placeholder"
             app:layout_constraintBottom_toTopOf="@+id/view4"
             app:layout_constraintEnd_toStartOf="@+id/itemNameLabel"
-            app:layout_constraintHorizontal_bias="0.08"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/common_google_signin_btn_icon_dark_focused" />
+            app:srcCompat="@drawable/img_profile_picture_placeholder" />
 
 
     </android.support.constraint.ConstraintLayout>

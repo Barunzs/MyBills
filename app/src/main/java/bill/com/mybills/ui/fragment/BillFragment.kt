@@ -189,6 +189,7 @@ internal class BillFragment : Fragment() {
 			REQUEST_CAMERA -> {
 				if (resultCode == Activity.RESULT_OK) {
 					capturedImageFile.let {
+                        productIconProgressBar.visibility = View.VISIBLE
 						val optimizeGoalImage = optimizeGoalImage(it)
 						it.delete()
 						it.createNewFile()
@@ -201,9 +202,11 @@ internal class BillFragment : Fragment() {
 						val filePath = uri?.lastPathSegment?.let { it1 -> storageReference?.child(customerName + "/" + System.currentTimeMillis())?.child(it1) }
 						filePath?.putFile(uri)?.addOnFailureListener({
 							Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
+                            productIconProgressBar.visibility = View.GONE
 						})?.addOnSuccessListener({
 							Toast.makeText(context, "Upload Successfully", Toast.LENGTH_LONG).show()
-							uriFirebase = it.uploadSessionUri
+                            productIconProgressBar.visibility = View.GONE
+							uriFirebase = it.downloadUrl
 							Picasso.with(context).load(uriFirebase).into(image)
 						})
 					}
@@ -230,9 +233,7 @@ internal class BillFragment : Fragment() {
 
 	private fun generateBill(view: View) {
 		try {
-			val randomVal = (0..10).random()
-			Log.d(TAG, "randomVal::$randomVal")
-			val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString())
+			val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(),uriFirebase.toString())
 			val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst
 			val df = DecimalFormat("#.##")
 			df.roundingMode = RoundingMode.CEILING
