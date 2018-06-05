@@ -5,8 +5,11 @@ import android.os.Parcelable
 
 internal data class Item( var particulars: String, var weight: Double, var goldRate: Double,var amtGold: Double,var makingCharge: Double,var cgst:Double,var sgst:Double,var customerName:String) : Parcelable {
 
+	var itemUri: String = String()
 
-    constructor(parcel: Parcel) : this(
+
+
+	constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readDouble(),
             parcel.readDouble(),

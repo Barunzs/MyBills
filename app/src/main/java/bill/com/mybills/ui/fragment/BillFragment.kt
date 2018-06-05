@@ -2,7 +2,6 @@ package bill.com.mybills.ui.fragment
 
 import android.Manifest
 import android.app.Activity
-import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -56,6 +55,7 @@ internal class BillFragment : Fragment() {
 	private var storageReference: StorageReference? = null
 	private var auth: FirebaseAuth? = null
 	private lateinit var billItemList: ArrayList<String>
+	private  var uriFirebase: Uri? = null
 
 	companion object {
 		val TAG = BillFragment::class.java.simpleName
@@ -79,12 +79,12 @@ internal class BillFragment : Fragment() {
 		//creating new file path
 		appDAL = context?.let { AppDAL(it) }
 		initEventsListeners()
-		storageReference?.child("photos/product_image-1027272193.jpg")?.downloadUrl?.addOnFailureListener({
+		/*storageReference?.child("photos/product_image-1027272193.jpg")?.downloadUrl?.addOnFailureListener({
 			//Toast.makeText(context, "Error::" + it.localizedMessage, Toast.LENGTH_LONG).show()
 		})?.addOnSuccessListener({
 			//Toast.makeText(context, "Upload", Toast.LENGTH_LONG).show()
 			//Picasso.with(context).load(it).into(image)
-		})
+		})*/
 	}
 
 	private fun initEventsListeners() {
@@ -148,6 +148,10 @@ internal class BillFragment : Fragment() {
 	}
 
 	private fun startImageCapture() {
+		if (customerField.text.toString().isEmpty()) {
+			Toast.makeText(context, "Please enter Customer name before taking image", Toast.LENGTH_LONG).show()
+			return
+		}
 		capturedImageFile = File.createTempFile("product_image", ".jpg", context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
 		if (capturedImageFile.exists()) {
 			capturedImageFile.delete()
@@ -192,21 +196,15 @@ internal class BillFragment : Fragment() {
 						optimizeGoalImage.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
 						byteArrayOutputStream.flush()
 						byteArrayOutputStream.close()
-						//image.setImageBitmap(optimizeGoalImage)
-						//val stream = ByteArrayOutputStream();
-						//optimizeGoalImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
-						//val byteArray = stream.toByteArray();
-						//optimizeGoalImage.recycle();
-						//uploadImage(byteArray)
 						val uri = Uri.fromFile(capturedImageFile)
 						val customerName = customerField.text.toString()
 						val filePath = uri?.lastPathSegment?.let { it1 -> storageReference?.child(customerName + "/" + System.currentTimeMillis())?.child(it1) }
 						filePath?.putFile(uri)?.addOnFailureListener({
-							Toast.makeText(context, "Error::" + it.localizedMessage, Toast.LENGTH_LONG).show()
+							Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
 						})?.addOnSuccessListener({
-							Toast.makeText(context, "Upload", Toast.LENGTH_LONG).show()
-							val uri = it.uploadSessionUri
-							Picasso.with(context).load(uri).into(image)
+							Toast.makeText(context, "Upload Successfully", Toast.LENGTH_LONG).show()
+							uriFirebase = it.uploadSessionUri
+							Picasso.with(context).load(uriFirebase).into(image)
 						})
 					}
 				}
@@ -229,19 +227,6 @@ internal class BillFragment : Fragment() {
 		return BitmapFactory.decodeFile(imageFile.absolutePath, bmpOptions)
 	}
 
-	private fun uploadImage(bitmap: ByteArray) {
-		val progressDialog = ProgressDialog(context)
-		progressDialog.setTitle("Uploading...")
-		progressDialog.show()
-		val uploadTask = storageReference?.putBytes(bitmap)
-		uploadTask?.addOnFailureListener({
-			progressDialog.hide()
-			Toast.makeText(context, "Error::" + it.localizedMessage, Toast.LENGTH_LONG).show()
-		})?.addOnSuccessListener({
-			progressDialog.hide()
-			Toast.makeText(context, "Upload", Toast.LENGTH_LONG).show()
-		})
-	}
 
 	private fun generateBill(view: View) {
 		try {

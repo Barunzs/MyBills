@@ -2,6 +2,7 @@ package bill.com.mybills.ui.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import bill.com.mybills.R
@@ -34,11 +35,18 @@ internal class MyProfileFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		storageReference?.child("photos/akash.jpg")?.downloadUrl?.addOnFailureListener({
-			Toast.makeText(context, "Error::" + it.localizedMessage, Toast.LENGTH_LONG).show()
-			profilePictureUpdateProgressBar.visibility = View.GONE
+			Log.d(MyProfileFragment.TAG, "OnFailureListener")
+			if (isVisible) {
+				Toast.makeText(context, "Error::" + it.localizedMessage, Toast.LENGTH_LONG).show()
+				profilePictureUpdateProgressBar.visibility = View.GONE
+			}
 		})?.addOnSuccessListener({
-			profilePictureUpdateProgressBar.visibility = View.GONE
-			Picasso.with(context).load(it).into(profilePictureImageView)
+			Log.d(MyProfileFragment.TAG, "OnSuccessListener")
+			if (isVisible) {
+				profilePictureUpdateProgressBar.visibility = View.GONE
+				Picasso.with(context).load(it).into(profilePictureImageView)
+			}
+
 		})
 	}
 
