@@ -199,9 +199,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
-        if (id == R.id.action_addnext) {
-            addNewItem();
-        }
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }

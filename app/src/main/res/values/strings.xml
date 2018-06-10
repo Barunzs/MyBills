@@ -21,4 +21,5 @@
     <string name="hint_enter_number">Enter number here</string>
     <string name="default_country_code">+91</string>
     <string name="label_emailAddress">Enter your email address</string>
+    <string name="ok">OK</string>
 </resources>

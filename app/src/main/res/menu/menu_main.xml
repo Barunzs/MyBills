@@ -7,9 +7,9 @@
         android:orderInCategory="1"
         android:title="@string/action_preview"
         app:showAsAction="never" />
-    <item
+   <!-- <item
         android:id="@+id/action_addnext"
         android:orderInCategory="2"
         android:title="@string/action_add"
-        app:showAsAction="never" />
+        app:showAsAction="never" />-->
 </menu>

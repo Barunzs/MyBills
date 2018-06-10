@@ -59,7 +59,6 @@ class BillPreviewActivity : AppCompatActivity() {
 			cgst += item.cgst
 			sgst += item.sgst
 		}
-
 		totalAmount.text = "₹ " + df.format(totalAmt)
 		sgstAmt.text = "₹ " + df.format(sgst)
 		cgstAmt.text = "₹ " + df.format(cgst)
