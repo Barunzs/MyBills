@@ -1,4 +1,4 @@
-package bill.com.mybills
+package bill.com.mybills.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
-import bill.com.mybills.ui.activity.MainActivity
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth

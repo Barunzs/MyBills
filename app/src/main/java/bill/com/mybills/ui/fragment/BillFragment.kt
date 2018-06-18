@@ -2,11 +2,9 @@ package bill.com.mybills.ui.fragment
 
 import android.Manifest
 import android.app.Activity
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -30,10 +28,7 @@ import bill.com.mybills.BuildConfig
 import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
 import bill.com.mybills.model.Item
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -46,7 +41,6 @@ import java.io.FileOutputStream
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.util.*
-import java.util.concurrent.ThreadLocalRandom
 import kotlin.collections.HashMap
 
 
@@ -287,7 +281,7 @@ internal class BillFragment : Fragment() {
         builder?.setPositiveButton("YES") { dialog, which ->
             val items = HashMap<String, Any>()
             items.put(item.customerName,"Hello")
-            db?.collection(item.customerName)?.document("Ingrediants")?.set(items)?.addOnSuccessListener {
+            db?.collection("Akash")?.document(item.customerName)?.set(items)?.addOnSuccessListener {
                 void: Void? ->
                 Toast.makeText(context,"Sucess",Toast.LENGTH_LONG).show()
 

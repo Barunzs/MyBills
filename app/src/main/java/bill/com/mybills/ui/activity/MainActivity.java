@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import bill.com.mybills.LoginActivity;
 import bill.com.mybills.R;
 import bill.com.mybills.config.AppDAL;
 import bill.com.mybills.model.Item;

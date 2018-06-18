@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.support.v7.app.AppCompatActivity
-import bill.com.mybills.LoginActivity
 import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
 import com.google.firebase.auth.FirebaseAuth
