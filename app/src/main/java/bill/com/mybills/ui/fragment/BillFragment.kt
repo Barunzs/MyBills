@@ -30,7 +30,11 @@ import bill.com.mybills.BuildConfig
 import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
 import bill.com.mybills.model.Item
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.gson.Gson
@@ -43,6 +47,7 @@ import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
+import kotlin.collections.HashMap
 
 
 internal class BillFragment : Fragment() {
@@ -60,6 +65,8 @@ internal class BillFragment : Fragment() {
     private var auth: FirebaseAuth? = null
     private lateinit var billItemList: ArrayList<String>
     private var uriFirebase: Uri? = null
+    private var db: FirebaseFirestore? = null
+
 
     companion object {
         val TAG = BillFragment::class.java.simpleName
@@ -72,6 +79,8 @@ internal class BillFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         storageReference = storage?.reference
         billItemList = ArrayList()
+        db = FirebaseFirestore.getInstance()
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -254,7 +263,7 @@ internal class BillFragment : Fragment() {
             }
             val jsonItemArraylist = gson.toJson(billItemList)
             appDAL?.billItemJson = jsonItemArraylist
-            timer(2000, 1000).start()
+            timer(2000, 1000,item).start()
         } catch (e: NumberFormatException) {
             view?.let {
                 Snackbar.make(it, "Please Enter all Fields", Snackbar.LENGTH_LONG)
@@ -271,11 +280,21 @@ internal class BillFragment : Fragment() {
 
     }
 
-    private fun showalert() {
+    private fun showalert(item:Item) {
         val builder = context?.let { context?.let { it1 -> AlertDialog.Builder(it1, R.style.MyDialogTheme) } }
         builder?.setTitle("Generate Bill")
         builder?.setMessage("Do you want add ${particular.text} to Bill?")
         builder?.setPositiveButton("YES") { dialog, which ->
+            val items = HashMap<String, Any>()
+            items.put(item.customerName,"Hello")
+            db?.collection(item.customerName)?.document("Ingrediants")?.set(items)?.addOnSuccessListener {
+                void: Void? ->
+                Toast.makeText(context,"Sucess",Toast.LENGTH_LONG).show()
+
+            }?.addOnFailureListener {
+                exception: java.lang.Exception ->
+                Toast.makeText(context,"Failure",Toast.LENGTH_LONG).show()
+            }
             addNewItem()
         }
         builder?.setNegativeButton("No") { dialog, which ->
@@ -284,13 +303,13 @@ internal class BillFragment : Fragment() {
         dialog?.show()
     }
 
-    private fun timer(millisInFuture: Long, countDownInterval: Long): CountDownTimer {
+    private fun timer(millisInFuture: Long, countDownInterval: Long,item:Item): CountDownTimer {
         return object : CountDownTimer(millisInFuture, countDownInterval) {
             override fun onTick(millisUntilFinished: Long) {
             }
 
             override fun onFinish() {
-                showalert()
+                showalert(item)
             }
         }
     }
