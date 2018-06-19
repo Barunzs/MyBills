@@ -229,7 +229,6 @@
                     android:clickable="false"
                     android:contextClickable="false"
                     android:ems="10"
-                    android:focusable="false"
                     android:hint="@string/label_emailAddress"
                     android:inputType="text"
                     android:paddingBottom="16dp" />
@@ -259,8 +258,6 @@
                     android:layout_height="wrap_content"
                     android:clickable="false"
                     android:ems="10"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:inputType="phone"
                     android:paddingBottom="16dp"
                     android:text="+91" />
@@ -290,8 +287,6 @@
                     android:layout_height="wrap_content"
                     android:clickable="false"
                     android:ems="10"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:inputType="text"
                     android:paddingBottom="16dp"
                     />
@@ -320,8 +315,6 @@
                     android:layout_height="wrap_content"
                     android:clickable="false"
                     android:ems="10"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:inputType="text"
                     android:paddingBottom="16dp"
                     />
@@ -350,8 +343,6 @@
                     android:layout_height="wrap_content"
                     android:clickable="false"
                     android:ems="10"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:inputType="text"
                     android:paddingBottom="16dp"
                     />
@@ -360,12 +351,13 @@
 
             <Button
                 android:id="@+id/updateprofileButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16dp"
                 android:layout_marginTop="16dp"
-                android:onClick="onClickUpdateGoalButton"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:text="Update"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -373,6 +365,4 @@
 
         </LinearLayout>
     </ScrollView>
-
-
 </android.support.constraint.ConstraintLayout>
