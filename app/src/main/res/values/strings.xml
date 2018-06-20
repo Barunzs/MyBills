@@ -12,7 +12,7 @@
     <string name="profiletransition">profiletransition</string>
     <string name="scan">Scan</string>
     <string name="header">Anushka Jewellers</string>
-    <string name="label_first_name">First Name</string>
+    <string name="label_first_name">Name</string>
     <string name="label_last_name">Last Name</string>
     <string name="label_mobile_number">Mobile Number</string>
     <string name="hint_enter_first_name">Enter your first name</string>
