@@ -2,19 +2,20 @@ package bill.com.mybills.ui.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.*
-import android.widget.Toast
 import bill.com.mybills.R
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_myprofile.*
 
+
 internal class MyProfileFragment : Fragment() {
 
 	private var storage: FirebaseStorage? = null
 	private var storageReference: StorageReference? = null
+	private var auth: FirebaseAuth? = null
 
 	companion object {
 		val TAG = MyProfileFragment::class.java.simpleName
@@ -25,6 +26,7 @@ internal class MyProfileFragment : Fragment() {
 		setHasOptionsMenu(true)
 		storage = FirebaseStorage.getInstance()
 		storageReference = storage?.reference
+		auth = FirebaseAuth.getInstance()
 
 	}
 
@@ -34,20 +36,31 @@ internal class MyProfileFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		storageReference?.child("photos/akash.jpg")?.downloadUrl?.addOnFailureListener({
+		/*storageReference?.child("photos/akash.jpg")?.downloadUrl?.addOnFailureListener {
 			Log.d(MyProfileFragment.TAG, "OnFailureListener")
 			if (isVisible) {
 				Toast.makeText(context, "Error::" + it.localizedMessage, Toast.LENGTH_LONG).show()
 				profilePictureUpdateProgressBar.visibility = View.GONE
 			}
-		})?.addOnSuccessListener({
+		}?.addOnSuccessListener {
 			Log.d(MyProfileFragment.TAG, "OnSuccessListener")
 			if (isVisible) {
 				profilePictureUpdateProgressBar.visibility = View.GONE
 				Picasso.with(context).load(it).into(profilePictureImageView)
 			}
 
-		})
+		}*/
+		val user = FirebaseAuth.getInstance().currentUser
+		if (user != null) {
+			// Name, email address, and profile photo Url
+			val name = user.displayName
+			val email = user.email
+			val photoUrl = user.photoUrl
+			profilePictureUpdateProgressBar.visibility = View.GONE
+			Picasso.with(context).load(photoUrl).into(profilePictureImageView)
+			fullNameTextView.setText(name)
+
+		}
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

@@ -80,6 +80,7 @@ internal class EditProfileFragment : Fragment() {
 	}
 
 	private fun onClickScanButton(view: View) {
+
 		val profileUpdates = UserProfileChangeRequest.Builder()
 				.setDisplayName(firstNameEditText.text.toString())
 				.setPhotoUri(uriFirebase)
@@ -91,15 +92,6 @@ internal class EditProfileFragment : Fragment() {
 						Log.d(TAG, "User profile updated.")
 					}
 				}
-		// [END update_profile]
-
-		/*val permissionCheck = context?.let { ContextCompat.checkSelfPermission(it, Manifest.permission.CALL_PHONE)}
-	if(permissionCheck!= PackageManager.PERMISSION_GRANTED) {
-		activity?.let{ActivityCompat.requestPermissions(it,arrayOf(Manifest.permission.CALL_PHONE),2)}
-	}else{
-		val intent=Intent(Intent.ACTION_CALL, Uri.parse("tel:"+"333,333"))
-		startActivity(intent)
-	}*/
 
 	}
 
@@ -161,7 +153,6 @@ internal class EditProfileFragment : Fragment() {
 						byteArrayOutputStream.close()
 						val uri = Uri.fromFile(capturedImageFile)
 						user = FirebaseAuth.getInstance().currentUser
-						Log.d(TAG, "uid::${user?.uid}")
 						val filePath = uri?.lastPathSegment?.let { it1 -> storageReference?.child(user?.uid + "/" + System.currentTimeMillis())?.child(it1) }
 						filePath?.putFile(uri)?.addOnFailureListener {
 							Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()

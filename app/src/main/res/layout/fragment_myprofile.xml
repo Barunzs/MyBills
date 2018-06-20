@@ -73,7 +73,6 @@
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="8dp"
                     android:gravity="center_horizontal"
-                    android:text="Akash Prasad"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="?android:attr/textColorPrimary"
