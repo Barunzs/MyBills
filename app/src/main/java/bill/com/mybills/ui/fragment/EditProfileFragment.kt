@@ -131,6 +131,7 @@ internal class EditProfileFragment : Fragment() {
 		}
 		val profileUpdates = UserProfileChangeRequest.Builder()
 				.setDisplayName(firstNameEditText.text.toString())
+				.setPhotoUri(uriFirebase)
 				.build()
 		updateUserProfile(profileUpdates)
 	}
@@ -222,10 +223,6 @@ internal class EditProfileFragment : Fragment() {
 							Toast.makeText(context, "Upload Successfully", Toast.LENGTH_LONG).show()
 							profilePictureUpdateProgressBar.visibility = View.GONE
 							uriFirebase = it.downloadUrl
-							val profileUpdates = UserProfileChangeRequest.Builder()
-									.setPhotoUri(uriFirebase)
-									.build()
-							updateUserProfile(profileUpdates)
 							Picasso.with(context).load(uriFirebase).into(editProfileImage)
 						}
 					}
