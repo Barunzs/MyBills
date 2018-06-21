@@ -160,7 +160,6 @@ class LoginActivity : AppCompatActivity() {
 			input_password.error = "Password may not be empty"
 			return
 		}
-		//startPhoneNumberVerification(input_phone.text.toString())
 		signin.visibility = View.VISIBLE
 		performLoginOrAccountCreation(input_email.text.toString(), input_password.text.toString())
 	}
