@@ -193,10 +193,10 @@ class LoginActivity : AppCompatActivity() {
 
 	private fun performLogin(email: String, password: String) {
 		mAuth?.signInWithEmailAndPassword(email, password)
-				?.addOnCompleteListener(this, { task ->
+				?.addOnCompleteListener(this) { task ->
 					if (task.isSuccessful) {
 						val user = task.result.user
-                        Log.d(TAG,"name::"+user.displayName)
+						Log.d(TAG,"name::"+user.displayName)
 						val intent = Intent(applicationContext, MainActivity::class.java)
 						startActivity(intent)
 						finish()
@@ -206,7 +206,7 @@ class LoginActivity : AppCompatActivity() {
 								Toast.LENGTH_SHORT).show()
 					}
 					signin.visibility = View.GONE
-				})
+				}
 	}
 
 }

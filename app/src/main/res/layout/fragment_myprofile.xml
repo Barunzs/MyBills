@@ -177,7 +177,6 @@
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="8dp"
                     android:gravity="center_horizontal"
-                    android:text="Anuskha Jewellers"
                     android:textAlignment="center"
                     android:textAllCaps="true"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -197,7 +196,6 @@
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="8dp"
                     android:gravity="center_horizontal"
-                    android:text="Balajee Complex Campasari More Siliguri- 734003"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -214,7 +212,6 @@
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="32dp"
                     android:gravity="center_horizontal"
-                    android:text="GSTIN: 19AFLPP9130J1ZW"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:visibility="visible"
@@ -225,6 +222,27 @@
                     app:layout_constraintTop_toBottomOf="@+id/businessNumberTextView"
                     tools:text="example@abc.com"
                     tools:visibility="visible" />
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/businessViewProgressBar"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:lottie_autoPlay="true"
+                    app:lottie_cacheStrategy="none"
+                    app:lottie_fileName="Spinner.json"
+                    app:lottie_loop="true"
+                    tools:visibility="visible"/>
 
             </android.support.constraint.ConstraintLayout>
 
