@@ -201,15 +201,15 @@ internal class BillFragment : Fragment() {
                         val uri = Uri.fromFile(capturedImageFile)
                         val customerName = customerField.text.toString()
                         val filePath = uri?.lastPathSegment?.let { it1 -> storageReference?.child(customerName + "/" + System.currentTimeMillis())?.child(it1) }
-                        filePath?.putFile(uri)?.addOnFailureListener({
+                        filePath?.putFile(uri)?.addOnFailureListener {
                             Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
                             productIconProgressBar.visibility = View.GONE
-                        })?.addOnSuccessListener({
+                        }?.addOnSuccessListener {
                             Toast.makeText(context, "Upload Successfully", Toast.LENGTH_LONG).show()
                             productIconProgressBar.visibility = View.GONE
                             uriFirebase = it.downloadUrl
                             Picasso.with(context).load(uriFirebase).into(image)
-                        })
+                        }
                     }
                 }
             }

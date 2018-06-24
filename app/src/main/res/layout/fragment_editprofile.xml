@@ -41,6 +41,7 @@
                     android:layout_height="100dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
+                    android:background="@drawable/ic_filled_circle_light_grey"
                     android:src="@drawable/img_profile_picture_placeholder"
                     app:layout_constraintEnd_toEndOf="@+id/editLogo"
                     app:layout_constraintHorizontal_bias=".1"
@@ -62,6 +63,7 @@
                     android:layout_height="100dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
+                    android:background="@drawable/ic_filled_circle_light_grey"
                     android:src="@drawable/img_profile_picture_placeholder"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias=".9"
@@ -83,7 +85,7 @@
                     tools:visibility="visible" />
 
                 <ImageButton
-                    android:id="@+id/changelogoPictureButton"
+                    android:id="@+id/changeBusinesslogoPictureButton"
                     style="@style/Widget.AppCompat.ImageButton"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
@@ -248,4 +250,25 @@
 
         </LinearLayout>
     </ScrollView>
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/progressbarUpdateprofile"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:adjustViewBounds="true"
+        android:cropToPadding="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_cacheStrategy="none"
+        app:lottie_fileName="Spinner.json"
+        app:lottie_loop="true"
+        tools:visibility="visible"/>
 </android.support.constraint.ConstraintLayout>

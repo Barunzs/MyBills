@@ -3,6 +3,7 @@ package bill.com.mybills.ui.fragment
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
+import android.widget.Toast
 import bill.com.mybills.R
 import bill.com.mybills.model.BusinessProfile
 import com.google.firebase.auth.FirebaseAuth
@@ -20,7 +21,7 @@ internal class MyProfileFragment : Fragment() {
     private var storage: FirebaseStorage? = null
     private var storageReference: StorageReference? = null
     private var auth: FirebaseAuth? = null
-    private var docRef: DocumentReference?  = null
+    private var docRef: DocumentReference? = null
     private var user: FirebaseUser? = null
     private var db: FirebaseFirestore? = null
 
@@ -55,16 +56,21 @@ internal class MyProfileFragment : Fragment() {
             Picasso.with(context).load(photoUrl).into(profilePictureImageView)
             fullNameTextView.text = name
         }
-
         docRef?.get()?.addOnSuccessListener { documentSnapshot ->
-            val businessProfile = documentSnapshot.toObject(BusinessProfile::class.java)
-            if(businessProfile!=null){
-                businessViewProgressBar.visibility = View.GONE
+            if (documentSnapshot.exists()) {
+                val businessProfile = documentSnapshot.toObject(BusinessProfile::class.java)
                 BusinessNameTextView.text = businessProfile.orgName
                 businessNumberTextView.text = businessProfile.address
                 businessGst.text = businessProfile.gstIN
-
+            }else{
+                Toast.makeText(context,"No Profile Data Found",Toast.LENGTH_LONG).show()
             }
+            businessViewProgressBar.visibility = View.GONE
+        }
+        storageReference?.child(user?.uid + "/businessLogo/businessLogo_image")?.downloadUrl?.addOnFailureListener {
+            Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
+        }?.addOnSuccessListener {
+            Picasso.with(context).load(it).into(businessPictureImageView)
         }
     }
 

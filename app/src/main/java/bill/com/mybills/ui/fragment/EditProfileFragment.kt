@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.support.annotation.NonNull
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.FileProvider
@@ -30,6 +31,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_editprofile.*
 import java.io.File
 import java.io.FileOutputStream
+import java.net.URI
 
 
 internal class EditProfileFragment : Fragment() {
@@ -45,6 +47,7 @@ internal class EditProfileFragment : Fragment() {
     private val REQUEST_IMAGE_BROWSER = 1
     private var user: FirebaseUser? = null
     private var docRef: DocumentReference? = null
+    private var businessLogoURI: Uri? = null
 
 
     companion object {
@@ -61,7 +64,6 @@ internal class EditProfileFragment : Fragment() {
         db = FirebaseFirestore.getInstance()
         user = FirebaseAuth.getInstance().currentUser
         docRef = user?.uid?.let { db?.collection(it)?.document("Business Profile") }
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -75,15 +77,28 @@ internal class EditProfileFragment : Fragment() {
             firstNameEditText.setText(user?.displayName)
             profilePictureUpdateProgressBar.visibility = View.GONE
         }
+
         docRef?.get()?.addOnSuccessListener { documentSnapshot ->
-            val businessProfile = documentSnapshot.toObject(BusinessProfile::class.java)
-            if (businessProfile != null) {
+            if (documentSnapshot.exists()) {
+                val businessProfile = documentSnapshot.toObject(BusinessProfile::class.java)
                 mobileNo.setText(businessProfile.phone)
                 shopName.setText(businessProfile.orgName)
                 gstin.setText(businessProfile.gstIN)
                 address.setText(businessProfile.address)
+                storageReference?.child(user?.uid + "/businessLogo/businessLogo_image")?.downloadUrl?.addOnFailureListener {
+                    Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
+                    businessPictureUpdateProgressBar.visibility = View.GONE
+                }?.addOnSuccessListener {
+                    Picasso.with(context).load(it).into(editLogo)
+                    businessPictureUpdateProgressBar.visibility = View.GONE
+                }
+
+            } else {
+                Toast.makeText(context, "No Profile Data Found", Toast.LENGTH_LONG).show()
             }
         }
+
+
         initEventListeners()
     }
 
@@ -95,7 +110,18 @@ internal class EditProfileFragment : Fragment() {
 
     private fun initEventListeners() {
         updateprofileButton?.setOnClickListener { onClickScanButton(it) }
-        changeProfilePictureButton.setOnClickListener { takeProfileImage(it) }
+        changeProfilePictureButton.setOnClickListener { uploadProfileImage(it) }
+        changeBusinesslogoPictureButton.setOnClickListener { uploadBusinessLogo(it) }
+    }
+
+    private fun uploadBusinessLogo(view: View) {
+        if (context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.CAMERA) } == PermissionChecker.PERMISSION_DENIED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(arrayOf(Manifest.permission.CAMERA), REQUEST_PERMISSION_CAMERA)
+            }
+        } else {
+            takeImage(true)
+        }
     }
 
     private fun onClickScanButton(view: View) {
@@ -130,6 +156,7 @@ internal class EditProfileFragment : Fragment() {
             address.error = "Shop Address cannot be empty"
             return
         }
+        progressbarUpdateprofile.visibility = View.VISIBLE
         val profileUpdates = UserProfileChangeRequest.Builder()
                 .setDisplayName(firstNameEditText.text.toString())
                 .build()
@@ -140,7 +167,7 @@ internal class EditProfileFragment : Fragment() {
         user?.updateProfile(profileUpdates)
                 ?.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        val businessProfile = BusinessProfile(mobileNo.text.toString(), shopName.text.toString(), gstin.text.toString(), address.text.toString())
+                        val businessProfile = BusinessProfile(mobileNo.text.toString(), shopName.text.toString(), gstin.text.toString(), address.text.toString(), null)
                         user?.uid?.let {
                             db?.collection(it)?.document("Business Profile")?.set(businessProfile)?.addOnSuccessListener { void: Void? ->
                                 Toast.makeText(context, "Success", Toast.LENGTH_LONG).show()
@@ -155,28 +182,41 @@ internal class EditProfileFragment : Fragment() {
                     } else {
                         Toast.makeText(context, "Error Try Again", Toast.LENGTH_LONG).show()
                     }
+                    progressbarUpdateprofile.visibility = View.GONE
                 }
     }
 
-    private fun takeProfileImage(view: View) {
+    private fun uploadProfileImage(view: View) {
         if (context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.CAMERA) } == PermissionChecker.PERMISSION_DENIED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(arrayOf(Manifest.permission.CAMERA), REQUEST_PERMISSION_CAMERA)
             }
         } else {
-            profileImageCapture()
+            takeImage(false)
         }
     }
 
-    private fun profileImageCapture() {
-        capturedImageFile = File.createTempFile("user_image", ".jpg", context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
+    private fun takeImage(isBusinessLogo: Boolean) {
+        if (isBusinessLogo) {
+            //capturedImageFile = File.createTempFile("businessLogo_image", ".jpg", context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
+            capturedImageFile = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "businessLogo_image")
+        } else {
+            capturedImageFile = File.createTempFile("user_image", ".jpg", context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
+        }
         if (capturedImageFile.exists()) {
             capturedImageFile.delete()
         }
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, context?.let { FileProvider.getUriForFile(it, BuildConfig.APPLICATION_ID + ".fileprovider", capturedImageFile) })
-        if (intent.resolveActivity(context?.packageManager) != null) {
-            startActivityForResult(intent, REQUEST_CAMERA)
+        if (isBusinessLogo) {
+            businessPictureUpdateProgressBar.visibility = View.VISIBLE
+            val i = Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            startActivityForResult(i, REQUEST_IMAGE_BROWSER)
+        } else {
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            if (intent.resolveActivity(context?.packageManager) != null) {
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, context?.let { FileProvider.getUriForFile(it, BuildConfig.APPLICATION_ID + ".fileprovider", capturedImageFile) })
+                startActivityForResult(intent, REQUEST_CAMERA)
+            }
         }
     }
 
@@ -200,6 +240,20 @@ internal class EditProfileFragment : Fragment() {
                         optimizeGoalImage.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
                         byteArrayOutputStream.flush()
                         byteArrayOutputStream.close()
+                        val uri = Uri.fromFile(capturedImageFile)
+                        var filePath: StorageReference?
+                        filePath = uri?.lastPathSegment?.let { it1 -> storageReference?.child(user?.uid + "/" + "businessLogo")?.child(it1) }
+                        filePath?.putFile(uri)?.addOnFailureListener {
+                            Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
+                            businessPictureUpdateProgressBar.visibility = View.GONE
+                        }?.addOnSuccessListener {
+                            businessLogoURI = Uri.EMPTY
+                            businessLogoURI = it.downloadUrl
+                            businessPictureUpdateProgressBar.visibility = View.GONE
+                            Picasso.with(context).load(it.downloadUrl).into(editLogo)
+
+                        }
+
                     }
                 }
             }
@@ -215,11 +269,13 @@ internal class EditProfileFragment : Fragment() {
                         byteArrayOutputStream.flush()
                         byteArrayOutputStream.close()
                         val uri = Uri.fromFile(capturedImageFile)
-                        val filePath = uri?.lastPathSegment?.let { it1 -> storageReference?.child(user?.uid + "/" + "profileImage")?.child(it1) }
+                        val filePath: StorageReference?
+                        filePath = uri?.lastPathSegment?.let { it1 -> storageReference?.child(user?.uid + "/" + "profileImage")?.child(it1) }
                         filePath?.putFile(uri)?.addOnFailureListener {
                             Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
                             profilePictureUpdateProgressBar.visibility = View.GONE
                         }?.addOnSuccessListener {
+                            uriFirebase = Uri.EMPTY
                             uriFirebase = it.downloadUrl
                             val profileUpdates = UserProfileChangeRequest.Builder()
                                     .setDisplayName(firstNameEditText.text.toString())

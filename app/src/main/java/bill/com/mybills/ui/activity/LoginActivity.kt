@@ -152,12 +152,12 @@ class LoginActivity : AppCompatActivity() {
 
 		if (input_email.text.isEmpty()) {
 			input_email.requestFocus()
-			input_email.error = "Email may not be empty"
+			input_email.error = "Email cannot be empty"
 			return
 		}
 		if (input_password.text.isEmpty()) {
 			input_password.requestFocus()
-			input_password.error = "Password may not be empty"
+			input_password.error = "Password cannot be empty"
 			return
 		}
 		signin.visibility = View.VISIBLE

@@ -1,13 +1,24 @@
 package bill.com.mybills.model;
 
+import android.net.Uri;
+
 import java.io.Serializable;
 
-public class BusinessProfile implements Serializable{
+public class BusinessProfile implements Serializable {
 
     public String phone;
     public String orgName;
     public String gstIN;
     public String address;
+    public Uri businessLogoURI;
+
+    public Uri getBusinessLogoURI() {
+        return businessLogoURI;
+    }
+
+    public void setBusinessLogoURI(Uri businessLogoURI) {
+        this.businessLogoURI = businessLogoURI;
+    }
 
     public String getPhone() {
         return phone;
@@ -41,18 +52,17 @@ public class BusinessProfile implements Serializable{
         this.address = address;
     }
 
-    public BusinessProfile(){
+    public BusinessProfile() {
 
     }
 
 
-    public BusinessProfile(String phone,String orgName,String gstIN,String address){
+    public BusinessProfile(String phone, String orgName, String gstIN, String address,Uri URI) {
         this.phone = phone;
         this.orgName = orgName;
         this.gstIN = gstIN;
         this.address = address;
-
-
+        this.businessLogoURI = URI;
     }
 
 }
