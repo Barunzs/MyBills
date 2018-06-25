@@ -10,7 +10,16 @@ public class BusinessProfile implements Serializable {
     public String orgName;
     public String gstIN;
     public String address;
-    public Uri businessLogoURI;
+    private Uri businessLogoURI;
+    private String pincode;
+
+    public String getPincode() {
+        return pincode;
+    }
+
+    public void setPincode(String pincode) {
+        this.pincode = pincode;
+    }
 
     public Uri getBusinessLogoURI() {
         return businessLogoURI;
@@ -57,12 +66,13 @@ public class BusinessProfile implements Serializable {
     }
 
 
-    public BusinessProfile(String phone, String orgName, String gstIN, String address,Uri URI) {
+    public BusinessProfile(String phone, String orgName, String gstIN, String address,Uri URI,String pincode) {
         this.phone = phone;
         this.orgName = orgName;
         this.gstIN = gstIN;
         this.address = address;
         this.businessLogoURI = URI;
+        this.pincode = pincode;
     }
 
 }

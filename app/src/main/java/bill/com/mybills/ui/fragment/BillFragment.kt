@@ -41,7 +41,6 @@ import java.io.FileOutputStream
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.util.*
-import kotlin.collections.HashMap
 
 
 internal class BillFragment : Fragment() {
@@ -279,7 +278,7 @@ internal class BillFragment : Fragment() {
         builder?.setTitle("Generate Bill")
         builder?.setMessage("Do you want add ${particular.text} to Bill?")
         builder?.setPositiveButton("YES") { dialog, which ->
-            val items = HashMap<String, Any>()
+            /*val items = HashMap<String, Any>()
             items.put(item.customerName,"Hello")
             db?.collection("Akash")?.document(item.customerName)?.set(items)?.addOnSuccessListener {
                 void: Void? ->
@@ -288,7 +287,7 @@ internal class BillFragment : Fragment() {
             }?.addOnFailureListener {
                 exception: java.lang.Exception ->
                 Toast.makeText(context,"Failure",Toast.LENGTH_LONG).show()
-            }
+            }*/
             addNewItem()
         }
         builder?.setNegativeButton("No") { dialog, which ->

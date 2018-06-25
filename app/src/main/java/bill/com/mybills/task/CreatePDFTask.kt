@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat
 import android.view.View
 import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
+import bill.com.mybills.model.BusinessProfile
 import bill.com.mybills.model.Item
 import com.airbnb.lottie.LottieAnimationView
 import com.itextpdf.text.*
@@ -26,7 +27,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-internal class CreatePDFTask(context: Context?, var file: File, var billItemList: ArrayList<Item>, var progress: LottieAnimationView) : AsyncTask<String, Void, String>() {
+internal class CreatePDFTask(context: Context?, var file: File, var billItemList: ArrayList<Item>, var progress: LottieAnimationView,var businessProfile : BusinessProfile) : AsyncTask<String, Void, String>() {
 
     private var cell: PdfPCell? = null
     private var bgImage: Image? = null
@@ -80,17 +81,17 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
                     "UniCNS-UCS2-H", BaseFont.NOT_EMBEDDED)
             f1.color = BaseColor.WHITE
             selector.addFont(f1)
-            var ph = selector.process("ANUSHKA JEWELLERS")
+            var ph = selector.process(businessProfile.orgName)
             cell?.addElement(ph)
-            ph = selector.process("BALAJI COMPLEX CHAMPASARI MORE")
+            ph = selector.process(businessProfile.address)
             cell?.addElement(ph)
-            ph = selector.process("SILIGURI-734003")
-            cell?.addElement(ph)
-            ph = selector.process("")
+            ph = selector.process("Pin-"+businessProfile.pincode)
             cell?.addElement(ph)
             ph = selector.process("")
             cell?.addElement(ph)
-            ph = selector.process("GSTIN: 19AFLPP9130J1ZW")
+            ph = selector.process("")
+            cell?.addElement(ph)
+            ph = selector.process(businessProfile.gstIN)
             cell?.addElement(ph)
             ph = selector.process("")
             cell?.addElement(ph)
