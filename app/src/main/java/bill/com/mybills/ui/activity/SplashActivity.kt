@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : AppCompatActivity() {
 	private var countdownTimer: CountDownTimer? = null
-	private val appDAL get() = AppDAL(applicationContext)
+	//private val appDAL get() = AppDAL(applicationContext)
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_splash)

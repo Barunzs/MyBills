@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ANUSHKA JEWELL</string>
+    <string name="app_name">M.B Jewellers &amp; Sons</string>
     <string name="action_share">Share</string>
     <string name="title_userAccount">Profile</string>
     <string name="action_preview">Preview</string>
@@ -22,4 +22,7 @@
     <string name="default_country_code">+91</string>
     <string name="label_emailAddress">Enter your email address</string>
     <string name="ok">OK</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="enter_pin_code">Enter Pin Code</string>
+    <string name="login">Login</string>
 </resources>
