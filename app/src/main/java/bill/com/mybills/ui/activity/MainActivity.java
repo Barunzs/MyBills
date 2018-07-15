@@ -190,11 +190,11 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_preview) {
-            Bundle bundle = new Bundle();
-            ArrayList billItemListObj  = getBillItemList();
-            bundle.putParcelableArrayList("billItemList", billItemListObj);
+            //Bundle bundle = new Bundle();
+            //ArrayList billItemListObj  = getBillItemList();
+            //bundle.putParcelableArrayList("billItemList", billItemListObj);
             Intent intent = new Intent(getApplicationContext(), BillPreviewActivity.class);
-            intent.putExtras(bundle);
+            //intent.putExtras(bundle);
             startActivity(intent);
             return true;
         }
@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
     }
 
-    private ArrayList<Item> getBillItemList(){
+    private ArrayList getBillItemList(){
         String itemListJsonDB = appDAL.getBillItemJson();
         Type type = new TypeToken<ArrayList<String>>() {
         }.getType();

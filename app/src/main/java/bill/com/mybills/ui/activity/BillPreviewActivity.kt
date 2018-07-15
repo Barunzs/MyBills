@@ -17,6 +17,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_preview.*
 import java.io.File
 import java.io.IOException
@@ -43,7 +45,8 @@ class BillPreviewActivity : AppCompatActivity() {
 		user = FirebaseAuth.getInstance().currentUser
 		docRef = user?.uid?.let { db?.collection(it)?.document("Business Profile") }
 		try {
-			billItemList = this.intent.extras.getParcelableArrayList("billItemList")
+			//billItemList = this.intent.extras.getParcelableArrayList("billItemList")
+            billItemList = getBillItemList() as ArrayList<Item>
 			if (billItemList.size > 0) {
 				customer.text = billItemList[0].customerName
 				billPreviewAdapter = BillPreviewAdapter()
@@ -106,5 +109,25 @@ class BillPreviewActivity : AppCompatActivity() {
 			sendBill.visibility = View.VISIBLE
 	}
 
+    private fun getBillItemList(): java.util.ArrayList<*> {
+        val itemListJsonDB = appDAL?.billItemJson
+        val type = object : TypeToken<java.util.ArrayList<String>>() {
+
+        }.type
+        val gson = Gson()
+        val billItemListJson = gson.fromJson<java.util.ArrayList<String>>(itemListJsonDB, type)
+        val billItemListObj = java.util.ArrayList<Item>()
+        if (billItemListJson != null && billItemListJson.size > 0) {
+            val itemType = object : TypeToken<Item>() {
+
+            }.type
+            val itemGson = Gson()
+            for (billItemObj in billItemListJson) {
+                val billItem = itemGson.fromJson<Item>(billItemObj, itemType)
+                billItemListObj.add(billItem)
+            }
+        }
+        return billItemListObj
+    }
 
 }

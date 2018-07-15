@@ -29,6 +29,7 @@ import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
 import bill.com.mybills.model.BusinessProfile
 import bill.com.mybills.model.Item
+import bill.com.mybills.ui.activity.BillPreviewActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
@@ -291,7 +292,7 @@ internal class BillFragment : Fragment() {
 
     private fun addNewItem() {
         val ft = fragmentManager?.beginTransaction()?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
-        var fragment = BillFragment()
+        val fragment = BillFragment()
         ft?.add(R.id.main_fragment_container, fragment)
         ft?.commit()
 
@@ -315,6 +316,9 @@ internal class BillFragment : Fragment() {
             addNewItem()
         }
         builder?.setNegativeButton("No") { dialog, which ->
+            val intent = Intent(context, BillPreviewActivity::class.java)
+            startActivity(intent)
+
         }
         val dialog: AlertDialog? = builder?.create()
         dialog?.show()
