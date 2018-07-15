@@ -136,6 +136,7 @@ class LoginActivity : AppCompatActivity() {
 							//mVerificationField.setError("Invalid code.")
 							// [END_EXCLUDE]
 						}
+						signin.visibility = View.GONE
 						// [START_EXCLUDE silent]
 						// Update UI
 						//updateUI(STATE_SIGNIN_FAILED);

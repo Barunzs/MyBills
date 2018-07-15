@@ -248,6 +248,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/enter_pin_code"
+                    android:maxLength="6"
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
             <android.support.v7.widget.AppCompatButton

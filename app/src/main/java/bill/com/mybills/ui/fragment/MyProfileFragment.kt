@@ -60,7 +60,7 @@ internal class MyProfileFragment : Fragment() {
             if (documentSnapshot.exists()) {
                 val businessProfile = documentSnapshot.toObject(BusinessProfile::class.java)
                 BusinessNameTextView.text = businessProfile.orgName
-                businessNumberTextView.text = businessProfile.address
+                businessNumberTextView.text = businessProfile.address +" Pin :" + businessProfile.pincode
                 businessGst.text = businessProfile.gstIN
             }else{
                 Toast.makeText(context,"No Profile Data Found",Toast.LENGTH_LONG).show()

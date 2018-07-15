@@ -24,14 +24,13 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/cancelGoalWarningTextView"
+                android:id="@+id/shopName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="32dp"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
                 android:gravity="center_horizontal"
-                android:text="@string/header"
                 android:textAllCaps="true"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:textColor="@color/white"
@@ -44,18 +43,17 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView42"
+                android:id="@+id/shopAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Siliguri-734003 Darjeeling"
                 android:textAppearance="@style/TextAppearance.AppCompat"
-                app:layout_constraintEnd_toEndOf="@+id/cancelGoalWarningTextView"
+                app:layout_constraintEnd_toEndOf="@+id/shopName"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/cancelGoalWarningTextView"
-                app:layout_constraintTop_toBottomOf="@+id/cancelGoalWarningTextView" />
+                app:layout_constraintStart_toStartOf="@+id/shopName"
+                app:layout_constraintTop_toBottomOf="@+id/shopName" />
 
             <TextView
                 android:id="@+id/customerName"
@@ -65,8 +63,8 @@
                 android:layout_marginTop="64dp"
                 android:text="Customer Name"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/cancelGoalWarningTextView"
-                app:layout_constraintTop_toBottomOf="@+id/textView42"/>
+                app:layout_constraintStart_toStartOf="@+id/shopName"
+                app:layout_constraintTop_toBottomOf="@+id/shopAddress"/>
             <EditText
                 android:id="@+id/customerField"
                 android:layout_width="100dp"
@@ -87,8 +85,8 @@
                 android:layout_marginTop="96dp"
                 android:text="Particulars of Ornament"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/cancelGoalWarningTextView"
-                app:layout_constraintTop_toBottomOf="@+id/textView42" />
+                app:layout_constraintStart_toStartOf="@+id/shopName"
+                app:layout_constraintTop_toBottomOf="@+id/shopAddress" />
 
             <EditText
                 android:id="@+id/particular"
@@ -135,7 +133,7 @@
                 android:text="Rate of Gold (₹)"
                 android:textStyle="bold"
                 app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="@+id/cancelGoalWarningTextView"
+                app:layout_constraintStart_toStartOf="@+id/shopName"
                 app:layout_constraintTop_toBottomOf="@+id/textView45" />
 
             <EditText
@@ -146,7 +144,7 @@
                 android:layout_marginStart="8dp"
                 android:inputType="numberSigned|numberDecimal"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView43"
-                app:layout_constraintEnd_toEndOf="@+id/cancelGoalWarningTextView"
+                app:layout_constraintEnd_toEndOf="@+id/shopName"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/textView43"
                 tools:text="Rs 32000" />
@@ -334,8 +332,8 @@
                 android:textStyle="bold"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="@+id/cancelGoalWarningTextView"
-                app:layout_constraintTop_toBottomOf="@+id/textView42" />
+                app:layout_constraintStart_toStartOf="@+id/shopName"
+                app:layout_constraintTop_toBottomOf="@+id/shopAddress" />
 
             <ImageView
                 android:id="@+id/image"
@@ -346,7 +344,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/weight"
                 app:layout_constraintHorizontal_bias=".95"
                 app:layout_constraintStart_toEndOf="@+id/textView47"
-                app:layout_constraintTop_toBottomOf="@+id/textView42"
+                app:layout_constraintTop_toBottomOf="@+id/shopAddress"
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@android:drawable/ic_menu_camera" />
 

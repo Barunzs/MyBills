@@ -27,8 +27,11 @@ import android.widget.Toast
 import bill.com.mybills.BuildConfig
 import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
+import bill.com.mybills.model.BusinessProfile
 import bill.com.mybills.model.Item
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -36,6 +39,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_bill.*
+import kotlinx.android.synthetic.main.fragment_myprofile.*
 import java.io.File
 import java.io.FileOutputStream
 import java.math.RoundingMode
@@ -59,6 +63,8 @@ internal class BillFragment : Fragment() {
     private lateinit var billItemList: ArrayList<String>
     private var uriFirebase: Uri? = null
     private var db: FirebaseFirestore? = null
+    private var docRef: DocumentReference? = null
+    private var user: FirebaseUser? = null
 
 
     companion object {
@@ -73,6 +79,9 @@ internal class BillFragment : Fragment() {
         storageReference = storage?.reference
         billItemList = ArrayList()
         db = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
+        user = FirebaseAuth.getInstance().currentUser
+        docRef = user?.uid?.let { db?.collection(it)?.document("Business Profile") }
 
     }
 
@@ -132,8 +141,23 @@ internal class BillFragment : Fragment() {
             }
         })
 
+        docRef?.get()?.addOnSuccessListener { documentSnapshot ->
+            if (documentSnapshot.exists()) {
+                val businessProfile = documentSnapshot.toObject(BusinessProfile::class.java)
+                if (isVisible){
+                    shopName.text = businessProfile.orgName
+                    shopAddress.text = businessProfile.address + " Pincode:" + businessProfile.pincode
+                }
+                /*businessGst.text = businessProfile.gstIN*/
+            } else {
+                Toast.makeText(context, "No Profile Data Found", Toast.LENGTH_LONG).show()
+            }
+        }
+
         generatebill.setOnClickListener { generateBill(it) }
         image.setOnClickListener { takeProductImage(it) }
+
+
     }
 
 
@@ -256,7 +280,7 @@ internal class BillFragment : Fragment() {
             }
             val jsonItemArraylist = gson.toJson(billItemList)
             appDAL?.billItemJson = jsonItemArraylist
-            timer(2000, 1000,item).start()
+            timer(2000, 1000, item).start()
         } catch (e: NumberFormatException) {
             view?.let {
                 Snackbar.make(it, "Please Enter all Fields", Snackbar.LENGTH_LONG)
@@ -273,7 +297,7 @@ internal class BillFragment : Fragment() {
 
     }
 
-    private fun showalert(item:Item) {
+    private fun showalert(item: Item) {
         val builder = context?.let { context?.let { it1 -> AlertDialog.Builder(it1, R.style.MyDialogTheme) } }
         builder?.setTitle("Generate Bill")
         builder?.setMessage("Do you want add ${particular.text} to Bill?")
@@ -296,7 +320,7 @@ internal class BillFragment : Fragment() {
         dialog?.show()
     }
 
-    private fun timer(millisInFuture: Long, countDownInterval: Long,item:Item): CountDownTimer {
+    private fun timer(millisInFuture: Long, countDownInterval: Long, item: Item): CountDownTimer {
         return object : CountDownTimer(millisInFuture, countDownInterval) {
             override fun onTick(millisUntilFinished: Long) {
             }

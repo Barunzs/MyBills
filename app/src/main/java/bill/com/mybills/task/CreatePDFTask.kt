@@ -31,8 +31,8 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
 
     private var cell: PdfPCell? = null
     private var bgImage: Image? = null
-    private val primarylight = WebColors.getRGBColor("#E07777");
-    private val myColor1 = WebColors.getRGBColor("#E43F3F");
+    private val primarylight = WebColors.getRGBColor("#2979FF");
+    private val myColor1 = WebColors.getRGBColor("#2979FF");
     private var contextRef: WeakReference<Context?> = WeakReference(context)
     private var appDAL: AppDAL? = null
     private var gst: Double = 0.0
@@ -63,7 +63,7 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
 
             //set drawable in cell
 
-            val myImage = contextRef.get()?.let { ContextCompat.getDrawable(it, R.drawable.anuska_jweller) };
+            val myImage = contextRef.get()?.let { ContextCompat.getDrawable(it, R.drawable.logo_back) };
             val bitmap = (myImage as BitmapDrawable).bitmap
             val stream = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
