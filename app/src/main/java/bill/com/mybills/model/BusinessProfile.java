@@ -12,6 +12,17 @@ public class BusinessProfile implements Serializable {
     public String address;
     private Uri businessLogoURI;
     private String pincode;
+    public boolean isActive;
+
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        this.isActive = active;
+    }
+
 
     public String getPincode() {
         return pincode;
@@ -66,13 +77,14 @@ public class BusinessProfile implements Serializable {
     }
 
 
-    public BusinessProfile(String phone, String orgName, String gstIN, String address,Uri URI,String pincode) {
+    public BusinessProfile(String phone, String orgName, String gstIN, String address,Uri URI,String pincode,boolean isActive) {
         this.phone = phone;
         this.orgName = orgName;
         this.gstIN = gstIN;
         this.address = address;
         this.businessLogoURI = URI;
         this.pincode = pincode;
+        this.isActive = isActive;
     }
 
 }

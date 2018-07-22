@@ -1,11 +1,15 @@
 package bill.com.mybills.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.view.*
 import android.widget.Toast
 import bill.com.mybills.R
 import bill.com.mybills.model.BusinessProfile
+import bill.com.mybills.model.Item
+import bill.com.mybills.ui.activity.BillPreviewActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
@@ -13,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_bill.*
 import kotlinx.android.synthetic.main.fragment_myprofile.*
 
 
@@ -73,6 +78,8 @@ internal class MyProfileFragment : Fragment() {
             Picasso.with(context).load(it).into(businessPictureImageView)
         }
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater);

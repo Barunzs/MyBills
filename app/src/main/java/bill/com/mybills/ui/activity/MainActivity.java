@@ -4,6 +4,7 @@ package bill.com.mybills.ui.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -11,13 +12,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -28,6 +38,7 @@ import java.util.Objects;
 
 import bill.com.mybills.R;
 import bill.com.mybills.config.AppDAL;
+import bill.com.mybills.model.BusinessProfile;
 import bill.com.mybills.model.Item;
 import bill.com.mybills.model.MenuItemObject;
 import bill.com.mybills.ui.adapter.CustomAdapter;
@@ -40,14 +51,18 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-    private String[] titles = {"Nigeria", "Ghana", "Senegal", "Togo"};
     private CharSequence mTitle;
     private CharSequence mDrawerTitle;
     private ActionBarDrawerToggle mDrawerToggle;
-    private Toolbar topToolBar;
     private AppDAL appDAL = null;
     private Fragment fragment = null;
-    private FirebaseAuth mAuth;
+    private FirebaseAuth auth;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
+    private DocumentReference docref;
+    private FirebaseUser user;
+    private FirebaseFirestore db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,14 +70,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         appDAL = new AppDAL(getApplicationContext());
         mTitle = mDrawerTitle = getTitle();
-        topToolBar = findViewById(R.id.toolbar2);
+        Toolbar topToolBar = findViewById(R.id.toolbar2);
         setSupportActionBar(topToolBar);
-        //topToolBar.setLogo(R.drawable.background);
-        //topToolBar.setLogoDescription(getResources().getString(R.string.logo_desc));
-        mAuth = FirebaseAuth.getInstance();
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerList = findViewById(R.id.left_drawer);
-
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+        db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        docref = db.collection(user.getUid()).document("Business Profile");
         List<MenuItemObject> listViewItems = new ArrayList<>();
         listViewItems.add(new MenuItemObject("My Profile", android.R.drawable.ic_menu_day));
         listViewItems.add(new MenuItemObject("Edit Profile", R.drawable.img_profile_picture_placeholder));
@@ -73,6 +90,19 @@ public class MainActivity extends AppCompatActivity {
         listViewItems.add(new MenuItemObject("Logout", android.R.drawable.ic_lock_power_off));
 
         mDrawerList.setAdapter(new CustomAdapter(this, listViewItems));
+
+        docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        BusinessProfile businessProfile = document.toObject(BusinessProfile.class);
+                        //showalert(businessProfile.isActive);
+                    }
+                }
+            }
+        });
 
         mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
 
@@ -136,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
             default:
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
-                mAuth.signOut();
+                auth.signOut();
                 finish();
                 break;
         }
@@ -237,4 +267,18 @@ public class MainActivity extends AppCompatActivity {
             addNewItem();
         }*/
     }
+    /*private void showalert(Boolean isActive) {
+        if(!isActive){
+            val builder = context?.let { context?.let { it1 -> AlertDialog.Builder(it1, R.style.MyDialogTheme) } }
+            builder?.setTitle("Payment")
+            builder?.setMessage("Please pay to use full version of this app")
+            builder?.setPositiveButton("OK") { dialog, which ->
+                    activity?.finish()
+            }
+            val dialog: AlertDialog? = builder?.create()
+            dialog?.setCancelable(false)
+            dialog?.show()
+        }
+
+    }*/
 }

@@ -164,7 +164,7 @@ internal class EditProfileFragment : Fragment() {
 		user?.updateProfile(profileUpdates)
 				?.addOnCompleteListener { task ->
 					if (task.isSuccessful) {
-						val businessProfile = BusinessProfile(mobileNo.text.toString(), shopName.text.toString(), gstin.text.toString(), address.text.toString(), null,pincode.text.toString())
+						val businessProfile = BusinessProfile(mobileNo.text.toString(), shopName.text.toString(), gstin.text.toString(), address.text.toString(), null,pincode.text.toString(),true)
 						user?.uid?.let {
 							db?.collection(it)?.document("Business Profile")?.set(businessProfile)?.addOnSuccessListener { void: Void? ->
 								Toast.makeText(context, "Success", Toast.LENGTH_LONG).show()
