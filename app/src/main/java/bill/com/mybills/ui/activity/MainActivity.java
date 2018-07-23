@@ -1,8 +1,10 @@
 package bill.com.mybills.ui.activity;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -57,11 +60,6 @@ public class MainActivity extends AppCompatActivity {
     private AppDAL appDAL = null;
     private Fragment fragment = null;
     private FirebaseAuth auth;
-    private FirebaseStorage storage;
-    private StorageReference storageReference;
-    private DocumentReference docref;
-    private FirebaseUser user;
-    private FirebaseFirestore db;
 
 
     @Override
@@ -74,12 +72,11 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(topToolBar);
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerList = findViewById(R.id.left_drawer);
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
-        db = FirebaseFirestore.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        docref = db.collection(user.getUid()).document("Business Profile");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
+        DocumentReference docref = db.collection(user.getUid()).document("Business Profile");
         List<MenuItemObject> listViewItems = new ArrayList<>();
         listViewItems.add(new MenuItemObject("My Profile", android.R.drawable.ic_menu_day));
         listViewItems.add(new MenuItemObject("Edit Profile", R.drawable.img_profile_picture_placeholder));
@@ -90,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         listViewItems.add(new MenuItemObject("Logout", android.R.drawable.ic_lock_power_off));
 
         mDrawerList.setAdapter(new CustomAdapter(this, listViewItems));
-
         docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -98,14 +94,13 @@ public class MainActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         BusinessProfile businessProfile = document.toObject(BusinessProfile.class);
-                        //showalert(businessProfile.isActive);
+                        showalert(businessProfile.isActive);
                     }
                 }
             }
         });
 
         mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
-
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
@@ -241,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
     }
 
-    private ArrayList getBillItemList(){
+    private ArrayList getBillItemList() {
         String itemListJsonDB = appDAL.getBillItemJson();
         Type type = new TypeToken<ArrayList<String>>() {
         }.getType();
@@ -257,28 +252,33 @@ public class MainActivity extends AppCompatActivity {
                 billItemListObj.add(billItem);
             }
         }
-        return  billItemListObj;
+        return billItemListObj;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        /*if(fragment instanceof BillFragment){
-            addNewItem();
-        }*/
     }
-    /*private void showalert(Boolean isActive) {
-        if(!isActive){
-            val builder = context?.let { context?.let { it1 -> AlertDialog.Builder(it1, R.style.MyDialogTheme) } }
-            builder?.setTitle("Payment")
-            builder?.setMessage("Please pay to use full version of this app")
-            builder?.setPositiveButton("OK") { dialog, which ->
-                    activity?.finish()
+
+    private void showalert(Boolean isActive) {
+        if (!isActive) {
+            AlertDialog.Builder builder;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                builder = new AlertDialog.Builder(MainActivity.this, R.style.MyDialogTheme);
+            } else {
+                builder = new AlertDialog.Builder(MainActivity.this);
             }
-            val dialog: AlertDialog? = builder?.create()
-            dialog?.setCancelable(false)
-            dialog?.show()
+            builder.setTitle("Payment")
+                    .setMessage("Please pay ot use the full version of the app")
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setCancelable(false)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
         }
 
-    }*/
+    }
 }
