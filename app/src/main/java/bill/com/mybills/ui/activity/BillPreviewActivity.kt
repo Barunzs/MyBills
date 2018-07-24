@@ -24,6 +24,9 @@ import java.io.File
 import java.io.IOException
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import android.os.StrictMode
+
+
 
 
 class BillPreviewActivity : AppCompatActivity() {
@@ -39,6 +42,8 @@ class BillPreviewActivity : AppCompatActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_preview)
+		val builder = StrictMode.VmPolicy.Builder()
+		StrictMode.setVmPolicy(builder.build())
 		appDAL = applicationContext?.let { AppDAL(it) }
 		billRecyclerView?.layoutManager = LinearLayoutManager(applicationContext)
 		db = FirebaseFirestore.getInstance()

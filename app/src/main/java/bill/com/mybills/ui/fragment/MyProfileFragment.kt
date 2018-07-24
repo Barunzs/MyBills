@@ -67,6 +67,9 @@ internal class MyProfileFragment : Fragment() {
                 BusinessNameTextView.text = businessProfile.orgName
                 businessNumberTextView.text = businessProfile.address +" Pin :" + businessProfile.pincode
                 businessGst.text = businessProfile.gstIN
+                phoneNumberTextView.text = businessProfile.phone
+                emailAddressTextView.text = user?.email
+
             }else{
                 Toast.makeText(context,"No Profile Data Found",Toast.LENGTH_LONG).show()
             }
