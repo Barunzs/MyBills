@@ -62,26 +62,28 @@ internal class MyProfileFragment : Fragment() {
             fullNameTextView.text = name
         }
         docRef?.get()?.addOnSuccessListener { documentSnapshot ->
-            if (documentSnapshot.exists()) {
-                val businessProfile = documentSnapshot.toObject(BusinessProfile::class.java)
-                BusinessNameTextView.text = businessProfile.orgName
-                businessNumberTextView.text = businessProfile.address +" Pin :" + businessProfile.pincode
-                businessGst.text = businessProfile.gstIN
-                phoneNumberTextView.text = businessProfile.phone
-                emailAddressTextView.text = user?.email
+            if (this.isVisible) {
+                if (documentSnapshot.exists()) {
+                    val businessProfile = documentSnapshot.toObject(BusinessProfile::class.java)
+                    BusinessNameTextView.text = businessProfile.orgName
+                    businessNumberTextView.text = businessProfile.address + " Pin :" + businessProfile.pincode
+                    businessGst.text = businessProfile.gstIN
+                    phoneNumberTextView.text = businessProfile.phone
+                    emailAddressTextView.text = user?.email
 
-            }else{
-                Toast.makeText(context,"No Profile Data Found",Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(context, "No Profile Data Found", Toast.LENGTH_LONG).show()
+                }
+                businessViewProgressBar.visibility = View.GONE
             }
-            businessViewProgressBar.visibility = View.GONE
         }
         storageReference?.child(user?.uid + "/businessLogo/businessLogo_image")?.downloadUrl?.addOnFailureListener {
             Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
         }?.addOnSuccessListener {
-            Picasso.with(context).load(it).into(businessPictureImageView)
+            if (this.isVisible)
+                Picasso.with(context).load(it).into(businessPictureImageView)
         }
     }
-
 
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

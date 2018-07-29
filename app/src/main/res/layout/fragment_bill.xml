@@ -24,7 +24,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/shopName"
+                android:id="@+id/shopNameHeader"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="32dp"
@@ -50,10 +50,10 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:textAppearance="@style/TextAppearance.AppCompat"
-                app:layout_constraintEnd_toEndOf="@+id/shopName"
+                app:layout_constraintEnd_toEndOf="@+id/shopNameHeader"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/shopName"
-                app:layout_constraintTop_toBottomOf="@+id/shopName" />
+                app:layout_constraintStart_toStartOf="@+id/shopNameHeader"
+                app:layout_constraintTop_toBottomOf="@+id/shopNameHeader" />
 
             <TextView
                 android:id="@+id/customerName"
@@ -63,7 +63,7 @@
                 android:layout_marginTop="64dp"
                 android:text="Customer Name"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/shopName"
+                app:layout_constraintStart_toStartOf="@+id/shopNameHeader"
                 app:layout_constraintTop_toBottomOf="@+id/shopAddress"/>
             <EditText
                 android:id="@+id/customerField"
@@ -85,7 +85,7 @@
                 android:layout_marginTop="96dp"
                 android:text="Particulars of Ornament"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/shopName"
+                app:layout_constraintStart_toStartOf="@+id/shopNameHeader"
                 app:layout_constraintTop_toBottomOf="@+id/shopAddress" />
 
             <EditText
@@ -133,7 +133,7 @@
                 android:text="Rate of Gold (₹)"
                 android:textStyle="bold"
                 app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="@+id/shopName"
+                app:layout_constraintStart_toStartOf="@+id/shopNameHeader"
                 app:layout_constraintTop_toBottomOf="@+id/textView45" />
 
             <EditText
@@ -144,7 +144,7 @@
                 android:layout_marginStart="8dp"
                 android:inputType="numberSigned|numberDecimal"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView43"
-                app:layout_constraintEnd_toEndOf="@+id/shopName"
+                app:layout_constraintEnd_toEndOf="@+id/shopNameHeader"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/textView43"
                 tools:text="Rs 32000" />
@@ -332,7 +332,7 @@
                 android:textStyle="bold"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="@+id/shopName"
+                app:layout_constraintStart_toStartOf="@+id/shopNameHeader"
                 app:layout_constraintTop_toBottomOf="@+id/shopAddress" />
 
             <ImageView

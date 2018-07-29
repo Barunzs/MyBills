@@ -146,7 +146,7 @@ internal class BillFragment : Fragment() {
             if (documentSnapshot.exists()) {
                 val businessProfile = documentSnapshot.toObject(BusinessProfile::class.java)
                 if (isVisible){
-                    shopName.text = businessProfile.orgName
+                    shopNameHeader.text = businessProfile.orgName
                     shopAddress.text = businessProfile.address + " Pincode:" + businessProfile.pincode
                 }
                 /*businessGst.text = businessProfile.gstIN*/

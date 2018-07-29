@@ -27,7 +27,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-internal class CreatePDFTask(context: Context?, var file: File, var billItemList: ArrayList<Item>, var progress: LottieAnimationView,var businessProfile : BusinessProfile) : AsyncTask<String, Void, String>() {
+internal class CreatePDFTask(context: Context?, var file: File, var billItemList: ArrayList<Item>, var progress: LottieAnimationView,var businessProfile : BusinessProfile,var bitmapLogo:Bitmap) : AsyncTask<String, Void, String>() {
 
     private var cell: PdfPCell? = null
     private var bgImage: Image? = null
@@ -63,8 +63,8 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
 
             //set drawable in cell
 
-            val myImage = contextRef.get()?.let { ContextCompat.getDrawable(it, R.drawable.logo_back) };
-            val bitmap = (myImage as BitmapDrawable).bitmap
+            //val myImage = contextRef.get()?.let { ContextCompat.getDrawable(it, R.drawable.logo_back) };
+            val bitmap = bitmapLogo
             val stream = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
             val bitmapdata = stream.toByteArray()

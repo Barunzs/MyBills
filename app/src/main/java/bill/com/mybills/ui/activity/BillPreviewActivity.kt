@@ -25,8 +25,9 @@ import java.io.IOException
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import android.os.StrictMode
-
-
+import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+import java.io.FileInputStream
 
 
 class BillPreviewActivity : AppCompatActivity() {
@@ -93,14 +94,11 @@ class BillPreviewActivity : AppCompatActivity() {
 	}
 
 	private fun sendPDF(itemList: ArrayList<Item>) {
-		/*val path = Environment.getExternalStorageDirectory().absolutePath + "/Trinity/PDF Files"
-		val dir = File(path)
-		if (dir.exists()) {
-			dir.mkdirs()
-		}*/
 		try {
-			val file = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "bill.pdf")
-			businessProfile?.let { CreatePDFTask(this@BillPreviewActivity, file, itemList, progressPdf, it).execute() }
+			val fileimage = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "image.jpg")
+            val bitmapLoga = BitmapFactory.decodeStream(FileInputStream(fileimage))
+			val filepdf = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "bill.pdf")
+			businessProfile?.let { CreatePDFTask(this@BillPreviewActivity, filepdf, itemList, progressPdf, it,bitmapLoga).execute() }
 			sendBill.visibility = View.GONE
 		} catch (e: IOException) {
 			e.printStackTrace()

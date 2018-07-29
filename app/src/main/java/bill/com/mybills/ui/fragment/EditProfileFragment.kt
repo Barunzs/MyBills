@@ -247,7 +247,12 @@ internal class EditProfileFragment : Fragment() {
 							businessLogoURI = it.downloadUrl
 							businessPictureUpdateProgressBar.visibility = View.GONE
 							Picasso.with(context).load(it.downloadUrl).into(editLogo)
-
+                            val localFile = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "image.jpg")
+                            storageReference?.child(user?.uid + "/businessLogo/businessLogo_image")?.getFile(localFile)?.addOnFailureListener {
+                                Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
+                            }?.addOnSuccessListener {
+                                Toast.makeText(context, "Profile iamge saved", Toast.LENGTH_LONG).show()
+                            }
 						}
 
 					}
