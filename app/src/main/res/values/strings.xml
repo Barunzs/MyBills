@@ -26,4 +26,5 @@
     <string name="enter_pin_code">Enter Pin Code</string>
     <string name="login">Login</string>
     <string name="shop_name">Shop Name</string>
+    <string name="sgst_1_5">SGST 1.5%</string>
 </resources>

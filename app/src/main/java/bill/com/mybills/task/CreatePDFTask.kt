@@ -61,9 +61,6 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
             cell = PdfPCell()
             cell?.border = Rectangle.NO_BORDER
 
-            //set drawable in cell
-
-            //val myImage = contextRef.get()?.let { ContextCompat.getDrawable(it, R.drawable.logo_back) };
             val bitmap = bitmapLogo
             val stream = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
@@ -172,40 +169,40 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
             cell?.colspan = 6
 
             for (item in billItemList) {
-                val selector = FontSelector();
+                val fontselector = FontSelector();
                 val f1 = FontFactory.getFont("MSung-Light",
                         "UniCNS-UCS2-H", BaseFont.NOT_EMBEDDED)
                 f1.color = BaseColor.BLACK
-                selector.addFont(f1)
+                fontselector.addFont(f1)
                 cell = PdfPCell()
                 cell?.fixedHeight = (300 / billItemList.size).toFloat()
-                var ph = selector.process(item.particulars)
+                var ph = fontselector.process(item.particulars)
                 cell?.addElement(ph)
                 table.addCell(cell)
                 cell = PdfPCell()
-                ph = selector.process(item.weight.toString())
+                ph = fontselector.process(item.weight.toString())
                 cell?.addElement(ph)
                 table.addCell(cell)
                 cell = PdfPCell()
-                ph = selector.process(item.goldRate.toString())
+                ph = fontselector.process(item.goldRate.toString())
                 cell?.addElement(ph)
                 table.addCell(cell)
                 cell = PdfPCell()
-                ph = selector.process(df.format(item.amtGold))
+                ph = fontselector.process(df.format(item.amtGold))
                 cell?.addElement(ph)
                 table.addCell(cell)
                 cell = PdfPCell()
-                ph = selector.process(item.makingCharge.toString())
+                ph = fontselector.process(item.makingCharge.toString())
                 cell?.addElement(ph)
                 table.addCell(cell)
                 cell = PdfPCell()
-                ph = selector.process(df.format(item.amtGold + item.makingCharge).toString())
+                ph = fontselector.process(df.format(item.amtGold + item.makingCharge).toString())
                 cell?.addElement(ph)
                 table.addCell(cell)
-                gst = (((item.amtGold + item.makingCharge) * 1.5) / 100)
-                totalAmt += (2 * gst + item.amtGold + item.makingCharge)
+                //gst = (((item.amtGold + item.makingCharge) * 1.5) / 100)
+                totalAmt += ( item.amtGold + item.makingCharge)
             }
-            val selectorGST = FontSelector();
+            /*val selectorGST = FontSelector();
             val fGST = FontFactory.getFont("MSung-Light",
                     "UniCNS-UCS2-H", BaseFont.NOT_EMBEDDED)
             fGST.color = BaseColor.BLACK
@@ -227,7 +224,7 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
             cell = PdfPCell()
             phGST = selectorGST.process(df.format(gst))
             cell?.addElement(phGST)
-            table.addCell(cell)
+            table.addCell(cell)*/
 
             val ftable = PdfPTable(6)
             ftable.widthPercentage = 100f

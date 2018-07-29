@@ -98,7 +98,7 @@ internal class BillFragment : Fragment() {
     }
 
     private fun initEventsListeners() {
-        makingCharge.addTextChangedListener(object : TextWatcher {
+        /*makingCharge.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(makingCharge: Editable) {
 
@@ -119,7 +119,7 @@ internal class BillFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             }
-        })
+        })*/
 
         rateofgold.addTextChangedListener(object : TextWatcher {
 
@@ -149,7 +149,6 @@ internal class BillFragment : Fragment() {
                     shopNameHeader.text = businessProfile.orgName
                     shopAddress.text = businessProfile.address + " Pincode:" + businessProfile.pincode
                 }
-                /*businessGst.text = businessProfile.gstIN*/
             } else {
                 Toast.makeText(context, "No Profile Data Found", Toast.LENGTH_LONG).show()
             }
@@ -259,7 +258,8 @@ internal class BillFragment : Fragment() {
     private fun addBillItem() {
         try {
             val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString())
-            val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst
+           /* val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst*/
+            val totalAmt = amountOfGold + makingCharge.text.toString().toDouble()
             val df = DecimalFormat("#.##")
             df.roundingMode = RoundingMode.CEILING
             total.text = "₹ " + df.format(totalAmt)
@@ -303,16 +303,6 @@ internal class BillFragment : Fragment() {
         builder?.setTitle("Generate Bill")
         builder?.setMessage("Do you want add ${particular.text} to Bill?")
         builder?.setPositiveButton("YES") { dialog, which ->
-            /*val items = HashMap<String, Any>()
-            items.put(item.customerName,"Hello")
-            db?.collection("Akash")?.document(item.customerName)?.set(items)?.addOnSuccessListener {
-                void: Void? ->
-                Toast.makeText(context,"Sucess",Toast.LENGTH_LONG).show()
-
-            }?.addOnFailureListener {
-                exception: java.lang.Exception ->
-                Toast.makeText(context,"Failure",Toast.LENGTH_LONG).show()
-            }*/
             addNewItem()
         }
         builder?.setNegativeButton("No") { dialog, which ->
