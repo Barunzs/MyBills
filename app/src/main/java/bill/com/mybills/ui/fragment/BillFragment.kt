@@ -40,7 +40,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_bill.*
-import kotlinx.android.synthetic.main.fragment_myprofile.*
 import java.io.File
 import java.io.FileOutputStream
 import java.math.RoundingMode
@@ -257,7 +256,11 @@ internal class BillFragment : Fragment() {
 
     private fun addBillItem() {
         try {
-            val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString())
+            if(customerPhoneField.text.toString().isEmpty()){
+				Toast.makeText(context,"Please enter phone no",Toast.LENGTH_LONG).show();
+                return;
+			}
+            val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(),customerPhoneField.text.toString())
            /* val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst*/
             val totalAmt = amountOfGold + makingCharge.text.toString().toDouble()
             val df = DecimalFormat("#.##")
@@ -295,7 +298,6 @@ internal class BillFragment : Fragment() {
         val fragment = BillFragment()
         ft?.add(R.id.main_fragment_container, fragment)
         ft?.commit()
-
     }
 
     private fun showalert(item: Item) {
@@ -318,11 +320,9 @@ internal class BillFragment : Fragment() {
         return object : CountDownTimer(millisInFuture, countDownInterval) {
             override fun onTick(millisUntilFinished: Long) {
             }
-
             override fun onFinish() {
                 showalert(item)
             }
         }
     }
-
 }

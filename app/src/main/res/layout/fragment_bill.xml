@@ -40,7 +40,8 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="MB SHOP"/>
 
             <TextView
                 android:id="@+id/shopAddress"
@@ -53,7 +54,8 @@
                 app:layout_constraintEnd_toEndOf="@+id/shopNameHeader"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@+id/shopNameHeader"
-                app:layout_constraintTop_toBottomOf="@+id/shopNameHeader" />
+                app:layout_constraintTop_toBottomOf="@+id/shopNameHeader"
+                tools:text="Shop No 16 JaiGao Pin 333333"/>
 
             <TextView
                 android:id="@+id/customerName"
@@ -67,7 +69,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/shopAddress"/>
             <EditText
                 android:id="@+id/customerField"
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:inputType="text"
@@ -78,21 +80,43 @@
                 app:layout_constraintStart_toEndOf="@+id/textView47"
                 tools:text="Shekar" />
             <TextView
-                android:id="@+id/textView47"
+                android:id="@+id/customerPhone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="96dp"
-                android:text="Particulars of Ornament"
+                android:text="@string/customer_phone"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/shopNameHeader"
+                app:layout_constraintTop_toBottomOf="@+id/shopAddress"/>
+            <EditText
+                android:id="@+id/customerPhoneField"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:maxLines="1"
+                android:maxLength="10"
+                app:layout_constraintBaseline_toBaselineOf="@+id/customerPhone"
+                app:layout_constraintEnd_toEndOf="@+id/weight"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/textView47"
+                tools:text="9741046748" />
+
+            <TextView
+                android:id="@+id/textView47"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="128dp"
+                android:text="@string/particulars_of_ornament"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/shopNameHeader"
                 app:layout_constraintTop_toBottomOf="@+id/shopAddress" />
 
             <EditText
                 android:id="@+id/particular"
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:inputType="text"
                 android:maxLines="1"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView47"
@@ -113,7 +137,7 @@
 
             <EditText
                 android:id="@+id/weight"
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:inputType="numberSigned|numberDecimal"
@@ -138,7 +162,7 @@
 
             <EditText
                 android:id="@+id/rateofgold"
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="32dp"
                 android:layout_marginStart="8dp"
@@ -173,7 +197,7 @@
 
             <EditText
                 android:id="@+id/amtofgold"
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:focusable="false"
@@ -210,7 +234,7 @@
 
             <EditText
                 android:id="@+id/sgstrate"
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:focusable="false"
@@ -237,7 +261,7 @@
 
             <EditText
                 android:id="@+id/makingCharge"
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:inputType="numberSigned|numberDecimal"
@@ -294,7 +318,7 @@
 
             <TextView
                 android:id="@+id/total"
-                android:layout_width="wrap_content"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="8dp"
@@ -306,7 +330,7 @@
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toEndOf="@+id/totalAmt"
                 app:layout_constraintTop_toBottomOf="@+id/view"
-                tools:text="Rs 100000" />
+                tools:text="Rs 12222" />
 
             <Button
                 android:id="@+id/generatebill"

@@ -3,12 +3,9 @@ package bill.com.mybills.task
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.AsyncTask
-import android.support.v4.content.ContextCompat
 import android.view.View
-import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
 import bill.com.mybills.model.BusinessProfile
 import bill.com.mybills.model.Item
@@ -96,8 +93,16 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
             cell?.addElement(ph)
             ph = selector.process("")
             cell?.addElement(ph)
-            ph = selector.process("Customer Name ${billItemList[0].customerName}")
+            ph = selector.process("Customer Name:${billItemList[0].customerName}")
             cell?.addElement(ph)
+            ph = selector.process("")
+            cell?.addElement(ph)
+            ph = selector.process("")
+            cell?.addElement(ph)
+            ph = selector.process("")
+            cell?.addElement(ph)
+			ph = selector.process("Mobile:${billItemList[0].phoneNo}")
+			cell?.addElement(ph)
             pt.addCell(cell)
 
             val billdate = SimpleDateFormat("dd/MM/yyyy")
