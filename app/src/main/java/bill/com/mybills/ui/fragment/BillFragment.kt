@@ -256,8 +256,8 @@ internal class BillFragment : Fragment() {
 
     private fun addBillItem() {
         try {
-            if(customerPhoneField.text.toString().isEmpty()){
-				Toast.makeText(context,"Please enter phone no",Toast.LENGTH_LONG).show();
+            if(customerPhoneField.text.toString().isEmpty() || customerName.text.toString().isEmpty()){
+				Toast.makeText(context,"Please enter customer details",Toast.LENGTH_LONG).show();
                 return;
 			}
             val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(),customerPhoneField.text.toString())

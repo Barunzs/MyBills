@@ -101,7 +101,7 @@ class BillPreviewActivity : AppCompatActivity() {
 			businessProfile?.let { CreatePDFTask(this@BillPreviewActivity, filepdf, itemList, progressPdf, it,bitmapLoga).execute() }
 			sendBill.visibility = View.GONE
 		} catch (e: IOException) {
-			e.printStackTrace()
+			Toast.makeText(applicationContext,"Please update your Logo before generating Bill",Toast.LENGTH_LONG).show()
 		}
 
 	}
@@ -115,14 +115,12 @@ class BillPreviewActivity : AppCompatActivity() {
     private fun getBillItemList(): java.util.ArrayList<*> {
         val itemListJsonDB = appDAL?.billItemJson
         val type = object : TypeToken<java.util.ArrayList<String>>() {
-
         }.type
         val gson = Gson()
         val billItemListJson = gson.fromJson<java.util.ArrayList<String>>(itemListJsonDB, type)
         val billItemListObj = java.util.ArrayList<Item>()
         if (billItemListJson != null && billItemListJson.size > 0) {
             val itemType = object : TypeToken<Item>() {
-
             }.type
             val itemGson = Gson()
             for (billItemObj in billItemListJson) {

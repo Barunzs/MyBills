@@ -72,11 +72,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(topToolBar);
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerList = findViewById(R.id.left_drawer);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        assert user != null;
-        DocumentReference docref = db.collection(user.getUid()).document("Business Profile");
         List<MenuItemObject> listViewItems = new ArrayList<>();
         listViewItems.add(new MenuItemObject("My Profile", android.R.drawable.ic_menu_day));
         listViewItems.add(new MenuItemObject("Edit Profile", R.drawable.img_profile_picture_placeholder));
@@ -87,18 +83,6 @@ public class MainActivity extends AppCompatActivity {
         listViewItems.add(new MenuItemObject("Logout", android.R.drawable.ic_lock_power_off));
 
         mDrawerList.setAdapter(new CustomAdapter(this, listViewItems));
-        docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        BusinessProfile businessProfile = document.toObject(BusinessProfile.class);
-                        showalert(businessProfile.isActive);
-                    }
-                }
-            }
-        });
 
         mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
             /** Called when a drawer has settled in a completely closed state. */
@@ -133,6 +117,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     private void selectItemFragment(int position) {
 
@@ -258,6 +244,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DocumentReference docref = db.collection(user.getUid()).document("Business Profile");
+        docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        BusinessProfile businessProfile = document.toObject(BusinessProfile.class);
+                        showalert(businessProfile.isActive);
+                    }
+                }
+            }
+        });
     }
 
     private void showalert(Boolean isActive) {
@@ -269,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
                 builder = new AlertDialog.Builder(MainActivity.this);
             }
             builder.setTitle("Payment")
-                    .setMessage("Please pay ot use the full version of the app")
+                    .setMessage("Please pay to use the full version of the app")
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             finish();
