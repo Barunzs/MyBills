@@ -91,7 +91,7 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
             cell?.addElement(ph)
             ph = selector.process("")
             cell?.addElement(ph)
-            ph = selector.process("_________________________________________________________")
+            ph = selector.process("___________________________________________________________")
             cell?.addElement(ph)
             ph = selector.process("Customer Name:  ${billItemList[0].customerName}")
             cell?.addElement(ph)
