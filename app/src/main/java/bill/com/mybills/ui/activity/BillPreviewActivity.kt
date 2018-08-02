@@ -1,10 +1,16 @@
 package bill.com.mybills.ui.activity
 
+import android.app.ActivityOptions
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
+import android.os.StrictMode
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.Toolbar
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import bill.com.mybills.R
@@ -21,13 +27,10 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_preview.*
 import java.io.File
+import java.io.FileInputStream
 import java.io.IOException
 import java.math.RoundingMode
 import java.text.DecimalFormat
-import android.os.StrictMode
-import android.graphics.BitmapFactory
-import android.graphics.Bitmap
-import java.io.FileInputStream
 
 
 class BillPreviewActivity : AppCompatActivity() {
@@ -46,6 +49,8 @@ class BillPreviewActivity : AppCompatActivity() {
 		val builder = StrictMode.VmPolicy.Builder()
 		StrictMode.setVmPolicy(builder.build())
 		appDAL = applicationContext?.let { AppDAL(it) }
+		val topToolBar = findViewById<Toolbar>(R.id.toolbar2)
+		setSupportActionBar(topToolBar)
 		billRecyclerView?.layoutManager = LinearLayoutManager(applicationContext)
 		db = FirebaseFirestore.getInstance()
 		user = FirebaseAuth.getInstance().currentUser
@@ -130,5 +135,22 @@ class BillPreviewActivity : AppCompatActivity() {
         }
         return billItemListObj
     }
+
+	override fun onCreateOptionsMenu(menu: Menu): Boolean {
+		menuInflater.inflate(R.menu.preview_menu, menu)
+		return true
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		val id = item.itemId
+		if (id == R.id.clear) {
+			appDAL?.billItemJson = String()
+			finish()
+			startActivity(intent,
+					ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+			return true
+		}
+		return super.onOptionsItemSelected(item)
+	}
 
 }

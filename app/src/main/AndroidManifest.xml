@@ -34,6 +34,7 @@
         <activity
             android:name=".ui.activity.BillPreviewActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.Dark" />
         <activity
             android:name=".barcodevision.BarcodeCaptureActivity"

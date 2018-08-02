@@ -325,4 +325,5 @@ internal class BillFragment : Fragment() {
             }
         }
     }
+
 }
