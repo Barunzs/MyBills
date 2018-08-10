@@ -44,6 +44,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -260,7 +261,9 @@ internal class BillFragment : Fragment() {
 				Toast.makeText(context,"Please enter customer details",Toast.LENGTH_LONG).show();
                 return;
 			}
-            val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(),customerPhoneField.text.toString())
+            val billdate = SimpleDateFormat("dd/MM/yyyy")
+            var date = billdate.format(Calendar.getInstance().time)
+            val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(),customerPhoneField.text.toString(),date)
            /* val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst*/
             val totalAmt = amountOfGold + makingCharge.text.toString().toDouble()
             val df = DecimalFormat("#.##")

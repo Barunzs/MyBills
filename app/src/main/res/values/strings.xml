@@ -30,4 +30,6 @@
     <string name="sgst_1_5">SGST 1.5%</string>
     <string name="customer_phone">Customer Phone</string>
     <string name="particulars_of_ornament">Details of Ornament</string>
+    <string name="no_transaction_available">No Transaction Available</string>
+    <string name="amount_placeholder">₹%d</string>
 </resources>

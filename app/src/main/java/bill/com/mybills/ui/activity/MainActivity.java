@@ -47,6 +47,7 @@ import bill.com.mybills.model.MenuItemObject;
 import bill.com.mybills.ui.adapter.CustomAdapter;
 import bill.com.mybills.ui.fragment.BillFragment;
 import bill.com.mybills.ui.fragment.EditProfileFragment;
+import bill.com.mybills.ui.fragment.MyBillTransactionFragment;
 import bill.com.mybills.ui.fragment.MyProfileFragment;
 import bill.com.mybills.ui.fragment.ScanFragment;
 
@@ -143,6 +144,12 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new ScanFragment();
                 fragmentManager.beginTransaction().replace(R.id.main_fragment_container, fragment,
                         ScanFragment.Companion.getTAG()).commit();
+                break;
+
+            case 4:
+                fragment = new MyBillTransactionFragment();
+                fragmentManager.beginTransaction().replace(R.id.main_fragment_container, fragment,
+                        MyBillTransactionFragment.Companion.getTAG()).commit();
                 break;
             default:
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);

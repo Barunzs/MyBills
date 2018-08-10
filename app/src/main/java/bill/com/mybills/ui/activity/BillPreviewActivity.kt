@@ -8,6 +8,7 @@ import android.os.StrictMode
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
@@ -56,7 +57,6 @@ class BillPreviewActivity : AppCompatActivity() {
 		user = FirebaseAuth.getInstance().currentUser
 		docRef = user?.uid?.let { db?.collection(it)?.document("Business Profile") }
 		try {
-			//billItemList = this.intent.extras.getParcelableArrayList("billItemList")
             billItemList = getBillItemList() as ArrayList<Item>
 			if (billItemList.size > 0) {
 				customer.text = billItemList[0].customerName
@@ -103,7 +103,7 @@ class BillPreviewActivity : AppCompatActivity() {
 			val fileimage = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "image.jpg")
             val bitmapLoga = BitmapFactory.decodeStream(FileInputStream(fileimage))
 			val filepdf = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "bill.pdf")
-			businessProfile?.let { CreatePDFTask(this@BillPreviewActivity, filepdf, itemList, progressPdf, it,bitmapLoga).execute() }
+			businessProfile?.let { CreatePDFTask(this@BillPreviewActivity, filepdf, itemList, progressPdf, it,bitmapLoga,db,user).execute() }
 			sendBill.visibility = View.GONE
 		} catch (e: IOException) {
 			Toast.makeText(applicationContext,"Please update your Logo before generating Bill",Toast.LENGTH_LONG).show()

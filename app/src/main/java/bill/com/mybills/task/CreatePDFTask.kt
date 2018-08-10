@@ -6,10 +6,16 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.AsyncTask
 import android.view.View
+import android.widget.Toast
+import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
 import bill.com.mybills.model.BusinessProfile
 import bill.com.mybills.model.Item
+import bill.com.mybills.ui.fragment.MyProfileFragment
 import com.airbnb.lottie.LottieAnimationView
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.WriteBatch
 import com.itextpdf.text.*
 import com.itextpdf.text.BaseColor
 import com.itextpdf.text.html.WebColors
@@ -24,7 +30,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-internal class CreatePDFTask(context: Context?, var file: File, var billItemList: ArrayList<Item>, var progress: LottieAnimationView,var businessProfile : BusinessProfile,var bitmapLogo:Bitmap) : AsyncTask<String, Void, String>() {
+internal class CreatePDFTask(context: Context?, var file: File, var billItemList: ArrayList<Item>, var progress: LottieAnimationView,var businessProfile : BusinessProfile,var bitmapLogo:Bitmap,val db: FirebaseFirestore?,val user: FirebaseUser?) : AsyncTask<String, Void, String>() {
 
     private var cell: PdfPCell? = null
     private var bgImage: Image? = null
@@ -104,8 +110,8 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
 			ph = selector.process("Mobile:  ${billItemList[0].phoneNo}")
 			cell?.addElement(ph)
             pt.addCell(cell)
-
             val billdate = SimpleDateFormat("dd/MM/yyyy")
+
             cell = PdfPCell()
             ph = selector.process(billdate.format(Calendar.getInstance().time))
             cell?.addElement(ph)
@@ -289,8 +295,19 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
     override fun onPostExecute(result: String) {
         super.onPostExecute(result)
         progress.visibility = View.GONE
-        appDAL?.billItemJson = String()
-        shareFile()
+        //appDAL?.billItemJson = String()
+        //var batch = db?.batch()
+        //shareFile()
+        for(item in billItemList){
+            user?.uid?.let {
+                db?.collection(it)?.document("Bill items")?.set(item)?.addOnSuccessListener { void: Void? ->
+                    Toast.makeText(contextRef.get(), "Success", Toast.LENGTH_LONG).show()
+                }?.addOnFailureListener { exception: java.lang.Exception ->
+                    Toast.makeText(contextRef.get(), "Failure", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
     }
 
     private fun shareFile() {
