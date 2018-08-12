@@ -43,6 +43,7 @@ import kotlinx.android.synthetic.main.fragment_bill.*
 import java.io.File
 import java.io.FileOutputStream
 import java.math.RoundingMode
+import java.sql.Timestamp
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -92,9 +93,12 @@ internal class BillFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //creating new file path
-        appDAL = context?.let { AppDAL(it) }
         initEventsListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        appDAL = context?.let { AppDAL(it) }
     }
 
     private fun initEventsListeners() {
@@ -261,9 +265,10 @@ internal class BillFragment : Fragment() {
 				Toast.makeText(context,"Please enter customer details",Toast.LENGTH_LONG).show();
                 return;
 			}
-            val billdate = SimpleDateFormat("dd/MM/yyyy")
-            var date = billdate.format(Calendar.getInstance().time)
-            val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(),customerPhoneField.text.toString(),date)
+            //val billdate = SimpleDateFormat("yyyy.MM.dd.HH.mm.ss")
+            val timestamp = Timestamp(System.currentTimeMillis())
+            //var date = (Calendar.getInstance().time)
+            val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(),customerPhoneField.text.toString(),timestamp.time.toString())
            /* val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst*/
             val totalAmt = amountOfGold + makingCharge.text.toString().toDouble()
             val df = DecimalFormat("#.##")

@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-internal class CreatePDFTask(context: Context?, var file: File, var billItemList: ArrayList<Item>, var progress: LottieAnimationView,var businessProfile : BusinessProfile,var bitmapLogo:Bitmap,val db: FirebaseFirestore?,val user: FirebaseUser?) : AsyncTask<String, Void, String>() {
+internal class CreatePDFTask(context: Context?, var file: File, var billItemList: ArrayList<Item>, var progress: LottieAnimationView, var businessProfile: BusinessProfile, var bitmapLogo: Bitmap, val db: FirebaseFirestore?, val user: FirebaseUser?) : AsyncTask<String, Void, String>() {
 
     private var cell: PdfPCell? = null
     private var bgImage: Image? = null
@@ -85,7 +85,7 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
             cell?.addElement(ph)
             ph = selector.process(businessProfile.address)
             cell?.addElement(ph)
-            ph = selector.process("Pin-"+businessProfile.pincode)
+            ph = selector.process("Pin-" + businessProfile.pincode)
             cell?.addElement(ph)
             ph = selector.process("")
             cell?.addElement(ph)
@@ -107,8 +107,8 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
             cell?.addElement(ph)
             ph = selector.process("")
             cell?.addElement(ph)
-			ph = selector.process("Mobile:  ${billItemList[0].phoneNo}")
-			cell?.addElement(ph)
+            ph = selector.process("Mobile:  ${billItemList[0].phoneNo}")
+            cell?.addElement(ph)
             pt.addCell(cell)
             val billdate = SimpleDateFormat("dd/MM/yyyy")
 
@@ -211,7 +211,7 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
                 cell?.addElement(ph)
                 table.addCell(cell)
                 //gst = (((item.amtGold + item.makingCharge) * 1.5) / 100)
-                totalAmt += ( item.amtGold + item.makingCharge)
+                totalAmt += (item.amtGold + item.makingCharge)
             }
             /*val selectorGST = FontSelector();
             val fGST = FontFactory.getFont("MSung-Light",
@@ -296,11 +296,10 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
         super.onPostExecute(result)
         progress.visibility = View.GONE
         //appDAL?.billItemJson = String()
-        //var batch = db?.batch()
         //shareFile()
-        for(item in billItemList){
+        for (item in billItemList) {
             user?.uid?.let {
-                db?.collection(it)?.document("Bill items")?.set(item)?.addOnSuccessListener { void: Void? ->
+                db?.collection(it)?.document(billItemList[0].phoneNo)?.collection("Bill Items")?.document()?.set(item)?.addOnSuccessListener { void: Void? ->
                     Toast.makeText(contextRef.get(), "Success", Toast.LENGTH_LONG).show()
                 }?.addOnFailureListener { exception: java.lang.Exception ->
                     Toast.makeText(contextRef.get(), "Failure", Toast.LENGTH_LONG).show()
@@ -323,5 +322,4 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
             contextRef.get()?.startActivity(Intent.createChooser(intentShareFile, "Share File"));
         }
     }
-
 }

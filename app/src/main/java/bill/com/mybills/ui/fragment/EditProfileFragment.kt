@@ -196,6 +196,16 @@ internal class EditProfileFragment : Fragment() {
 		}
 	}
 
+    override fun onResume() {
+        super.onResume()
+        val localFile = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "image.jpg")
+        storageReference?.child(user?.uid + "/businessLogo/businessLogo_image")?.getFile(localFile)?.addOnFailureListener {
+            Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
+        }?.addOnSuccessListener {
+            Toast.makeText(context, "Profile iamge saved", Toast.LENGTH_LONG).show()
+        }
+    }
+
 	private fun takeImage(isBusinessLogo: Boolean) {
 		if (isBusinessLogo) {
 			capturedImageFile = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "businessLogo_image")
