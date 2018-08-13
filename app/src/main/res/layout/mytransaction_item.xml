@@ -69,6 +69,17 @@
             app:layout_constraintTop_toBottomOf="@+id/transactionLayout" />
 
         <LinearLayout
+            android:id="@+id/Linearvoucherlayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view4"/>
+
+        <LinearLayout
             android:id="@+id/voucherlayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

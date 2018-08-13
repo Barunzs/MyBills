@@ -1,30 +1,31 @@
 package bill.com.mybills.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
-import bill.com.mybills.model.Item
 import bill.com.mybills.ui.adapter.MyTransactionadapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_mytransaction.*
 import java.util.ArrayList
 import android.util.Log
 import bill.com.mybills.model.BillItem
-import com.google.android.gms.tasks.OnCompleteListener
+import bill.com.mybills.model.Item
+import bill.com.mybills.ui.activity.BillPreviewActivity
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.QuerySnapshot
-import com.google.android.gms.tasks.Task
-import android.support.annotation.NonNull
-
-
+import kotlinx.android.synthetic.main.fragment_bill.*
+import android.text.InputType
+import android.widget.EditText
+import android.widget.RelativeLayout
+import android.text.InputFilter
 
 
 class MyBillTransactionFragment : Fragment() {
@@ -35,6 +36,7 @@ class MyBillTransactionFragment : Fragment() {
     private var docRef: DocumentReference? = null
     private var user: FirebaseUser? = null
     private var db: FirebaseFirestore? = null
+    private var registration: ListenerRegistration? = null;
 
     companion object {
         val TAG = MyBillTransactionFragment::class.java.simpleName
@@ -54,14 +56,17 @@ class MyBillTransactionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //billItemList = getBillItemList() as ArrayList<BillItem>
-        getBillItemList()
         goalVoucherRecyclerView?.layoutManager = LinearLayoutManager(context)
         transactionAdapter = MyTransactionadapter()
     }
 
+    override fun onResume() {
+        super.onResume()
+        showalert()
+    }
 
-    private fun getBillItemList() {
+
+    private fun getBillItemList(phoneNo: String) {
         /*val itemListJsonDB = appDAL?.billItemJson
         val type = object : TypeToken<ArrayList<String>>() {
         }.type
@@ -93,23 +98,23 @@ class MyBillTransactionFragment : Fragment() {
                 Toast.makeText(context, "No Profile Data Found", Toast.LENGTH_LONG).show()
             }
         }*/
-       docRef
-                ?.get()
-                ?.addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        for (document in arrayOf(task.result)) {
-                            if (document.exists())
-                                Log.d(TAG, document.id + " => " + document.data)
-                        }
-                    } else {
-                        Log.d(TAG, "Error getting documents: ", task.exception)
-                    }
-                }
+        /* docRef
+                  ?.get()
+                  ?.addOnCompleteListener { task ->
+                      if (task.isSuccessful) {
+                          for (document in arrayOf(task.result)) {
+                              if (document.exists())
+                                  Log.d(TAG, document.id + " => " + document.data)
+                          }
+                      } else {
+                          Log.d(TAG, "Error getting documents: ", task.exception)
+                      }
+                  }*/
 
-       /* val capitalCities = db?.collection("Bill")?.document()?.get()
+        /* val capitalCities = db?.collection("Bill")?.document()?.get()
 
-        for (doc in arrayOf(capitalCities)) {
-            *//*Log.d(TAG, "HHHHH: ${doc?.document()?.get()?.addOnCompleteListener(OnCompleteListener {
+         for (doc in arrayOf(capitalCities)) {
+             *//*Log.d(TAG, "HHHHH: ${doc?.document()?.get()?.addOnCompleteListener(OnCompleteListener {
                 if (it.result.exists())
                     Log.w(TAG, "Hello:" + it.result.data)
             })}")*//*
@@ -118,7 +123,7 @@ class MyBillTransactionFragment : Fragment() {
             }))
         }
 */
-        val list = ArrayList<String>()
+        /*val list = ArrayList<String>()
         db?.collection("Wban5NWAP8aQegqpVt1avLrY5at1")?.document("9090909090")?.parent?.get()?.addOnCompleteListener(OnCompleteListener<QuerySnapshot> { task ->
             if (task.isSuccessful) {
                 for (document in task.result) {
@@ -128,13 +133,13 @@ class MyBillTransactionFragment : Fragment() {
             } else {
                 Log.d(TAG, "Error getting documents: ", task.exception)
             }
-        })
+        })*/
         //docRef?.addSnapshotListener( EventListener())
 
-        val notesList = mutableListOf<BillItem>()
+        val billitemList = mutableListOf<BillItem>()
 
         user?.uid?.let {
-            db?.collection(it)?.document("9090909090")?.collection("Bill Items")
+            registration = db?.collection(it)?.document(phoneNo)?.collection("Bill Items")
                     ?.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                         completedGoalsUpdateProgressBar.visibility = View.GONE
                         if (e != null) {
@@ -144,23 +149,47 @@ class MyBillTransactionFragment : Fragment() {
 
                         for (doc in snapshots) {
                             val note = doc.toObject(BillItem::class.java)
-                            //Log.w(TAG, "doc:"+doc.data)
-                            //note.id = doc.id
-                            notesList.add(note)
+                            billitemList.add(note)
                         }
-                        transactionAdapter.billItemList = notesList as ArrayList<BillItem>
+                        transactionAdapter.billItemList = billitemList as ArrayList<BillItem>
                         goalVoucherRecyclerView?.adapter = transactionAdapter
-                        // instead of simply using the entire query snapshot
-                        // see the actual changes to query results between query snapshots (added, removed, and modified)
                         for (dc in snapshots.documentChanges) {
                             when (dc.type) {
-                                DocumentChange.Type.ADDED -> Log.d(TAG, "New city: " + dc.document.data)
-                                DocumentChange.Type.MODIFIED -> Log.d(TAG, "Modified city: " + dc.document.data)
-                                DocumentChange.Type.REMOVED -> Log.d(TAG, "Removed city: " + dc.document.data)
+                                DocumentChange.Type.ADDED ->
+                                    Log.d(TAG, "New city: " + dc.document.data)
+                                DocumentChange.Type.MODIFIED ->
+                                    Log.d(TAG, "Modified city: " + dc.document.data)
+                                DocumentChange.Type.REMOVED ->
+                                    Log.d(TAG, "Removed city: " + dc.document.data)
+
                             }
                         }
                     })
         }
 
     }
+
+    private fun showalert() {
+        val builder = context?.let { context?.let { it1 -> AlertDialog.Builder(it1, R.style.MyDialogTheme) } }
+        val inputPhone = EditText(context)
+        inputPhone.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_CLASS_PHONE
+        inputPhone.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10))
+        builder?.setView(inputPhone)
+        builder?.setTitle("SEARCH BILL")
+        builder?.setMessage("Please enter Customer Phone No")
+        builder?.setPositiveButton("Search") { dialog, which ->
+            Log.d(TAG, "YES: ")
+            val customerPhone = inputPhone.text.toString()
+            if (!customerPhone.isEmpty())
+                getBillItemList(customerPhone)
+        }
+        val dialog: AlertDialog? = builder?.create()
+        dialog?.show()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        registration?.remove()
+    }
+
 }
