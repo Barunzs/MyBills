@@ -175,14 +175,9 @@ class MyBillTransactionFragment : Fragment() {
                         expandableListAdapter = CustomExpandableListAdapter(context, expandableListTitle, billitemsMap)
                         expandableListView.setAdapter(expandableListAdapter)
                         expandableListView.setOnGroupCollapseListener { groupPosition ->
-                            Toast.makeText(context,
-                                    expandableListTitle[groupPosition] + " List Collapsed.",
-                                    Toast.LENGTH_SHORT).show()
                         }
                         expandableListView.setOnGroupExpandListener(ExpandableListView.OnGroupExpandListener { groupPosition ->
-                            Toast.makeText(context,
-                                    expandableListTitle[groupPosition] + " List Expanded.",
-                                    Toast.LENGTH_SHORT).show()
+
                         })
                         /* for (dc in snapshots.documentChanges) {
                              when (dc.type) {

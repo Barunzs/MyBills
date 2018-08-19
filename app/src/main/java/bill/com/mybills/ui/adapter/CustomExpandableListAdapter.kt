@@ -10,7 +10,9 @@ import android.view.LayoutInflater
 import bill.com.mybills.R
 
 import android.graphics.Typeface
+import android.widget.ImageView
 import bill.com.mybills.R.id.weight
+import com.squareup.picasso.Picasso
 import java.text.DecimalFormat
 
 
@@ -76,9 +78,12 @@ class CustomExpandableListAdapter(val context: Context?, val expandableListTitle
                 .findViewById<View>(R.id.weight) as TextView
         val amountTextView = convertView
                 .findViewById<View>(R.id.amount) as TextView
+        val imageView = convertView
+                .findViewById<View>(R.id.ornamentImage) as ImageView
         expandedListTextView.text = billItem.particulars
         weightTextView.text = "${billItem.weight}g"
         amountTextView.text =  "₹ " + df.format(billItem.amtGold)
+        Picasso.with(context).load(billItem.itemUri).into(imageView)
         return convertView
     }
 

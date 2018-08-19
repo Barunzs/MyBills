@@ -99,6 +99,12 @@ internal class BillFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         appDAL = context?.let { AppDAL(it) }
+        if (!appDAL?.billItemJson.isNullOrEmpty()) {
+            customerField.visibility = View.INVISIBLE
+            customerPhoneField.visibility = View.INVISIBLE
+            customerName.visibility = View.INVISIBLE
+            customerPhone.visibility = View.INVISIBLE
+        }
     }
 
     private fun initEventsListeners() {
@@ -149,7 +155,7 @@ internal class BillFragment : Fragment() {
         docRef?.get()?.addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
                 val businessProfile = documentSnapshot.toObject(BusinessProfile::class.java)
-                if (isVisible){
+                if (isVisible) {
                     shopNameHeader.text = businessProfile.orgName
                     shopAddress.text = businessProfile.address + " Pincode:" + businessProfile.pincode
                 }
@@ -176,8 +182,8 @@ internal class BillFragment : Fragment() {
     }
 
     private fun startImageCapture() {
-        if (customerField.text.toString().isEmpty()) {
-            Toast.makeText(context, "Please enter Customer name before taking image", Toast.LENGTH_LONG).show()
+        if (particular.text.toString().isEmpty()) {
+            Toast.makeText(context, "Please enter Ornament name before taking image", Toast.LENGTH_LONG).show()
             return
         }
         capturedImageFile = File.createTempFile("product_image", ".jpg", context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
@@ -226,7 +232,7 @@ internal class BillFragment : Fragment() {
                         byteArrayOutputStream.flush()
                         byteArrayOutputStream.close()
                         val uri = Uri.fromFile(capturedImageFile)
-                        val customerName = customerField.text.toString()
+                        val customerName = particular.text.toString()
                         val filePath = uri?.lastPathSegment?.let { it1 -> storageReference?.child(customerName + "/" + System.currentTimeMillis())?.child(it1) }
                         filePath?.putFile(uri)?.addOnFailureListener {
                             Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
@@ -261,15 +267,11 @@ internal class BillFragment : Fragment() {
 
     private fun addBillItem() {
         try {
-            if(customerPhoneField.text.toString().isEmpty() || customerName.text.toString().isEmpty()){
-				Toast.makeText(context,"Please enter customer details",Toast.LENGTH_LONG).show();
-                return;
-			}
             //val billdate = SimpleDateFormat("yyyy.MM.dd.HH.mm.ss")
             val timestamp = Timestamp(System.currentTimeMillis())
             //var date = (Calendar.getInstance().time)
-            val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(),customerPhoneField.text.toString(),timestamp.time.toString())
-           /* val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst*/
+            val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(), customerPhoneField.text.toString(), timestamp.time.toString())
+            /* val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst*/
             val totalAmt = amountOfGold + makingCharge.text.toString().toDouble()
             val df = DecimalFormat("#.##")
             df.roundingMode = RoundingMode.CEILING
@@ -328,6 +330,7 @@ internal class BillFragment : Fragment() {
         return object : CountDownTimer(millisInFuture, countDownInterval) {
             override fun onTick(millisUntilFinished: Long) {
             }
+
             override fun onFinish() {
                 showalert(item)
             }
