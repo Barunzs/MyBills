@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import bill.com.mybills.R
 import bill.com.mybills.model.BillItem
-import bill.com.mybills.model.Item
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.mytransaction_item.view.*
 import java.text.SimpleDateFormat
@@ -20,9 +19,16 @@ internal class MyTransactionViewHolder(var parent: ViewGroup?) : RecyclerView.Vi
         val total = billItem.amtGold + billItem.makingCharge
         itemView.voucherAmount.text = ("₹ $total").toString()
         val d = Date(billItem.date.toLong())
-        val f = SimpleDateFormat("dd-MM-yyyy",Locale.US)
+        val f = SimpleDateFormat("dd-MM-yyyy", Locale.US)
         itemView.activityDateTimeTextView.text = f.format(d)
         Picasso.with(itemView.context).load(billItem.itemUri).into(itemView.voucherImage)
     }
+
+    fun setBillItemMap(billItemList: ArrayList<BillItem>) {
+        billItemList.forEach {
+
+        }
+    }
+
 
 }

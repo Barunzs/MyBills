@@ -1,42 +1,44 @@
 package bill.com.mybills.ui.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.text.InputFilter
+import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
+import bill.com.mybills.model.BillItem
 import bill.com.mybills.ui.adapter.MyTransactionadapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.android.synthetic.main.fragment_mytransaction.*
-import java.util.ArrayList
-import android.util.Log
-import bill.com.mybills.model.BillItem
-import bill.com.mybills.model.Item
-import bill.com.mybills.ui.activity.BillPreviewActivity
 import com.google.firebase.firestore.*
-import com.google.firebase.firestore.QuerySnapshot
-import kotlinx.android.synthetic.main.fragment_bill.*
-import android.text.InputType
-import android.widget.EditText
-import android.widget.RelativeLayout
-import android.text.InputFilter
+import com.google.firebase.firestore.EventListener
+import kotlinx.android.synthetic.main.fragment_mytransaction.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import android.widget.ExpandableListAdapter
+import android.widget.ExpandableListView
+import android.widget.Toast
+import bill.com.mybills.ui.adapter.CustomExpandableListAdapter
+import bill.com.mybills.R.id.expandableListView
 
 
 class MyBillTransactionFragment : Fragment() {
 
     private var appDAL: AppDAL? = null
-    private var billItemList: ArrayList<BillItem> = ArrayList()
     private lateinit var transactionAdapter: MyTransactionadapter
     private var docRef: DocumentReference? = null
     private var user: FirebaseUser? = null
     private var db: FirebaseFirestore? = null
     private var registration: ListenerRegistration? = null;
+    var expandableListAdapter: ExpandableListAdapter? = null
 
     companion object {
         val TAG = MyBillTransactionFragment::class.java.simpleName
@@ -48,6 +50,7 @@ class MyBillTransactionFragment : Fragment() {
         db = FirebaseFirestore.getInstance()
         user = FirebaseAuth.getInstance().currentUser
         docRef = user?.uid?.let { db?.collection(it)?.document("Bill") }
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -56,7 +59,7 @@ class MyBillTransactionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        goalVoucherRecyclerView?.layoutManager = LinearLayoutManager(context)
+        //goalVoucherRecyclerView?.layoutManager = LinearLayoutManager(context)
         transactionAdapter = MyTransactionadapter()
     }
 
@@ -137,8 +140,8 @@ class MyBillTransactionFragment : Fragment() {
         //docRef?.addSnapshotListener( EventListener())
 
         val billitemList = mutableListOf<BillItem>()
-
-        user?.uid?.let {
+        val expandableListTitle = mutableListOf<String>()
+        user?.uid?.let { it ->
             registration = db?.collection(it)?.document(phoneNo)?.collection("Bill Items")
                     ?.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                         completedGoalsUpdateProgressBar.visibility = View.GONE
@@ -146,24 +149,52 @@ class MyBillTransactionFragment : Fragment() {
                             Log.w(TAG, "listen:error", e)
                             return@EventListener
                         }
-
+                        val billitemsMap = HashMap<String, ArrayList<BillItem>?>()
+                        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
                         for (doc in snapshots) {
                             val note = doc.toObject(BillItem::class.java)
                             billitemList.add(note)
-                        }
-                        transactionAdapter.billItemList = billitemList as ArrayList<BillItem>
-                        goalVoucherRecyclerView?.adapter = transactionAdapter
-                        for (dc in snapshots.documentChanges) {
-                            when (dc.type) {
-                                DocumentChange.Type.ADDED ->
-                                    Log.d(TAG, "New city: " + dc.document.data)
-                                DocumentChange.Type.MODIFIED ->
-                                    Log.d(TAG, "Modified city: " + dc.document.data)
-                                DocumentChange.Type.REMOVED ->
-                                    Log.d(TAG, "Removed city: " + dc.document.data)
-
+                            val formattedDate = Date(note.date.toLong())
+                            val dateString = dateFormat.format(formattedDate)
+                            if (!expandableListTitle.contains(dateString))
+                                expandableListTitle.add(dateString)
+                            if (billitemsMap.containsKey(dateString)) {
+                                val billItemsList = billitemsMap[dateString]
+                                billItemsList?.add(note)
+                                billitemsMap[dateString] = billItemsList
+                            } else {
+                                val billItemsList = ArrayList<BillItem>()
+                                billItemsList.add(note)
+                                billitemsMap[dateString] = billItemsList
                             }
                         }
+                        Log.w(TAG, "billitemsMap:${billitemsMap["13-08-2018"]?.size}")
+                        //transactionAdapter.billItemList = billitemList as ArrayList<BillItem>
+                        //transactionAdapter.billitemsMap = billitemsMap
+                        //goalVoucherRecyclerView?.adapter = transactionAdapter
+                        expandableListAdapter = CustomExpandableListAdapter(context, expandableListTitle, billitemsMap)
+                        expandableListView.setAdapter(expandableListAdapter)
+                        expandableListView.setOnGroupCollapseListener { groupPosition ->
+                            Toast.makeText(context,
+                                    expandableListTitle[groupPosition] + " List Collapsed.",
+                                    Toast.LENGTH_SHORT).show()
+                        }
+                        expandableListView.setOnGroupExpandListener(ExpandableListView.OnGroupExpandListener { groupPosition ->
+                            Toast.makeText(context,
+                                    expandableListTitle[groupPosition] + " List Expanded.",
+                                    Toast.LENGTH_SHORT).show()
+                        })
+                        /* for (dc in snapshots.documentChanges) {
+                             when (dc.type) {
+                                 DocumentChange.Type.ADDED ->
+                                     Log.d(TAG, "New city: " + dc.document.data)
+                                 DocumentChange.Type.MODIFIED ->
+                                     Log.d(TAG, "Modified city: " + dc.document.data)
+                                 DocumentChange.Type.REMOVED ->
+                                     Log.d(TAG, "Removed city: " + dc.document.data)
+
+                             }
+                         }*/
                     })
         }
 

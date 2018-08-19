@@ -295,12 +295,16 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
     override fun onPostExecute(result: String) {
         super.onPostExecute(result)
         progress.visibility = View.GONE
-        //appDAL?.billItemJson = String()
+        appDAL?.billItemJson = String()
         //shareFile()
+        var count = 0
         for (item in billItemList) {
             user?.uid?.let {
                 db?.collection(it)?.document(billItemList[0].phoneNo)?.collection("Bill Items")?.document()?.set(item)?.addOnSuccessListener { void: Void? ->
                     Toast.makeText(contextRef.get(), "Success", Toast.LENGTH_LONG).show()
+                    count++
+                    if (count == billItemList.size)
+                        shareFile()
                 }?.addOnFailureListener { exception: java.lang.Exception ->
                     Toast.makeText(contextRef.get(), "Failure", Toast.LENGTH_LONG).show()
                 }
