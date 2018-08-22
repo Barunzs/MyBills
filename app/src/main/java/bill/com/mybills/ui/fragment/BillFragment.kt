@@ -108,7 +108,7 @@ internal class BillFragment : Fragment() {
     }
 
     private fun initEventsListeners() {
-        /*makingCharge.addTextChangedListener(object : TextWatcher {
+        makingCharge.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(makingCharge: Editable) {
 
@@ -118,6 +118,7 @@ internal class BillFragment : Fragment() {
                     cgstrate.setText(gst.toString())
                 } catch (e: NumberFormatException) {
                     Toast.makeText(context, "Please enter all fields", Toast.LENGTH_LONG).show()
+                    gst = 0.0
                     sgstrate.setText(gst.toString())
                     cgstrate.setText(gst.toString())
                 }
@@ -129,7 +130,7 @@ internal class BillFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             }
-        })*/
+        })
 
         rateofgold.addTextChangedListener(object : TextWatcher {
 
@@ -260,7 +261,6 @@ internal class BillFragment : Fragment() {
         return BitmapFactory.decodeFile(imageFile.absolutePath, bmpOptions)
     }
 
-
     private fun generateBill(view: View) {
         addBillItem()
     }
@@ -271,8 +271,8 @@ internal class BillFragment : Fragment() {
             val timestamp = Timestamp(System.currentTimeMillis())
             //var date = (Calendar.getInstance().time)
             val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(), customerPhoneField.text.toString(), timestamp.time.toString())
-            /* val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst*/
-            val totalAmt = amountOfGold + makingCharge.text.toString().toDouble()
+            val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst
+            //val totalAmt = amountOfGold + makingCharge.text.toString().toDouble()
             val df = DecimalFormat("#.##")
             df.roundingMode = RoundingMode.CEILING
             total.text = "₹ " + df.format(totalAmt)

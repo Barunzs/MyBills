@@ -168,7 +168,7 @@ class MyBillTransactionFragment : Fragment() {
                                 billitemsMap[dateString] = billItemsList
                             }
                         }
-                        Log.w(TAG, "billitemsMap:${billitemsMap["13-08-2018"]?.size}")
+                        //Log.w(TAG, "billitemsMap:${billitemsMap["13-08-2018"]?.size}")
                         //transactionAdapter.billItemList = billitemList as ArrayList<BillItem>
                         //transactionAdapter.billitemsMap = billitemsMap
                         //goalVoucherRecyclerView?.adapter = transactionAdapter
@@ -177,7 +177,6 @@ class MyBillTransactionFragment : Fragment() {
                         expandableListView.setOnGroupCollapseListener { groupPosition ->
                         }
                         expandableListView.setOnGroupExpandListener(ExpandableListView.OnGroupExpandListener { groupPosition ->
-
                         })
                         /* for (dc in snapshots.documentChanges) {
                              when (dc.type) {
