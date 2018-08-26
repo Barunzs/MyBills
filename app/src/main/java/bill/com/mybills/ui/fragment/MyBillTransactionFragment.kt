@@ -28,6 +28,7 @@ import android.widget.ExpandableListView
 import android.widget.Toast
 import bill.com.mybills.ui.adapter.CustomExpandableListAdapter
 import bill.com.mybills.R.id.expandableListView
+import com.google.firebase.firestore.CollectionReference
 
 
 class MyBillTransactionFragment : Fragment() {
@@ -139,8 +140,19 @@ class MyBillTransactionFragment : Fragment() {
         })*/
         //docRef?.addSnapshotListener( EventListener())
 
+        /*val citiesRef = user?.uid?.let { db?.collection(it)?.document(phoneNo)?.collection("Bill Items")?.whereEqualTo("customerName", "Barun")}
+
+        citiesRef?.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
+            for (doc in snapshots) {
+                val note = doc.toObject(BillItem::class.java)
+                Log.d(TAG, "note::$note")
+            }
+
+        })*/
+
         val billitemList = mutableListOf<BillItem>()
         val expandableListTitle = mutableListOf<String>()
+        val billNoList = mutableListOf<String>()
         user?.uid?.let { it ->
             registration = db?.collection(it)?.document(phoneNo)?.collection("Bill Items")
                     ?.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
@@ -150,45 +162,47 @@ class MyBillTransactionFragment : Fragment() {
                             return@EventListener
                         }
                         val billitemsMap = HashMap<String, ArrayList<BillItem>?>()
-                        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
+                        //val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
                         for (doc in snapshots) {
-                            val note = doc.toObject(BillItem::class.java)
-                            billitemList.add(note)
-                            val formattedDate = Date(note.date.toLong())
-                            val dateString = dateFormat.format(formattedDate)
-                            if (!expandableListTitle.contains(dateString))
-                                expandableListTitle.add(dateString)
-                            if (billitemsMap.containsKey(dateString)) {
-                                val billItemsList = billitemsMap[dateString]
-                                billItemsList?.add(note)
-                                billitemsMap[dateString] = billItemsList
+                            val billItem = doc.toObject(BillItem::class.java)
+                            billitemList.add(billItem)
+                            //val formattedDate = Date(billItem.date.toLong())
+                            //val dateString = dateFormat.format(formattedDate)
+                            if (!billNoList.contains(billItem.billNo)) {
+                                expandableListTitle.add(billItem.customerName)
+                                billNoList.add(billItem.billNo)
+                            }
+                            if (billitemsMap.containsKey(billItem.billNo)) {
+                                val billItemsList = billitemsMap[billItem.billNo]
+                                billItemsList?.add(billItem)
+                                billitemsMap[billItem.billNo] = billItemsList
                             } else {
                                 val billItemsList = ArrayList<BillItem>()
-                                billItemsList.add(note)
-                                billitemsMap[dateString] = billItemsList
+                                billItemsList.add(billItem)
+                                billitemsMap[billItem.billNo] = billItemsList
                             }
                         }
                         //Log.w(TAG, "billitemsMap:${billitemsMap["13-08-2018"]?.size}")
                         //transactionAdapter.billItemList = billitemList as ArrayList<BillItem>
                         //transactionAdapter.billitemsMap = billitemsMap
                         //goalVoucherRecyclerView?.adapter = transactionAdapter
-                        expandableListAdapter = CustomExpandableListAdapter(context, expandableListTitle, billitemsMap)
+                        expandableListAdapter = CustomExpandableListAdapter(context, billNoList, billitemsMap,expandableListTitle)
                         expandableListView.setAdapter(expandableListAdapter)
                         expandableListView.setOnGroupCollapseListener { groupPosition ->
                         }
                         expandableListView.setOnGroupExpandListener(ExpandableListView.OnGroupExpandListener { groupPosition ->
                         })
-                        /* for (dc in snapshots.documentChanges) {
-                             when (dc.type) {
-                                 DocumentChange.Type.ADDED ->
-                                     Log.d(TAG, "New city: " + dc.document.data)
-                                 DocumentChange.Type.MODIFIED ->
-                                     Log.d(TAG, "Modified city: " + dc.document.data)
-                                 DocumentChange.Type.REMOVED ->
-                                     Log.d(TAG, "Removed city: " + dc.document.data)
+                        for (dc in snapshots.documentChanges) {
+                            when (dc.type) {
+                                DocumentChange.Type.ADDED ->
+                                    Log.d(TAG, "New city: " + dc.document.data)
+                                DocumentChange.Type.MODIFIED ->
+                                    Log.d(TAG, "Modified city: " + dc.document.data)
+                                DocumentChange.Type.REMOVED ->
+                                    Log.d(TAG, "Removed city: " + dc.document.data)
 
-                             }
-                         }*/
+                            }
+                        }
                     })
         }
 

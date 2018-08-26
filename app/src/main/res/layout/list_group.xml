@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:weightSum="2">
+    android:weightSum="3">
 
     <TextView
         android:id="@+id/listTitle"
@@ -14,7 +14,20 @@
         android:paddingStart="?android:attr/expandableListPreferredItemPaddingLeft"
         android:paddingTop="8dp"
         android:layout_gravity="center_vertical"
-        android:layout_weight="1"
+        android:layout_weight="1.2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/billDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingStart="?android:attr/expandableListPreferredItemPaddingLeft"
+        android:paddingTop="8dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1.2"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/white"
         android:textStyle="bold" />
@@ -23,7 +36,7 @@
         android:id="@+id/pdf"
         android:layout_width="0dp"
         android:layout_height="24dp"
-        android:layout_weight="1"
+        android:layout_weight=".6"
         android:layout_gravity="center_vertical"
         android:adjustViewBounds="true"
         android:src="@drawable/pdf_icon" />

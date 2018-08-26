@@ -97,7 +97,7 @@
                 android:maxLines="1"
                 android:maxLength="10"
                 app:layout_constraintBaseline_toBaselineOf="@+id/customerPhone"
-                app:layout_constraintEnd_toEndOf="@+id/weight"
+                app:layout_constraintEnd_toEndOf="@+id/weigh_of_gold_item"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/textView47"
                 tools:text="9741046748" />
@@ -114,13 +114,13 @@
                 app:layout_constraintTop_toBottomOf="@+id/shopAddress" />
 
             <EditText
-                android:id="@+id/particular"
+                android:id="@+id/particularofitem"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:maxLines="1"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView47"
-                app:layout_constraintEnd_toEndOf="@+id/weight"
+                app:layout_constraintEnd_toEndOf="@+id/weigh_of_gold_item"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/textView47"
                 tools:text="Ring" />
@@ -136,7 +136,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView47" />
 
             <EditText
-                android:id="@+id/weight"
+                android:id="@+id/weigh_of_gold_item"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -205,7 +205,7 @@
                 android:inputType="numberSigned|numberDecimal"
                 android:visibility="visible"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView49"
-                app:layout_constraintEnd_toEndOf="@+id/particular"
+                app:layout_constraintEnd_toEndOf="@+id/particularofitem"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/textView49"
                 tools:text="Rs 20000" />

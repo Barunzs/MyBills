@@ -40,6 +40,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_bill.*
+import kotlinx.android.synthetic.main.list_item.*
 import java.io.File
 import java.io.FileOutputStream
 import java.math.RoundingMode
@@ -79,7 +80,6 @@ internal class BillFragment : Fragment() {
         storage = FirebaseStorage.getInstance()
         auth = FirebaseAuth.getInstance()
         storageReference = storage?.reference
-        billItemList = ArrayList()
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
         user = FirebaseAuth.getInstance().currentUser
@@ -98,17 +98,37 @@ internal class BillFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        billItemList = ArrayList()
         appDAL = context?.let { AppDAL(it) }
         if (!appDAL?.billItemJson.isNullOrEmpty()) {
-            customerField.visibility = View.INVISIBLE
-            customerPhoneField.visibility = View.INVISIBLE
-            customerName.visibility = View.INVISIBLE
-            customerPhone.visibility = View.INVISIBLE
+            val billItem = getFirstBillItem()
+            customerField.setText(billItem?.customerName)
+            customerPhoneField.setText(billItem?.phoneNo)
+            particularofitem.requestFocus()
         }
     }
 
+    private fun getFirstBillItem():Item?{
+
+        var billitem: Item? = null
+        if (!appDAL?.billItemJson.isNullOrEmpty()) {
+            val arrayListType = object : TypeToken<ArrayList<String>>() {
+            }.type
+            val ArrayLisgson = Gson()
+            billItemList = ArrayLisgson.fromJson<java.util.ArrayList<String>>(appDAL?.billItemJson, arrayListType)
+            if (billItemList.size > 0) {
+                val type = object : TypeToken<Item>() {
+                }.type
+                val itemGson = Gson()
+                billitem  = itemGson.fromJson<Item>(billItemList[0], type)
+            }
+
+        }
+        return billitem
+    }
+
     private fun initEventsListeners() {
-        makingCharge.addTextChangedListener(object : TextWatcher {
+        /*makingCharge.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(makingCharge: Editable) {
 
@@ -118,7 +138,6 @@ internal class BillFragment : Fragment() {
                     cgstrate.setText(gst.toString())
                 } catch (e: NumberFormatException) {
                     Toast.makeText(context, "Please enter all fields", Toast.LENGTH_LONG).show()
-                    gst = 0.0
                     sgstrate.setText(gst.toString())
                     cgstrate.setText(gst.toString())
                 }
@@ -130,14 +149,14 @@ internal class BillFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             }
-        })
+        })*/
 
         rateofgold.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(rateOfGold: Editable) {
 
                 try {
-                    amountOfGold = weight.text.toString().toDouble() * (rateOfGold.toString().toDouble() / 10)
+                    amountOfGold = weigh_of_gold_item.text.toString().toDouble() * (rateOfGold.toString().toDouble() / 10)
                     amtofgold.setText(amountOfGold.toString())
                 } catch (e: NumberFormatException) {
                     Toast.makeText(context, "Please enter all fields", Toast.LENGTH_LONG).show()
@@ -164,7 +183,6 @@ internal class BillFragment : Fragment() {
                 Toast.makeText(context, "No Profile Data Found", Toast.LENGTH_LONG).show()
             }
         }
-
         generatebill.setOnClickListener { generateBill(it) }
         image.setOnClickListener { takeProductImage(it) }
 
@@ -183,7 +201,7 @@ internal class BillFragment : Fragment() {
     }
 
     private fun startImageCapture() {
-        if (particular.text.toString().isEmpty()) {
+        if (particularofitem.text.toString().isEmpty()) {
             Toast.makeText(context, "Please enter Ornament name before taking image", Toast.LENGTH_LONG).show()
             return
         }
@@ -233,7 +251,7 @@ internal class BillFragment : Fragment() {
                         byteArrayOutputStream.flush()
                         byteArrayOutputStream.close()
                         val uri = Uri.fromFile(capturedImageFile)
-                        val customerName = particular.text.toString()
+                        val customerName = particularofitem.text.toString()
                         val filePath = uri?.lastPathSegment?.let { it1 -> storageReference?.child(customerName + "/" + System.currentTimeMillis())?.child(it1) }
                         filePath?.putFile(uri)?.addOnFailureListener {
                             Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
@@ -261,6 +279,7 @@ internal class BillFragment : Fragment() {
         return BitmapFactory.decodeFile(imageFile.absolutePath, bmpOptions)
     }
 
+
     private fun generateBill(view: View) {
         addBillItem()
     }
@@ -269,10 +288,17 @@ internal class BillFragment : Fragment() {
         try {
             //val billdate = SimpleDateFormat("yyyy.MM.dd.HH.mm.ss")
             val timestamp = Timestamp(System.currentTimeMillis())
+            val firstBillItem = getFirstBillItem()
+            val billNo:String?
+            if(firstBillItem!=null){
+                 billNo = firstBillItem.billNo
+            }else {
+                billNo = timestamp.time.toString()
+            }
             //var date = (Calendar.getInstance().time)
-            val item = Item(particular?.text.toString(), weight.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weight.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(), customerPhoneField.text.toString(), timestamp.time.toString())
-            val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst
-            //val totalAmt = amountOfGold + makingCharge.text.toString().toDouble()
+            val item = Item(particularofitem?.text.toString(), weigh_of_gold_item.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weigh_of_gold_item.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(), customerPhoneField.text.toString(), timestamp.toString(), billNo)
+            /* val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst*/
+            val totalAmt = amountOfGold + makingCharge.text.toString().toDouble()
             val df = DecimalFormat("#.##")
             df.roundingMode = RoundingMode.CEILING
             total.text = "₹ " + df.format(totalAmt)
@@ -313,7 +339,7 @@ internal class BillFragment : Fragment() {
     private fun showalert(item: Item) {
         val builder = context?.let { context?.let { it1 -> AlertDialog.Builder(it1, R.style.MyDialogTheme) } }
         builder?.setTitle("Generate Bill")
-        builder?.setMessage("Do you want add ${particular.text} to Bill?")
+        builder?.setMessage("Do you want add next item to Bill?")
         builder?.setPositiveButton("YES") { dialog, which ->
             addNewItem()
         }

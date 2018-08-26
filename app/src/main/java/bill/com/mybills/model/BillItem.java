@@ -50,6 +50,16 @@ public class BillItem implements Serializable {
     private Double amtGold;
     private Double makingCharge;
 
+    public String getBillNo() {
+        return billNo;
+    }
+
+    public void setBillNo(String billNo) {
+        this.billNo = billNo;
+    }
+
+    private String billNo;
+
     public String getItemUri() {
         return itemUri;
     }
