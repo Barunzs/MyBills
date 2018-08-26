@@ -14,10 +14,12 @@ import android.widget.ImageView
 import bill.com.mybills.R.id.weight
 import com.squareup.picasso.Picasso
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class CustomExpandableListAdapter(val context: Context?, val expandableListTitle: List<String>,
-                                  val expandableListDetail: HashMap<String, ArrayList<BillItem>?>) : BaseExpandableListAdapter() {
+                                  val expandableListDetail: HashMap<String, ArrayList<BillItem>?>, val headerTitle:List<String>) : BaseExpandableListAdapter() {
 
 
     override fun hasStableIds(): Boolean {
@@ -31,16 +33,24 @@ class CustomExpandableListAdapter(val context: Context?, val expandableListTitle
 
     override fun getGroupView(listPosition: Int, isExpanded: Boolean,
                               convertView: View?, parent: ViewGroup): View {
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
         var convertView = convertView
         val listTitle = getGroup(listPosition) as String
+        val billDate = expandableListTitle[listPosition]
+        val formattedDate = Date(billDate.toLong())
+        val dateString = dateFormat.format(formattedDate)
         if (convertView == null) {
             val layoutInflater = this.context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = layoutInflater.inflate(R.layout.list_group, null)
         }
         val listTitleTextView = convertView!!
                 .findViewById<View>(R.id.listTitle) as TextView
+        val dateTextView = convertView!!
+                .findViewById<View>(R.id.billDate) as TextView
         listTitleTextView.setTypeface(null, Typeface.BOLD)
+        dateTextView.setTypeface(null, Typeface.BOLD)
         listTitleTextView.text = listTitle
+        dateTextView.text = dateString
         return convertView
     }
 
@@ -55,7 +65,7 @@ class CustomExpandableListAdapter(val context: Context?, val expandableListTitle
     }
 
     override fun getGroup(listPosition: Int): Any {
-        return this.expandableListTitle[listPosition]
+        return this.headerTitle[listPosition]
     }
 
     override fun getGroupId(listPosition: Int): Long {
