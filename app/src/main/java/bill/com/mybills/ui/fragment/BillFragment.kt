@@ -108,7 +108,7 @@ internal class BillFragment : Fragment() {
         }
     }
 
-    private fun getFirstBillItem():Item?{
+    private fun getFirstBillItem(): Item? {
 
         var billitem: Item? = null
         if (!appDAL?.billItemJson.isNullOrEmpty()) {
@@ -120,7 +120,7 @@ internal class BillFragment : Fragment() {
                 val type = object : TypeToken<Item>() {
                 }.type
                 val itemGson = Gson()
-                billitem  = itemGson.fromJson<Item>(billItemList[0], type)
+                billitem = itemGson.fromJson<Item>(billItemList[0], type)
             }
 
         }
@@ -128,7 +128,7 @@ internal class BillFragment : Fragment() {
     }
 
     private fun initEventsListeners() {
-        /*makingCharge.addTextChangedListener(object : TextWatcher {
+        makingCharge.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(makingCharge: Editable) {
 
@@ -138,6 +138,7 @@ internal class BillFragment : Fragment() {
                     cgstrate.setText(gst.toString())
                 } catch (e: NumberFormatException) {
                     Toast.makeText(context, "Please enter all fields", Toast.LENGTH_LONG).show()
+                    gst = 0.0
                     sgstrate.setText(gst.toString())
                     cgstrate.setText(gst.toString())
                 }
@@ -149,7 +150,7 @@ internal class BillFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             }
-        })*/
+        })
 
         rateofgold.addTextChangedListener(object : TextWatcher {
 
@@ -289,16 +290,16 @@ internal class BillFragment : Fragment() {
             //val billdate = SimpleDateFormat("yyyy.MM.dd.HH.mm.ss")
             val timestamp = Timestamp(System.currentTimeMillis())
             val firstBillItem = getFirstBillItem()
-            val billNo:String?
-            if(firstBillItem!=null){
-                 billNo = firstBillItem.billNo
-            }else {
+            val billNo: String?
+            if (firstBillItem != null) {
+                billNo = firstBillItem.billNo
+            } else {
                 billNo = timestamp.time.toString()
             }
             //var date = (Calendar.getInstance().time)
             val item = Item(particularofitem?.text.toString(), weigh_of_gold_item.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weigh_of_gold_item.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(), customerPhoneField.text.toString(), timestamp.toString(), billNo)
-            /* val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst*/
-            val totalAmt = amountOfGold + makingCharge.text.toString().toDouble()
+            val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst
+            //val totalAmt = amountOfGold + makingCharge.text.toString().toDouble()
             val df = DecimalFormat("#.##")
             df.roundingMode = RoundingMode.CEILING
             total.text = "₹ " + df.format(totalAmt)
