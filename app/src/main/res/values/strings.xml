@@ -32,4 +32,16 @@
     <string name="particulars_of_ornament">Details of Ornament</string>
     <string name="no_transaction_available">No Transaction Available</string>
     <string name="amount_placeholder">₹%d</string>
+    <string name="title_activity_welcome">Home Screen</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+    <string name="slide_1_title">Welcome...</string>
+    <string name="slide_1_desc">Welcome to Billing Solution, one stop solution for your customer billing</string>
+    <string name="slide_2_title">Billing</string>
+    <string name="slide_2_desc">Create bills for daily sales and share via email or print using printer</string>
+    <string name="slide_3_title">Transactions</string>
+    <string name="slide_3_desc">Search your customer transaction using phone number of the customer</string>
+    <string name="slide_4_title">Flexibility</string>
+    <string name="slide_4_desc">Edit your profile to add your GST and Buiness logo in the Bill</string>
 </resources>

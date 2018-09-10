@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import bill.com.mybills.R
 import bill.com.mybills.barcodevision.BarcodeCaptureActivity
+import bill.com.mybills.ui.activity.WelcomeActivity
 import com.google.android.gms.vision.barcode.Barcode
 import kotlinx.android.synthetic.main.fragment_scan.*
 
@@ -38,6 +39,8 @@ internal class ScanFragment : Fragment() {
 		val intent = Intent(activity, BarcodeCaptureActivity::class.java)
 		intent.putExtra(BarcodeCaptureActivity.AutoFocus, true)
 		startActivityForResult(intent, 4)
+
+
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
