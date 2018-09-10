@@ -39,6 +39,10 @@
         <activity
             android:name=".barcodevision.BarcodeCaptureActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.WelcomeActivity"
+            android:theme="@style/Theme.Design.NoActionBar"
+            android:screenOrientation="portrait" />
         <!-- region Providers -->
         <provider
             android:name="android.support.v4.content.FileProvider"
