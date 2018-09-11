@@ -251,7 +251,7 @@ internal class EditProfileFragment : Fragment() {
                         byteArrayOutputStream.flush()
                         byteArrayOutputStream.close()
                         val uri = Uri.fromFile(capturedImageFile)
-                        var filePath: StorageReference?
+                        val filePath: StorageReference?
                         filePath = uri?.lastPathSegment?.let { it1 -> storageReference?.child(user?.uid + "/" + "businessLogo")?.child(it1) }
                         filePath?.putFile(uri)?.addOnFailureListener {
                             Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()

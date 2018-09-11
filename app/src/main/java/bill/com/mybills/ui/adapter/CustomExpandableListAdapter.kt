@@ -10,16 +10,23 @@ import android.view.LayoutInflater
 import bill.com.mybills.R
 
 import android.graphics.Typeface
+import android.os.Environment
 import android.widget.ImageView
-import bill.com.mybills.R.id.weight
+import android.widget.Toast
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
+import java.io.File
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 class CustomExpandableListAdapter(val context: Context?, val expandableListTitle: List<String>,
-                                  val expandableListDetail: HashMap<String, ArrayList<BillItem>?>, val headerTitle:List<String>) : BaseExpandableListAdapter() {
+                                  val expandableListDetail: HashMap<String, ArrayList<BillItem>?>, val headerTitle: List<String>, val user: FirebaseUser?) : BaseExpandableListAdapter() {
 
 
     override fun hasStableIds(): Boolean {
@@ -45,8 +52,19 @@ class CustomExpandableListAdapter(val context: Context?, val expandableListTitle
         }
         val listTitleTextView = convertView!!
                 .findViewById<View>(R.id.listTitle) as TextView
-        val dateTextView = convertView!!
+        val dateTextView = convertView
                 .findViewById<View>(R.id.billDate) as TextView
+        val pdfDownload = convertView.findViewById<View>(R.id.pdf) as ImageView
+        pdfDownload.setOnClickListener { v: View? ->
+            Toast.makeText(context, "hello", Toast.LENGTH_LONG).show()
+            val localFile = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "bill.pdf")
+            val storageReference = FirebaseStorage.getInstance().reference
+            storageReference.child(user?.uid + "/" + billDate + "/bills").getFile(localFile).addOnFailureListener {
+                Toast.makeText(context, it.localizedMessage, Toast.LENGTH_LONG).show()
+            }.addOnSuccessListener {
+                Toast.makeText(context, "sucess", Toast.LENGTH_LONG).show()
+            }
+        }
         listTitleTextView.setTypeface(null, Typeface.BOLD)
         dateTextView.setTypeface(null, Typeface.BOLD)
         listTitleTextView.text = listTitle
@@ -92,7 +110,7 @@ class CustomExpandableListAdapter(val context: Context?, val expandableListTitle
                 .findViewById<View>(R.id.ornamentImage) as ImageView
         expandedListTextView.text = billItem.particulars
         weightTextView.text = "${billItem.weight}g"
-        amountTextView.text =  "₹ " + df.format(billItem.amtGold)
+        amountTextView.text = "₹ " + df.format(billItem.amtGold)
         Picasso.with(context).load(billItem.itemUri).into(imageView)
         return convertView
     }

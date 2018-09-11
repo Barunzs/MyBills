@@ -186,7 +186,7 @@ class MyBillTransactionFragment : Fragment() {
                         //transactionAdapter.billItemList = billitemList as ArrayList<BillItem>
                         //transactionAdapter.billitemsMap = billitemsMap
                         //goalVoucherRecyclerView?.adapter = transactionAdapter
-                        expandableListAdapter = CustomExpandableListAdapter(context, billNoList, billitemsMap,expandableListTitle)
+                        expandableListAdapter = CustomExpandableListAdapter(context, billNoList, billitemsMap,expandableListTitle,user)
                         expandableListView.setAdapter(expandableListAdapter)
                         expandableListView.setOnGroupCollapseListener { groupPosition ->
                         }

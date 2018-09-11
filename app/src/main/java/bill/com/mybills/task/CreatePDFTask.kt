@@ -14,12 +14,17 @@ import bill.com.mybills.model.Item
 import bill.com.mybills.ui.fragment.MyProfileFragment
 import com.airbnb.lottie.LottieAnimationView
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.WriteBatch
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.itextpdf.text.*
 import com.itextpdf.text.BaseColor
 import com.itextpdf.text.html.WebColors
 import com.itextpdf.text.pdf.*
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_editprofile.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -316,6 +321,16 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
     private fun shareFile() {
         val intentShareFile = Intent(Intent.ACTION_SEND);
         val fileWithinMyDir = File(file.absolutePath)
+        val filePath: StorageReference?
+        val storage = FirebaseStorage.getInstance()
+        val storageReference = storage.reference
+        val uri = Uri.fromFile(fileWithinMyDir)
+        filePath = uri?.lastPathSegment?.let { it -> storageReference.child(user?.uid + "/" + billItemList[0].billNo + "/bills").child(it) }
+        filePath?.putFile(uri)?.addOnFailureListener {
+            Toast.makeText(contextRef.get(), "Error uploading bill" + it.localizedMessage, Toast.LENGTH_LONG).show()
+        }?.addOnSuccessListener {
+            Toast.makeText(contextRef.get(), "Bill Uploaded", Toast.LENGTH_LONG).show()
+        }
         if (fileWithinMyDir.exists()) {
             intentShareFile.type = "application/pdf";
             intentShareFile.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.absolutePath));
