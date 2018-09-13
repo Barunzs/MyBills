@@ -1,6 +1,7 @@
 package bill.com.mybills.ui.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Environment
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import bill.com.mybills.R
 import bill.com.mybills.model.BillItem
+import bill.com.mybills.ui.activity.WebviewActivity
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
@@ -52,12 +54,23 @@ class CustomExpandableListAdapter(val context: Context?, val expandableListTitle
 				.findViewById<View>(R.id.billDate) as TextView
 		val pdfDownload = convertView.findViewById<View>(R.id.pdf) as ImageView
 		pdfDownload.setOnClickListener { v: View? ->
-			val localFile = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "bill.pdf")
+			val localFile = File(context?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "bill.pdf")
 			val storageReference = FirebaseStorage.getInstance().reference
-			storageReference.child(user?.uid + "/" + billDate + "/bills").getFile(localFile).addOnFailureListener {
+			/*storageReference.child(user?.uid + "/" + billDate + "/bills").getFile(localFile).addOnFailureListener {
 				Toast.makeText(context, it.localizedMessage, Toast.LENGTH_LONG).show()
+				val intent = Intent(context, WebviewActivity::class.java)
+				intent.putExtra("URL", Uri.parse("file://" + localFile.absolutePath))
+				context?.startActivity(intent)
 			}.addOnSuccessListener {
-				Toast.makeText(context, "sucess", Toast.LENGTH_LONG).show()
+				Toast.makeText(context, "success", Toast.LENGTH_LONG).show()
+			}*/
+			storageReference.child(user?.uid + "/" + billDate + "/" + "/bills" + "/bill.pdf").getDownloadUrl().addOnSuccessListener {
+				Toast.makeText(context, "success", Toast.LENGTH_LONG).show()
+				val intent = Intent(context, WebviewActivity::class.java)
+				intent.putExtra("URL", it.toString())
+				context?.startActivity(intent)
+			}.addOnFailureListener {
+				Toast.makeText(context, it.localizedMessage, Toast.LENGTH_LONG).show()
 			}
 		}
 		listTitleTextView.setTypeface(null, Typeface.BOLD)
