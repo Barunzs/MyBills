@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:weightSum="3">
+    android:weightSum="5">
 
     <TextView
         android:id="@+id/listTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1.5"
+        android:ellipsize="end"
+        android:maxLength="12"
         android:paddingBottom="8dp"
         android:paddingStart="?android:attr/expandableListPreferredItemPaddingLeft"
         android:paddingTop="8dp"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1.2"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/white"
         android:textStyle="bold" />
@@ -23,11 +27,11 @@
         android:id="@+id/billDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="2"
         android:paddingBottom="8dp"
         android:paddingStart="?android:attr/expandableListPreferredItemPaddingLeft"
         android:paddingTop="8dp"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1.2"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/white"
         android:textStyle="bold" />
@@ -35,9 +39,26 @@
     <ImageView
         android:id="@+id/pdf"
         android:layout_width="0dp"
-        android:layout_height="24dp"
-        android:layout_weight=".6"
+        android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
+        android:layout_marginLeft="16dp"
+        android:layout_weight=".5"
         android:adjustViewBounds="true"
-        android:src="@drawable/pdf_icon" />
+        android:padding="4dp"
+        android:src="@android:drawable/stat_sys_download" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/loadingdata"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
+        android:visibility="gone"
+        app:lottie_autoPlay="true"
+        app:lottie_cacheStrategy="none"
+        app:lottie_fileName="Spinner.json"
+        app:lottie_loop="true"
+        tools:visibility="visible" />
+
 </LinearLayout>

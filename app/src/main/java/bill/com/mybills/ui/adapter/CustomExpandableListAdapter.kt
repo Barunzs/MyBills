@@ -1,5 +1,6 @@
 package bill.com.mybills.ui.adapter
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
@@ -7,13 +8,8 @@ import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseExpandableListAdapter
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import bill.com.mybills.R
 import bill.com.mybills.model.BillItem
-import bill.com.mybills.ui.activity.WebviewActivity
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
@@ -21,6 +17,14 @@ import java.io.File
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import android.content.ActivityNotFoundException
+import android.net.Uri
+import android.support.v4.content.ContextCompat.startActivity
+import android.widget.*
+import com.airbnb.lottie.LottieAnimationView
+import com.itextpdf.text.pdf.PdfFileSpecification.url
+
+
 
 
 class CustomExpandableListAdapter(val context: Context?, val expandableListTitle: List<String>,
@@ -53,24 +57,27 @@ class CustomExpandableListAdapter(val context: Context?, val expandableListTitle
 		val dateTextView = convertView
 				.findViewById<View>(R.id.billDate) as TextView
 		val pdfDownload = convertView.findViewById<View>(R.id.pdf) as ImageView
+        val loadingData : LottieAnimationView = convertView.findViewById(R.id.loadingdata) as LottieAnimationView
 		pdfDownload.setOnClickListener { v: View? ->
-			val localFile = File(context?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "bill.pdf")
+            loadingData.visibility = View.VISIBLE
 			val storageReference = FirebaseStorage.getInstance().reference
-			/*storageReference.child(user?.uid + "/" + billDate + "/bills").getFile(localFile).addOnFailureListener {
-				Toast.makeText(context, it.localizedMessage, Toast.LENGTH_LONG).show()
-				val intent = Intent(context, WebviewActivity::class.java)
-				intent.putExtra("URL", Uri.parse("file://" + localFile.absolutePath))
-				context?.startActivity(intent)
-			}.addOnSuccessListener {
+			storageReference.child(user?.uid + "/" + billDate + "/" + "/bills" + "/bill.pdf").downloadUrl.addOnSuccessListener {
 				Toast.makeText(context, "success", Toast.LENGTH_LONG).show()
-			}*/
-			storageReference.child(user?.uid + "/" + billDate + "/" + "/bills" + "/bill.pdf").getDownloadUrl().addOnSuccessListener {
-				Toast.makeText(context, "success", Toast.LENGTH_LONG).show()
-				val intent = Intent(context, WebviewActivity::class.java)
-				intent.putExtra("URL", it.toString())
-				context?.startActivity(intent)
+				val intent = Intent(Intent.ACTION_VIEW)
+				intent.setDataAndType(Uri.parse(it.toString()), "application/pdf")
+				intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+				val newIntent = Intent.createChooser(intent, "Open File")
+                loadingData.visibility = View.GONE
+				try {
+                    context?.startActivity(intent)
+				} catch (e: ActivityNotFoundException) {
+					// Instruct the user to install a PDF reader here, or something
+				}
+
 			}.addOnFailureListener {
+                loadingData.visibility = View.GONE
 				Toast.makeText(context, it.localizedMessage, Toast.LENGTH_LONG).show()
+
 			}
 		}
 		listTitleTextView.setTypeface(null, Typeface.BOLD)

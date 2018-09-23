@@ -306,7 +306,7 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
         for (item in billItemList) {
             user?.uid?.let {
                 db?.collection(it)?.document(billItemList[0].phoneNo)?.collection("Bill Items")?.document()?.set(item)?.addOnSuccessListener { void: Void? ->
-                    Toast.makeText(contextRef.get(), "Success", Toast.LENGTH_LONG).show()
+                    Toast.makeText(contextRef.get(), "Please share Bill to Customer", Toast.LENGTH_LONG).show()
                     count++
                     if (count == billItemList.size)
                         shareFile()
@@ -329,7 +329,7 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
         filePath?.putFile(uri)?.addOnFailureListener {
             Toast.makeText(contextRef.get(), "Error uploading bill" + it.localizedMessage, Toast.LENGTH_LONG).show()
         }?.addOnSuccessListener {
-            Toast.makeText(contextRef.get(), "Bill Uploaded", Toast.LENGTH_LONG).show()
+            Toast.makeText(contextRef.get(), "Bill Uploaded Successfully", Toast.LENGTH_LONG).show()
         }
         if (fileWithinMyDir.exists()) {
             intentShareFile.type = "application/pdf";

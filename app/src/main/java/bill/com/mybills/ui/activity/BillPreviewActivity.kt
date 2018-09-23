@@ -1,6 +1,7 @@
 package bill.com.mybills.ui.activity
 
 import android.app.ActivityOptions
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
@@ -36,86 +37,93 @@ import java.text.DecimalFormat
 
 class BillPreviewActivity : AppCompatActivity() {
 
-	private lateinit var billPreviewAdapter: BillPreviewAdapter
-	private var appDAL: AppDAL? = null
-	private var docRef: DocumentReference? = null
-	private var billItemList: ArrayList<Item> = ArrayList()
-	private var user: FirebaseUser? = null
-	private var db: FirebaseFirestore? = null
-	private var businessProfile: BusinessProfile? = null
+    private lateinit var billPreviewAdapter: BillPreviewAdapter
+    private var appDAL: AppDAL? = null
+    private var docRef: DocumentReference? = null
+    private var billItemList: ArrayList<Item> = ArrayList()
+    private var user: FirebaseUser? = null
+    private var db: FirebaseFirestore? = null
+    private var businessProfile: BusinessProfile? = null
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_preview)
-		val builder = StrictMode.VmPolicy.Builder()
-		StrictMode.setVmPolicy(builder.build())
-		appDAL = applicationContext?.let { AppDAL(it) }
-		val topToolBar = findViewById<Toolbar>(R.id.toolbar2)
-		setSupportActionBar(topToolBar)
-		billRecyclerView?.layoutManager = LinearLayoutManager(applicationContext)
-		db = FirebaseFirestore.getInstance()
-		user = FirebaseAuth.getInstance().currentUser
-		docRef = user?.uid?.let { db?.collection(it)?.document("Business Profile") }
-		try {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_preview)
+        val builder = StrictMode.VmPolicy.Builder()
+        StrictMode.setVmPolicy(builder.build())
+        appDAL = applicationContext?.let { AppDAL(it) }
+        val topToolBar = findViewById<Toolbar>(R.id.toolbar2)
+        setSupportActionBar(topToolBar)
+        billRecyclerView?.layoutManager = LinearLayoutManager(applicationContext)
+        db = FirebaseFirestore.getInstance()
+        user = FirebaseAuth.getInstance().currentUser
+        docRef = user?.uid?.let { db?.collection(it)?.document("Business Profile") }
+        try {
             billItemList = getBillItemList() as ArrayList<Item>
-			if (billItemList.size > 0) {
-				customer.text = billItemList[0].customerName
-				billPreviewAdapter = BillPreviewAdapter()
-				billPreviewAdapter.billItemArray = billItemList
-				billRecyclerView?.adapter = billPreviewAdapter
-				billRecyclerView.scrollToPosition(billItemList.size - 1);
-			} else {
-				tax.visibility = View.GONE
-				sendBill.visibility = View.GONE
-				Snackbar.make(billRecyclerView, "Please Generate Bill before Preview", Snackbar.LENGTH_LONG)
-						.setAction("Action", null).show()
-				return
-			}
-		} catch (e: Throwable) {
-			Snackbar.make(billRecyclerView, "Please Generate Bill before Preview", Snackbar.LENGTH_LONG)
-					.setAction("Action", null).show()
-		}
-		val df = DecimalFormat("#.##")
-		df.roundingMode = RoundingMode.CEILING
-		var totalAmt = 0.0
-		var cgst = 0.0
-		var sgst = 0.0
-		for (item in billItemList) {
-			totalAmt += (item.cgst + item.sgst + item.amtGold + item.makingCharge)
-			cgst += item.cgst
-			sgst += item.sgst
-		}
-		totalAmount.text = "₹ " + df.format(totalAmt)
-		sgstAmt.text = "₹ " + df.format(sgst)
-		cgstAmt.text = "₹ " + df.format(cgst)
-		sendBill.setOnClickListener { sendPDF(billItemList) }
-		docRef?.get()?.addOnSuccessListener { documentSnapshot ->
-			if (documentSnapshot.exists()) {
-				businessProfile = documentSnapshot.toObject(BusinessProfile::class.java)
-			} else {
-				Toast.makeText(applicationContext, "No Profile Data Found", Toast.LENGTH_LONG).show()
-			}
-		}
-	}
+            if (billItemList.size > 0) {
+                customer.text = billItemList[0].customerName
+                billPreviewAdapter = BillPreviewAdapter()
+                billPreviewAdapter.billItemArray = billItemList
+                billRecyclerView?.adapter = billPreviewAdapter
+                billRecyclerView.scrollToPosition(billItemList.size - 1);
+            } else {
+                tax.visibility = View.GONE
+                sendBill.visibility = View.GONE
+                Snackbar.make(billRecyclerView, "Please Generate Bill before Preview", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show()
+                return
+            }
+        } catch (e: Throwable) {
+            Snackbar.make(billRecyclerView, "Please Generate Bill before Preview", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+        }
+        val df = DecimalFormat("#.##")
+        df.roundingMode = RoundingMode.CEILING
+        var totalAmt = 0.0
+        var cgst = 0.0
+        var sgst = 0.0
+        for (item in billItemList) {
+            totalAmt += (item.cgst + item.sgst + item.amtGold + item.makingCharge)
+            cgst += item.cgst
+            sgst += item.sgst
+        }
+        totalAmount.text = "₹ " + df.format(totalAmt)
+        sgstAmt.text = "₹ " + df.format(sgst)
+        cgstAmt.text = "₹ " + df.format(cgst)
+        sendBill.setOnClickListener {
+            sendPDF(billItemList)
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            startActivity(intent)
+            finish()
 
-	private fun sendPDF(itemList: ArrayList<Item>) {
-		try {
-			val fileimage = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "image.jpg")
+
+        }
+        docRef?.get()?.addOnSuccessListener { documentSnapshot ->
+            if (documentSnapshot.exists()) {
+                businessProfile = documentSnapshot.toObject(BusinessProfile::class.java)
+            } else {
+                Toast.makeText(applicationContext, "No Profile Data Found", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun sendPDF(itemList: ArrayList<Item>) {
+        try {
+            val fileimage = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "image.jpg")
             val bitmapLoga = BitmapFactory.decodeStream(FileInputStream(fileimage))
-			val filepdf = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "bill.pdf")
-			businessProfile?.let { CreatePDFTask(this@BillPreviewActivity, filepdf, itemList, progressPdf, it,bitmapLoga,db,user).execute() }
-			sendBill.visibility = View.GONE
-		} catch (e: IOException) {
-			Toast.makeText(applicationContext,"Please update your Logo before generating Bill",Toast.LENGTH_LONG).show()
-		}
+            val filepdf = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "bill.pdf")
+            businessProfile?.let { CreatePDFTask(this@BillPreviewActivity, filepdf, itemList, progressPdf, it, bitmapLoga, db, user).execute() }
+            sendBill.visibility = View.GONE
+        } catch (e: IOException) {
+            Toast.makeText(applicationContext, "Please update your Logo before generating Bill", Toast.LENGTH_LONG).show()
+        }
 
-	}
+    }
 
-	override fun onResume() {
-		super.onResume()
-		if (billItemList.size > 0)
-			sendBill.visibility = View.VISIBLE
-	}
+    override fun onResume() {
+        super.onResume()
+        if (billItemList.size > 0)
+            sendBill.visibility = View.VISIBLE
+    }
 
     private fun getBillItemList(): java.util.ArrayList<*> {
         val itemListJsonDB = appDAL?.billItemJson
@@ -136,21 +144,21 @@ class BillPreviewActivity : AppCompatActivity() {
         return billItemListObj
     }
 
-	override fun onCreateOptionsMenu(menu: Menu): Boolean {
-		menuInflater.inflate(R.menu.preview_menu, menu)
-		return true
-	}
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.preview_menu, menu)
+        return true
+    }
 
-	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		val id = item.itemId
-		if (id == R.id.clear) {
-			appDAL?.billItemJson = String()
-			finish()
-			startActivity(intent,
-					ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
-			return true
-		}
-		return super.onOptionsItemSelected(item)
-	}
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        if (id == R.id.clear) {
+            appDAL?.billItemJson = String()
+            finish()
+            startActivity(intent,
+                    ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
 }

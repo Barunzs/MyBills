@@ -346,6 +346,7 @@ internal class BillFragment : Fragment() {
         builder?.setNegativeButton("No") { dialog, which ->
             val intent = Intent(context, BillPreviewActivity::class.java)
             startActivity(intent)
+            activity?.finish()
 
         }
         val dialog: AlertDialog? = builder?.create()
