@@ -131,7 +131,7 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
             pTable.addCell(cell)
 
             val table = PdfPTable(6)
-            val columnWidth = floatArrayOf(25f, 10f, 30f, 30f, 35f, 20f)
+            val columnWidth = floatArrayOf(25f, 10f, 30f, 30f, 30f, 25f)
             table.setWidths(columnWidth)
             cell = PdfPCell()
             cell?.backgroundColor = primarylight
@@ -215,10 +215,10 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
                 ph = fontselector.process(df.format(item.amtGold + item.makingCharge).toString())
                 cell?.addElement(ph)
                 table.addCell(cell)
-                //gst = (((item.amtGold + item.makingCharge) * 1.5) / 100)
+                gst = (((item.amtGold + item.makingCharge) * 1.5) / 100)
                 totalAmt += (item.amtGold + item.makingCharge)
             }
-            /*val selectorGST = FontSelector();
+            val selectorGST = FontSelector();
             val fGST = FontFactory.getFont("MSung-Light",
                     "UniCNS-UCS2-H", BaseFont.NOT_EMBEDDED)
             fGST.color = BaseColor.BLACK
@@ -240,11 +240,11 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
             cell = PdfPCell()
             phGST = selectorGST.process(df.format(gst))
             cell?.addElement(phGST)
-            table.addCell(cell)*/
+            table.addCell(cell)
 
             val ftable = PdfPTable(6)
             ftable.widthPercentage = 100f
-            val columnWidthaa = floatArrayOf(30f, 5f, 5f, 5f, 35f, 20f)
+            val columnWidthaa = floatArrayOf(30f, 5f, 5f, 5f, 25f, 30f)
             ftable.setWidths(columnWidthaa)
             cell = PdfPCell()
             cell?.colspan = 6
