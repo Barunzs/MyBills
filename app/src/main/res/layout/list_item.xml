@@ -15,11 +15,12 @@
 
         <ImageView
             android:id="@+id/ornamentImage"
+            android:padding="4dp"
             android:layout_width="0dp"
             android:layout_height="64dp"
             android:layout_weight=".8"
             android:layout_margin="4dp"
-            app:srcCompat="@drawable/ic_camera_secondary_2"
+            android:src="@drawable/img_profile_picture_placeholder"
             android:contentDescription="ornament" />
 
         <TextView
@@ -27,8 +28,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginLeft="2dp"
             android:layout_gravity="center_vertical"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
             tools:text="Hello" />
 
         <TextView
@@ -36,8 +38,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginLeft="2dp"
             android:layout_gravity="center_vertical"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
             tools:text="Hello" />
 
         <TextView
@@ -45,8 +48,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.2"
+            android:layout_marginLeft="2dp"
             android:layout_gravity="center_vertical"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
             tools:text="Hello" />
 
     </LinearLayout>

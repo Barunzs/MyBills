@@ -60,7 +60,6 @@ class MyBillTransactionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //goalVoucherRecyclerView?.layoutManager = LinearLayoutManager(context)
         transactionAdapter = MyTransactionadapter()
     }
 
@@ -154,7 +153,7 @@ class MyBillTransactionFragment : Fragment() {
         val expandableListTitle = mutableListOf<String>()
         val billNoList = mutableListOf<String>()
         user?.uid?.let { it ->
-            registration = db?.collection(it)?.document(phoneNo)?.collection("Bill Items")
+            registration = db?.collection(it)?.document(phoneNo)?.collection("Bill Items")?.orderBy("date", Query.Direction.DESCENDING)
                     ?.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                         completedGoalsUpdateProgressBar.visibility = View.GONE
                         if (e != null) {
@@ -162,12 +161,9 @@ class MyBillTransactionFragment : Fragment() {
                             return@EventListener
                         }
                         val billitemsMap = HashMap<String, ArrayList<BillItem>?>()
-                        //val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
                         for (doc in snapshots) {
                             val billItem = doc.toObject(BillItem::class.java)
                             billitemList.add(billItem)
-                            //val formattedDate = Date(billItem.date.toLong())
-                            //val dateString = dateFormat.format(formattedDate)
                             if (!billNoList.contains(billItem.billNo)) {
                                 expandableListTitle.add(billItem.customerName)
                                 billNoList.add(billItem.billNo)
@@ -182,17 +178,13 @@ class MyBillTransactionFragment : Fragment() {
                                 billitemsMap[billItem.billNo] = billItemsList
                             }
                         }
-                        //Log.w(TAG, "billitemsMap:${billitemsMap["13-08-2018"]?.size}")
-                        //transactionAdapter.billItemList = billitemList as ArrayList<BillItem>
-                        //transactionAdapter.billitemsMap = billitemsMap
-                        //goalVoucherRecyclerView?.adapter = transactionAdapter
                         expandableListAdapter = CustomExpandableListAdapter(context, billNoList, billitemsMap,expandableListTitle,user)
                         expandableListView.setAdapter(expandableListAdapter)
                         expandableListView.setOnGroupCollapseListener { groupPosition ->
                         }
-                        expandableListView.setOnGroupExpandListener(ExpandableListView.OnGroupExpandListener { groupPosition ->
+                        expandableListView.setOnGroupExpandListener { groupPosition ->
 
-                        })
+                        }
                         for (dc in snapshots.documentChanges) {
                             when (dc.type) {
                                 DocumentChange.Type.ADDED ->

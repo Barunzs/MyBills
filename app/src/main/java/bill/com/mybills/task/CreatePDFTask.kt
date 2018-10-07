@@ -90,7 +90,7 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
             cell?.addElement(ph)
             ph = selector.process(businessProfile.address)
             cell?.addElement(ph)
-            ph = selector.process("Pin-" + businessProfile.pincode)
+            ph = selector.process("Pin: " + businessProfile.pincode)
             cell?.addElement(ph)
             ph = selector.process("")
             cell?.addElement(ph)
@@ -98,7 +98,7 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
             cell?.addElement(ph)
             ph = selector.process(businessProfile.gstIN)
             cell?.addElement(ph)
-            ph = selector.process("")
+            ph = selector.process("Phone: " + businessProfile.phone)
             cell?.addElement(ph)
             ph = selector.process("")
             cell?.addElement(ph)
@@ -301,7 +301,6 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
         super.onPostExecute(result)
         progress.visibility = View.GONE
         appDAL?.billItemJson = String()
-        //shareFile()
         var count = 0
         for (item in billItemList) {
             user?.uid?.let {
@@ -315,7 +314,6 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
                 }
             }
         }
-
     }
 
     private fun shareFile() {
