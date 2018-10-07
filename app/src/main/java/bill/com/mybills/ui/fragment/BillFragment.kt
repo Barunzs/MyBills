@@ -128,9 +128,10 @@ internal class BillFragment : Fragment() {
     }
 
     private fun initEventsListeners() {
+        /*makingCharge.addTextChangedListener(object : TextWatcher {
 
-        makingCharge.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(makingCharge: Editable) {
+
                 try {
                     gst = ((amtofgold.text.toString().toDouble() + makingCharge.toString().toDouble()) * 1.5) / 100
                     sgstrate.setText(gst.toString())
@@ -140,6 +141,7 @@ internal class BillFragment : Fragment() {
                     sgstrate.setText(gst.toString())
                     cgstrate.setText(gst.toString())
                 }
+
             }
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -147,7 +149,7 @@ internal class BillFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             }
-        })
+        })*/
 
         rateofgold.addTextChangedListener(object : TextWatcher {
 
@@ -239,7 +241,7 @@ internal class BillFragment : Fragment() {
             }
             REQUEST_CAMERA -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    capturedImageFile.let { it ->
+                    capturedImageFile.let {
                         productIconProgressBar.visibility = View.VISIBLE
                         val optimizeGoalImage = optimizeGoalImage(it)
                         it.delete()
@@ -289,7 +291,7 @@ internal class BillFragment : Fragment() {
             val firstBillItem = getFirstBillItem()
             val billNo:String?
             if(firstBillItem!=null){
-                 billNo = firstBillItem.billNo
+                billNo = firstBillItem.billNo
             }else {
                 billNo = timestamp.time.toString()
             }

@@ -110,7 +110,7 @@ class BillPreviewActivity : AppCompatActivity() {
         try {
             val fileimage = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "image.jpg")
             val bitmapLoga = BitmapFactory.decodeStream(FileInputStream(fileimage))
-            val filepdf = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "bill.pdf")
+            val filepdf = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), businessProfile?.orgName+"_"+itemList[0].customerName+".pdf")
             businessProfile?.let { CreatePDFTask(this@BillPreviewActivity, filepdf, itemList, progressPdf, it, bitmapLoga, db, user).execute() }
             sendBill.visibility = View.GONE
         } catch (e: IOException) {
