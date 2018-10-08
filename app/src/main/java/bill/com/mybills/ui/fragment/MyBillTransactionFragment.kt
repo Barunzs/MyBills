@@ -28,6 +28,7 @@ import android.widget.ExpandableListView
 import android.widget.Toast
 import bill.com.mybills.ui.adapter.CustomExpandableListAdapter
 import bill.com.mybills.R.id.expandableListView
+import bill.com.mybills.model.BusinessProfile
 import com.google.firebase.firestore.CollectionReference
 
 
@@ -40,6 +41,8 @@ class MyBillTransactionFragment : Fragment() {
     private var db: FirebaseFirestore? = null
     private var registration: ListenerRegistration? = null;
     var expandableListAdapter: ExpandableListAdapter? = null
+    private var businessprofileDocument: DocumentReference? = null
+    private var businessprofile: BusinessProfile? = null
 
     companion object {
         val TAG = MyBillTransactionFragment::class.java.simpleName
@@ -51,7 +54,7 @@ class MyBillTransactionFragment : Fragment() {
         db = FirebaseFirestore.getInstance()
         user = FirebaseAuth.getInstance().currentUser
         docRef = user?.uid?.let { db?.collection(it)?.document("Bill") }
-
+        businessprofileDocument = user?.uid?.let { db?.collection(it)?.document("Business Profile") }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -61,6 +64,15 @@ class MyBillTransactionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         transactionAdapter = MyTransactionadapter()
+        businessprofileDocument?.get()?.addOnSuccessListener { documentSnapshot ->
+            if (this.isVisible) {
+                if (documentSnapshot.exists()) {
+                    businessprofile = documentSnapshot.toObject(BusinessProfile::class.java)
+                } else {
+                    Toast.makeText(context, "No Profile Data Found", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 
     override fun onResume() {
@@ -178,7 +190,7 @@ class MyBillTransactionFragment : Fragment() {
                                 billitemsMap[billItem.billNo] = billItemsList
                             }
                         }
-                        expandableListAdapter = CustomExpandableListAdapter(context, billNoList, billitemsMap,expandableListTitle,user)
+                        expandableListAdapter = CustomExpandableListAdapter(context, billNoList, billitemsMap,expandableListTitle,user,businessprofile)
                         expandableListView.setAdapter(expandableListAdapter)
                         expandableListView.setOnGroupCollapseListener { groupPosition ->
                         }

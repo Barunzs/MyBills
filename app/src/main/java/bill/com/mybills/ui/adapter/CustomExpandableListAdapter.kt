@@ -21,122 +21,121 @@ import android.content.ActivityNotFoundException
 import android.net.Uri
 import android.support.v4.content.ContextCompat.startActivity
 import android.widget.*
+import bill.com.mybills.model.BusinessProfile
 import com.airbnb.lottie.LottieAnimationView
 import com.itextpdf.text.pdf.PdfFileSpecification.url
 
 
-
-
 class CustomExpandableListAdapter(val context: Context?, val expandableListTitle: List<String>,
-								  val expandableListDetail: HashMap<String, ArrayList<BillItem>?>, val headerTitle: List<String>, val user: FirebaseUser?) : BaseExpandableListAdapter() {
+                                  val expandableListDetail: HashMap<String, ArrayList<BillItem>?>, val headerTitle: List<String>, val user: FirebaseUser?, val businessProfile: BusinessProfile?) : BaseExpandableListAdapter() {
 
 
-	override fun hasStableIds(): Boolean {
-		return false
-	}
+    override fun hasStableIds(): Boolean {
+        return false
+    }
 
 
-	override fun isChildSelectable(listPosition: Int, expandedListPosition: Int): Boolean {
-		return true
-	}
+    override fun isChildSelectable(listPosition: Int, expandedListPosition: Int): Boolean {
+        return true
+    }
 
-	override fun getGroupView(listPosition: Int, isExpanded: Boolean,
-							  convertView: View?, parent: ViewGroup): View {
-		val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
-		var convertView = convertView
-		val listTitle = getGroup(listPosition) as String
-		val billDate = expandableListTitle[listPosition]
-		val formattedDate = Date(billDate.toLong())
-		val dateString = dateFormat.format(formattedDate)
-		if (convertView == null) {
-			val layoutInflater = this.context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-			convertView = layoutInflater.inflate(R.layout.list_group, null)
-		}
-		val listTitleTextView = convertView!!
-				.findViewById<View>(R.id.listTitle) as TextView
-		val dateTextView = convertView
-				.findViewById<View>(R.id.billDate) as TextView
-		val pdfDownload = convertView.findViewById<View>(R.id.pdf) as ImageView
-        val loadingData : LottieAnimationView = convertView.findViewById(R.id.loadingdata) as LottieAnimationView
-		pdfDownload.setOnClickListener { v: View? ->
+    override fun getGroupView(listPosition: Int, isExpanded: Boolean,
+                              convertView: View?, parent: ViewGroup): View {
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
+        var convertView = convertView
+        val listTitle = getGroup(listPosition) as String
+        val billDate = expandableListTitle[listPosition]
+        val formattedDate = Date(billDate.toLong())
+        val dateString = dateFormat.format(formattedDate)
+        if (convertView == null) {
+            val layoutInflater = this.context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            convertView = layoutInflater.inflate(R.layout.list_group, null)
+        }
+        val listTitleTextView = convertView!!
+                .findViewById<View>(R.id.listTitle) as TextView
+        val dateTextView = convertView
+                .findViewById<View>(R.id.billDate) as TextView
+        val pdfDownload = convertView.findViewById<View>(R.id.pdf) as ImageView
+        val loadingData: LottieAnimationView = convertView.findViewById(R.id.loadingdata) as LottieAnimationView
+        pdfDownload.setOnClickListener { v: View? ->
             loadingData.visibility = View.VISIBLE
-			val storageReference = FirebaseStorage.getInstance().reference
-			storageReference.child(user?.uid + "/" + billDate + "/" + "/bills" + "/bill.pdf").downloadUrl.addOnSuccessListener {
-				Toast.makeText(context, "success", Toast.LENGTH_LONG).show()
-				val intent = Intent(Intent.ACTION_VIEW)
-				intent.setDataAndType(Uri.parse(it.toString()), "application/pdf")
-				intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-				val newIntent = Intent.createChooser(intent, "Open File")
+            val storageReference = FirebaseStorage.getInstance().reference
+            storageReference.child(user?.uid + "/" + billDate + "/" + "/bills/" + businessProfile?.orgName?.trim() + "_" + listTitle.trim() + ".pdf").downloadUrl.addOnSuccessListener {
+                Toast.makeText(context, "success", Toast.LENGTH_LONG).show()
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.setDataAndType(Uri.parse(it.toString()), "application/pdf")
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                val newIntent = Intent.createChooser(intent, "Open File")
                 loadingData.visibility = View.GONE
-				try {
+                try {
                     context?.startActivity(intent)
-				} catch (e: ActivityNotFoundException) {
-					// Instruct the user to install a PDF reader here, or something
-				}
+                } catch (e: ActivityNotFoundException) {
+                    // Instruct the user to install a PDF reader here, or something
+                }
 
-			}.addOnFailureListener {
+            }.addOnFailureListener {
                 loadingData.visibility = View.GONE
-				Toast.makeText(context, it.localizedMessage, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, it.localizedMessage, Toast.LENGTH_LONG).show()
 
-			}
-		}
-		listTitleTextView.setTypeface(null, Typeface.BOLD)
-		dateTextView.setTypeface(null, Typeface.BOLD)
-		listTitleTextView.text = listTitle
-		dateTextView.text = dateString
-		return convertView
-	}
+            }
+        }
+        listTitleTextView.setTypeface(null, Typeface.BOLD)
+        dateTextView.setTypeface(null, Typeface.BOLD)
+        listTitleTextView.text = listTitle
+        dateTextView.text = dateString
+        return convertView
+    }
 
-	override fun getGroupCount(): Int {
-		return this.expandableListTitle.size
-	}
-
-
-	override fun getChildrenCount(listPosition: Int): Int {
-		return this.expandableListDetail[this.expandableListTitle[listPosition]]
-				?.size!!
-	}
-
-	override fun getGroup(listPosition: Int): Any {
-		return this.headerTitle[listPosition]
-	}
-
-	override fun getGroupId(listPosition: Int): Long {
-		return listPosition.toLong()
-	}
-
-	override fun getChildView(listPosition: Int, expandedListPosition: Int,
-							  isLastChild: Boolean, convertView: View?, parent: ViewGroup): View {
-		var convertView = convertView
-		val billItem = getChild(listPosition, expandedListPosition) as BillItem
-		if (convertView == null) {
-			val layoutInflater = this.context
-					?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-			convertView = layoutInflater.inflate(R.layout.list_item, null)
-		}
-		val df = DecimalFormat("#.##")
-		val expandedListTextView = convertView
-				?.findViewById<View>(R.id.particulars) as TextView
-		val weightTextView = convertView
-				.findViewById<View>(R.id.weight) as TextView
-		val amountTextView = convertView
-				.findViewById<View>(R.id.amount) as TextView
-		val imageView = convertView
-				.findViewById<View>(R.id.ornamentImage) as ImageView
-		expandedListTextView.text = billItem.particulars
-		weightTextView.text = "${billItem.weight}g"
-		amountTextView.text = "₹ " + df.format(billItem.amtGold)
-		Picasso.with(context).load(billItem.itemUri).into(imageView)
-		return convertView
-	}
+    override fun getGroupCount(): Int {
+        return this.expandableListTitle.size
+    }
 
 
-	override fun getChildId(listPosition: Int, expandedListPosition: Int): Long {
-		return expandedListPosition.toLong()
-	}
+    override fun getChildrenCount(listPosition: Int): Int {
+        return this.expandableListDetail[this.expandableListTitle[listPosition]]
+                ?.size!!
+    }
+
+    override fun getGroup(listPosition: Int): Any {
+        return this.headerTitle[listPosition]
+    }
+
+    override fun getGroupId(listPosition: Int): Long {
+        return listPosition.toLong()
+    }
+
+    override fun getChildView(listPosition: Int, expandedListPosition: Int,
+                              isLastChild: Boolean, convertView: View?, parent: ViewGroup): View {
+        var convertView = convertView
+        val billItem = getChild(listPosition, expandedListPosition) as BillItem
+        if (convertView == null) {
+            val layoutInflater = this.context
+                    ?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            convertView = layoutInflater.inflate(R.layout.list_item, null)
+        }
+        val df = DecimalFormat("#.##")
+        val expandedListTextView = convertView
+                ?.findViewById<View>(R.id.particulars) as TextView
+        val weightTextView = convertView
+                .findViewById<View>(R.id.weight) as TextView
+        val amountTextView = convertView
+                .findViewById<View>(R.id.amount) as TextView
+        val imageView = convertView
+                .findViewById<View>(R.id.ornamentImage) as ImageView
+        expandedListTextView.text = billItem.particulars
+        weightTextView.text = "${billItem.weight}g"
+        amountTextView.text = "₹ " + df.format(billItem.amtGold)
+        Picasso.with(context).load(billItem.itemUri).into(imageView)
+        return convertView
+    }
 
 
-	override fun getChild(listPosition: Int, expandedListPosition: Int): BillItem? {
-		return this.expandableListDetail[this.expandableListTitle[listPosition]]?.get(expandedListPosition)
-	}
+    override fun getChildId(listPosition: Int, expandedListPosition: Int): Long {
+        return expandedListPosition.toLong()
+    }
+
+
+    override fun getChild(listPosition: Int, expandedListPosition: Int): BillItem? {
+        return this.expandableListDetail[this.expandableListTitle[listPosition]]?.get(expandedListPosition)
+    }
 }
