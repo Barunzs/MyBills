@@ -36,7 +36,7 @@
     <string name="next">NEXT</string>
     <string name="skip">SKIP</string>
     <string name="start">GOT IT</string>
-    <string name="slide_1_title">Welcome...</string>
+    <string name="slide_1_title">Welcome…</string>
     <string name="slide_1_desc">Welcome to Billing Solution, one stop solution for your customer billing</string>
     <string name="slide_2_title">Billing</string>
     <string name="slide_2_desc">Create bills for daily sales and share via email or print using printer</string>
@@ -44,4 +44,6 @@
     <string name="slide_3_desc">Search your customer transaction using phone number of the customer</string>
     <string name="slide_4_title">Flexibility</string>
     <string name="slide_4_desc">Edit your profile to add your GST and Buiness logo in the Bill</string>
+    <string name="total">Total</string>
+    <string name="cgst_1_5">CGST 1.5%</string>
 </resources>

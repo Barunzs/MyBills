@@ -3,6 +3,7 @@ package bill.com.mybills.ui.fragment
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -84,7 +85,10 @@ internal class BillFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         user = FirebaseAuth.getInstance().currentUser
         docRef = user?.uid?.let { db?.collection(it)?.document("Business Profile") }
-
+        var tabletSize = resources.getBoolean(R.bool.isTablet)
+        if (tabletSize) {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -108,7 +112,7 @@ internal class BillFragment : Fragment() {
         }
     }
 
-    private fun getFirstBillItem():Item?{
+    private fun getFirstBillItem(): Item? {
 
         var billitem: Item? = null
         if (!appDAL?.billItemJson.isNullOrEmpty()) {
@@ -120,7 +124,7 @@ internal class BillFragment : Fragment() {
                 val type = object : TypeToken<Item>() {
                 }.type
                 val itemGson = Gson()
-                billitem  = itemGson.fromJson<Item>(billItemList[0], type)
+                billitem = itemGson.fromJson<Item>(billItemList[0], type)
             }
 
         }
@@ -287,10 +291,10 @@ internal class BillFragment : Fragment() {
             //val billdate = SimpleDateFormat("yyyy.MM.dd.HH.mm.ss")
             val timestamp = Timestamp(System.currentTimeMillis())
             val firstBillItem = getFirstBillItem()
-            val billNo:String?
-            if(firstBillItem!=null){
+            val billNo: String?
+            if (firstBillItem != null) {
                 billNo = firstBillItem.billNo
-            }else {
+            } else {
                 billNo = timestamp.time.toString()
             }
             //var date = (Calendar.getInstance().time)
