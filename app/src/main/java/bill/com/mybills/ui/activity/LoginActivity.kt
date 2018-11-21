@@ -1,6 +1,7 @@
 package bill.com.mybills.ui.activity
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
@@ -36,6 +37,10 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         initEventsListeners()
+        val tabletSize = resources.getBoolean(R.bool.isTablet)
+        if (tabletSize) {
+           requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
         mAuth = FirebaseAuth.getInstance()
         mCallbacks = object : OnVerificationStateChangedCallbacks() {
 
