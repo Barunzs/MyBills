@@ -3,6 +3,7 @@ package bill.com.mybills.ui.fragment
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -62,6 +63,10 @@ internal class EditProfileFragment : Fragment() {
         db = FirebaseFirestore.getInstance()
         user = FirebaseAuth.getInstance().currentUser
         docRef = user?.uid?.let { db?.collection(it)?.document("Business Profile") }
+        val tabletSize = resources.getBoolean(R.bool.isTablet)
+        if (tabletSize) {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

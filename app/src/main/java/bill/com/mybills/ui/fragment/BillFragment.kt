@@ -85,7 +85,7 @@ internal class BillFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         user = FirebaseAuth.getInstance().currentUser
         docRef = user?.uid?.let { db?.collection(it)?.document("Business Profile") }
-        var tabletSize = resources.getBoolean(R.bool.isTablet)
+        val tabletSize = resources.getBoolean(R.bool.isTablet)
         if (tabletSize) {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         }
