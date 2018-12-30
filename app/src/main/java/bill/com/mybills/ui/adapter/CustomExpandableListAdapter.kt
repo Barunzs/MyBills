@@ -1,29 +1,27 @@
 package bill.com.mybills.ui.adapter
 
-import android.app.ProgressDialog
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
-import android.os.Environment
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.BaseExpandableListAdapter
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import bill.com.mybills.R
 import bill.com.mybills.model.BillItem
+import bill.com.mybills.model.BusinessProfile
+import com.airbnb.lottie.LottieAnimationView
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
-import java.io.File
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import android.content.ActivityNotFoundException
-import android.net.Uri
-import android.support.v4.content.ContextCompat.startActivity
-import android.widget.*
-import bill.com.mybills.model.BusinessProfile
-import com.airbnb.lottie.LottieAnimationView
-import com.itextpdf.text.pdf.PdfFileSpecification.url
 
 
 class CustomExpandableListAdapter(val context: Context?, val expandableListTitle: List<String>,
@@ -60,7 +58,8 @@ class CustomExpandableListAdapter(val context: Context?, val expandableListTitle
         pdfDownload.setOnClickListener { v: View? ->
             loadingData.visibility = View.VISIBLE
             val storageReference = FirebaseStorage.getInstance().reference
-            storageReference.child(user?.uid + "/" + billDate + "/" + "/bills/" + businessProfile?.orgName?.trim() + "_" + listTitle.trim() + ".pdf").downloadUrl.addOnSuccessListener {
+            var billPdfFilePath = user?.uid + "/" + billDate + "/" + "/bills/" + businessProfile?.orgName?.trim() + "_" + listTitle.trim()
+            storageReference.child("$billPdfFilePath.pdf").downloadUrl.addOnSuccessListener {
                 Toast.makeText(context, "success", Toast.LENGTH_LONG).show()
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.setDataAndType(Uri.parse(it.toString()), "application/pdf")
@@ -75,8 +74,23 @@ class CustomExpandableListAdapter(val context: Context?, val expandableListTitle
 
             }.addOnFailureListener {
                 loadingData.visibility = View.GONE
-                Toast.makeText(context, it.localizedMessage, Toast.LENGTH_LONG).show()
+                billPdfFilePath = user?.uid + "/" + billDate + "/" + "/bills/bill"
+                storageReference.child("$billPdfFilePath.pdf").downloadUrl.addOnSuccessListener {
+                    Toast.makeText(context, "success", Toast.LENGTH_LONG).show()
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.setDataAndType(Uri.parse(it.toString()), "application/pdf")
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    val newIntent = Intent.createChooser(intent, "Open File")
+                    loadingData.visibility = View.GONE
+                    try {
+                        context?.startActivity(intent)
+                    } catch (e: ActivityNotFoundException) {
+                        // Instruct the user to install a PDF reader here, or something
+                    }
 
+                }.addOnFailureListener {
+                    Toast.makeText(context, it.localizedMessage, Toast.LENGTH_LONG).show()
+                }
             }
         }
         listTitleTextView.setTypeface(null, Typeface.BOLD)
