@@ -20,6 +20,8 @@ import android.widget.Toast
 import bill.com.mybills.BuildConfig
 import bill.com.mybills.R
 import bill.com.mybills.model.BusinessProfile
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -84,11 +86,11 @@ internal class EditProfileFragment : Fragment() {
         docRef?.get()?.addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
                 val businessProfile = documentSnapshot.toObject(BusinessProfile::class.java)
-                mobileNo.setText(businessProfile.phone)
-                shopName.setText(businessProfile.orgName)
-                gstin.setText(businessProfile.gstIN)
-                address.setText(businessProfile.address)
-                pincode.setText(businessProfile.pincode)
+                mobileNo.setText(businessProfile?.phone)
+                shopName.setText(businessProfile?.orgName)
+                gstin.setText(businessProfile?.gstIN)
+                address.setText(businessProfile?.address)
+                pincode.setText(businessProfile?.pincode)
                 storageReference?.child(user?.uid + "/businessLogo/businessLogo_image")?.downloadUrl?.addOnFailureListener {
                     Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
                     businessPictureUpdateProgressBar.visibility = View.GONE
@@ -263,9 +265,9 @@ internal class EditProfileFragment : Fragment() {
                             businessPictureUpdateProgressBar.visibility = View.GONE
                         }?.addOnSuccessListener {
                             businessLogoURI = Uri.EMPTY
-                            businessLogoURI = it.downloadUrl
+                            businessLogoURI = it.uploadSessionUri
                             businessPictureUpdateProgressBar.visibility = View.GONE
-                            Picasso.with(context).load(it.downloadUrl).into(editLogo)
+                            Picasso.with(context).load(it.uploadSessionUri).into(editLogo)
                             val localFile = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "image.jpg")
                             storageReference?.child(user?.uid + "/businessLogo/businessLogo_image")?.getFile(localFile)?.addOnFailureListener {
                                 Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
@@ -296,21 +298,27 @@ internal class EditProfileFragment : Fragment() {
                             profilePictureUpdateProgressBar.visibility = View.GONE
                         }?.addOnSuccessListener {
                             uriFirebase = Uri.EMPTY
-                            uriFirebase = it.downloadUrl
-                            val profileUpdates = UserProfileChangeRequest.Builder()
-                                    .setDisplayName(firstNameEditText.text.toString())
-                                    .setPhotoUri(uriFirebase)
-                                    .build()
-                            user?.updateProfile(profileUpdates)
-                                    ?.addOnCompleteListener { task ->
-                                        profilePictureUpdateProgressBar.visibility = View.GONE
-                                        if (task.isSuccessful) {
-                                            Toast.makeText(context, "Profile Picture Uploaded Successfully", Toast.LENGTH_LONG).show()
-                                            Picasso.with(context).load(uriFirebase).into(editProfileImage)
-                                        } else {
-                                            Toast.makeText(context, "Error Try Again", Toast.LENGTH_LONG).show()
+                            val result = it.metadata?.reference?.downloadUrl
+                            result?.addOnSuccessListener {
+                                val photoStringLink = uri.toString()
+                                uriFirebase = it
+                                val profileUpdates = UserProfileChangeRequest.Builder()
+                                        .setDisplayName(firstNameEditText.text.toString())
+                                        .setPhotoUri(uriFirebase)
+                                        .build()
+                                user?.updateProfile(profileUpdates)
+                                        ?.addOnCompleteListener { task ->
+                                            profilePictureUpdateProgressBar.visibility = View.GONE
+                                            if (task.isSuccessful) {
+                                                Toast.makeText(context, "Profile Picture Uploaded Successfully", Toast.LENGTH_LONG).show()
+                                                Picasso.with(context).load(uriFirebase).into(editProfileImage)
+                                            } else {
+                                                Toast.makeText(context, "Error Try Again", Toast.LENGTH_LONG).show()
+                                            }
                                         }
-                                    }
+
+                            }
+
                         }
                     }
                 }

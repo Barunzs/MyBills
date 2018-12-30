@@ -128,7 +128,7 @@ class LoginActivity : AppCompatActivity() {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success")
                         input_password.setText(credential.smsCode)
-                        val user = task.result.user
+                        val user = task.result?.user
                         Log.d(TAG, "signInWithCrede")
                         val intent = Intent(applicationContext, MainActivity::class.java)
                         startActivity(intent)
@@ -202,8 +202,8 @@ class LoginActivity : AppCompatActivity() {
         mAuth?.signInWithEmailAndPassword(email, password)
                 ?.addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        val user = task.result.user
-                        Log.d(TAG, "name::" + user.displayName)
+                        val user = task.result?.user
+                        Log.d(TAG, "name::" + user?.displayName)
                         val prefManager  = PrefManager()
                         prefManager.setup(applicationContext)
                         if(prefManager.isFirstTimeLaunch()){

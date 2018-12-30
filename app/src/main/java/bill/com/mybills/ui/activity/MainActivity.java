@@ -46,6 +46,7 @@ import bill.com.mybills.ui.fragment.BillFragment;
 import bill.com.mybills.ui.fragment.EditProfileFragment;
 import bill.com.mybills.ui.fragment.MyBillTransactionFragment;
 import bill.com.mybills.ui.fragment.MyProfileFragment;
+import bill.com.mybills.ui.fragment.ReportFragment;
 import bill.com.mybills.ui.fragment.ScanFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -77,8 +78,8 @@ public class MainActivity extends AppCompatActivity {
         listViewItems.add(new MenuItemObject("Generate Bill", android.R.drawable.ic_menu_agenda));
         listViewItems.add(new MenuItemObject("Scan Barcode", android.R.drawable.ic_popup_sync));
         listViewItems.add(new MenuItemObject("My Transaction", android.R.drawable.ic_menu_recent_history));
-        //listViewItems.add(new MenuItemObject("Settings", android.R.drawable.ic_menu_info_details));
-        listViewItems.add(new MenuItemObject("Preview Bill", android.R.drawable.ic_menu_recent_history));
+        listViewItems.add(new MenuItemObject("Preview Bill", android.R.drawable.ic_menu_sort_by_size));
+        listViewItems.add(new MenuItemObject("Reports", android.R.drawable.ic_menu_report_image));
         listViewItems.add(new MenuItemObject("Logout", android.R.drawable.ic_lock_power_off));
 
         mDrawerList.setAdapter(new CustomAdapter(this, listViewItems));
@@ -153,6 +154,11 @@ public class MainActivity extends AppCompatActivity {
                 Intent billPreviewIntent = new Intent(getApplicationContext(), BillPreviewActivity.class);
                 startActivity(billPreviewIntent);
             break;
+            case 6:
+                fragment = new ReportFragment();
+                fragmentManager.beginTransaction().replace(R.id.main_fragment_container, fragment,
+                        ReportFragment.Companion.getTAG()).commit();
+                break;
             default:
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);

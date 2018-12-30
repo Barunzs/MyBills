@@ -65,10 +65,10 @@ internal class MyProfileFragment : Fragment() {
             if (this.isVisible) {
                 if (documentSnapshot.exists()) {
                     val businessProfile = documentSnapshot.toObject(BusinessProfile::class.java)
-                    BusinessNameTextView.text = businessProfile.orgName
-                    businessNumberTextView.text = businessProfile.address + " Pin :" + businessProfile.pincode
-                    businessGst.text = businessProfile.gstIN
-                    phoneNumberTextView.text = businessProfile.phone
+                    BusinessNameTextView.text = businessProfile?.orgName
+                    businessNumberTextView.text = businessProfile?.address + " Pin :" + businessProfile?.pincode
+                    businessGst.text = businessProfile?.gstIN
+                    phoneNumberTextView.text = businessProfile?.phone
                     emailAddressTextView.text = user?.email
 
                 } else {

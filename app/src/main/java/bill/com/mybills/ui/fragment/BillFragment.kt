@@ -178,8 +178,8 @@ internal class BillFragment : Fragment() {
             if (documentSnapshot.exists()) {
                 val businessProfile = documentSnapshot.toObject(BusinessProfile::class.java)
                 if (isVisible) {
-                    shopNameHeader.text = businessProfile.orgName
-                    shopAddress.text = businessProfile.address + " Pincode:" + businessProfile.pincode
+                    shopNameHeader.text = businessProfile?.orgName
+                    shopAddress.text = businessProfile?.address + " Pincode:" + businessProfile?.pincode
                 }
             } else {
                 Toast.makeText(context, "No Profile Data Found", Toast.LENGTH_LONG).show()
@@ -261,7 +261,7 @@ internal class BillFragment : Fragment() {
                         }?.addOnSuccessListener {
                             Toast.makeText(context, "Upload Successfully", Toast.LENGTH_LONG).show()
                             productIconProgressBar.visibility = View.GONE
-                            uriFirebase = it.downloadUrl
+                            uriFirebase = it.uploadSessionUri
                             Picasso.with(context).load(uriFirebase).into(image)
                         }
                     }

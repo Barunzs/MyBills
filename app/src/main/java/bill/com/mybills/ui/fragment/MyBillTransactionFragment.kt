@@ -173,21 +173,23 @@ class MyBillTransactionFragment : Fragment() {
                             return@EventListener
                         }
                         val billitemsMap = HashMap<String, ArrayList<BillItem>?>()
-                        for (doc in snapshots) {
-                            val billItem = doc.toObject(BillItem::class.java)
-                            billitemList.add(billItem)
-                            if (!billNoList.contains(billItem.billNo)) {
-                                expandableListTitle.add(billItem.customerName)
-                                billNoList.add(billItem.billNo)
-                            }
-                            if (billitemsMap.containsKey(billItem.billNo)) {
-                                val billItemsList = billitemsMap[billItem.billNo]
-                                billItemsList?.add(billItem)
-                                billitemsMap[billItem.billNo] = billItemsList
-                            } else {
-                                val billItemsList = ArrayList<BillItem>()
-                                billItemsList.add(billItem)
-                                billitemsMap[billItem.billNo] = billItemsList
+                        if (snapshots != null) {
+                            for (doc in snapshots) {
+                                val billItem = doc.toObject(BillItem::class.java)
+                                billitemList.add(billItem)
+                                if (!billNoList.contains(billItem.billNo)) {
+                                    expandableListTitle.add(billItem.customerName)
+                                    billNoList.add(billItem.billNo)
+                                }
+                                if (billitemsMap.containsKey(billItem.billNo)) {
+                                    val billItemsList = billitemsMap[billItem.billNo]
+                                    billItemsList?.add(billItem)
+                                    billitemsMap[billItem.billNo] = billItemsList
+                                } else {
+                                    val billItemsList = ArrayList<BillItem>()
+                                    billItemsList.add(billItem)
+                                    billitemsMap[billItem.billNo] = billItemsList
+                                }
                             }
                         }
                         expandableListAdapter = CustomExpandableListAdapter(context, billNoList, billitemsMap,expandableListTitle,user,businessprofile)
@@ -197,7 +199,7 @@ class MyBillTransactionFragment : Fragment() {
                         expandableListView.setOnGroupExpandListener { groupPosition ->
 
                         }
-                        for (dc in snapshots.documentChanges) {
+                        for (dc in snapshots?.documentChanges!!) {
                             when (dc.type) {
                                 DocumentChange.Type.ADDED ->
                                     Log.d(TAG, "New city: " + dc.document.data)
