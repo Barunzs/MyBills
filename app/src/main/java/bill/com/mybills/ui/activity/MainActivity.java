@@ -43,6 +43,7 @@ import bill.com.mybills.model.Item;
 import bill.com.mybills.model.MenuItemObject;
 import bill.com.mybills.ui.adapter.CustomAdapter;
 import bill.com.mybills.ui.fragment.BillFragment;
+import bill.com.mybills.ui.fragment.CustomDateDialog;
 import bill.com.mybills.ui.fragment.EditProfileFragment;
 import bill.com.mybills.ui.fragment.MyBillTransactionFragment;
 import bill.com.mybills.ui.fragment.MyProfileFragment;
@@ -154,8 +155,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(billPreviewIntent);
             break;
             case 6:
-                Intent reportIntent = new Intent(getApplicationContext(), BarChartActivity.class);
-                startActivity(reportIntent);
+                //Intent reportIntent = new Intent(getApplicationContext(), BarChartActivity.class);
+                //startActivity(reportIntent);
+                FragmentManager fm = getSupportFragmentManager();
+                CustomDateDialog editNameDialogFragment = CustomDateDialog.Companion.newInstance("kkkk");
+                editNameDialogFragment.show(fm, "fragment_edit_name");
+
                 break;
             default:
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
