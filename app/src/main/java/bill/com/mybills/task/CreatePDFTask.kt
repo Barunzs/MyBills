@@ -58,7 +58,7 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
         df.roundingMode = RoundingMode.CEILING
         try {
             val fOut = FileOutputStream(file)
-            val writer = PdfWriter.getInstance(doc, fOut)
+            //val writer = PdfWriter.getInstance(doc, fOut)
             //open the document
             doc.open()
             //create table

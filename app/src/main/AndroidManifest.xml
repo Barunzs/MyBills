@@ -44,6 +44,10 @@
             android:name=".ui.activity.WelcomeActivity"
             android:theme="@style/Theme.Design.NoActionBar"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.BarChartActivity"
+            android:theme="@style/Theme.Design.NoActionBar"
+            android:screenOrientation="landscape" />
         <!-- region Providers -->
         <provider
             android:name="android.support.v4.content.FileProvider"

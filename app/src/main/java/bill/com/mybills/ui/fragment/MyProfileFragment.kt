@@ -1,6 +1,7 @@
 package bill.com.mybills.ui.fragment
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
@@ -44,7 +45,10 @@ internal class MyProfileFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         user = FirebaseAuth.getInstance().currentUser
         docRef = user?.uid?.let { db?.collection(it)?.document("Business Profile") }
-
+        val tabletSize = resources.getBoolean(R.bool.isTablet)
+        if (tabletSize) {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

@@ -46,7 +46,6 @@ import bill.com.mybills.ui.fragment.BillFragment;
 import bill.com.mybills.ui.fragment.EditProfileFragment;
 import bill.com.mybills.ui.fragment.MyBillTransactionFragment;
 import bill.com.mybills.ui.fragment.MyProfileFragment;
-import bill.com.mybills.ui.fragment.ReportFragment;
 import bill.com.mybills.ui.fragment.ScanFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -155,9 +154,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(billPreviewIntent);
             break;
             case 6:
-                fragment = new ReportFragment();
-                fragmentManager.beginTransaction().replace(R.id.main_fragment_container, fragment,
-                        ReportFragment.Companion.getTAG()).commit();
+                Intent reportIntent = new Intent(getApplicationContext(), BarChartActivity.class);
+                startActivity(reportIntent);
                 break;
             default:
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
