@@ -15,7 +15,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.custom_date.*
 
 
-class CustomDateDialog: DialogFragment() {
+class CustomDateDialog : DialogFragment() {
 
     val myCalendar = Calendar.getInstance()
 
@@ -41,7 +41,7 @@ class CustomDateDialog: DialogFragment() {
         return inflater.inflate(R.layout.custom_date, container)
     }
 
-    override fun onViewCreated(view: View,savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         start_date.setOnClickListener {
             DatePickerDialog(context, startDate, myCalendar
@@ -56,10 +56,14 @@ class CustomDateDialog: DialogFragment() {
     }
 
     var endDate: DatePickerDialog.OnDateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-        end_date.setText("$dayOfMonth-$monthOfYear-$year")
+        var month = monthOfYear
+        month++
+        end_date.setText("$dayOfMonth-$month-$year")
     }
     var startDate: DatePickerDialog.OnDateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-        start_date.setText("$dayOfMonth-$monthOfYear-$year")
+        var month = monthOfYear
+        month++
+        start_date.setText("$dayOfMonth-$month-$year")
     }
 
 
