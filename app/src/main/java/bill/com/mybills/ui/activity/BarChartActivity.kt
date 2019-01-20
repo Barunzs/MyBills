@@ -152,14 +152,8 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
 
     override fun onStart() {
         super.onStart()
-       DatePickerDialog(this@BarChartActivity, date, myCalendar
-                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                myCalendar.get(Calendar.DAY_OF_MONTH)).show()
-    }
-
-    var date: DatePickerDialog.OnDateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
         user?.uid?.let { it ->
-            db?.collection(it)?.document("8080808033")?.collection("Bill Items")?.whereGreaterThanOrEqualTo("date", "$year-$monthOfYear-$dayOfMonth")?.whereLessThanOrEqualTo("date", "2018-12-30")
+            db?.collection(it)?.document("8080808033")?.collection("Bill Items")?.whereGreaterThanOrEqualTo("date", "2018-10-01")?.whereLessThanOrEqualTo("date", "2018-12-30")
                     ?.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                         if (e != null) {
                             Log.e(TAG, "listen:error", e)
@@ -172,6 +166,7 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
                     })
         }
     }
+
 
     private fun setData(snapshots: QuerySnapshot) {
 

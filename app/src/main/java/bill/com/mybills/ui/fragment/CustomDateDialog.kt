@@ -9,22 +9,30 @@ import android.view.LayoutInflater
 import android.view.View
 import bill.com.mybills.R
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.icu.util.Calendar
 import android.util.Log
+import android.widget.Toast
+import bill.com.mybills.ui.activity.BarChartActivity
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.custom_date.*
+import android.animation.PropertyValuesHolder
+import android.animation.ObjectAnimator
+import android.support.v7.app.AlertDialog
+import android.animation.Animator
+
+
 
 
 class CustomDateDialog : DialogFragment() {
 
     val myCalendar = Calendar.getInstance()
+    var endDateStr = ""
+    var startDatestr = ""
 
     companion object {
         fun newInstance(title: String): CustomDateDialog {
             val frag = CustomDateDialog()
-            val args = Bundle()
-            args.putString("title", title)
-            frag.arguments = args
             return frag
         }
     }
@@ -53,18 +61,65 @@ class CustomDateDialog : DialogFragment() {
                     .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                     myCalendar.get(Calendar.DAY_OF_MONTH)).show()
         }
+        searchBtn.setOnClickListener {
+            //Toast.makeText(context,"startDatestr:"+startDatestr,Toast.LENGTH_LONG).show()
+
+            val decorView = dialog
+                    ?.window
+                    ?.decorView
+
+            val scaleDown = ObjectAnimator.ofPropertyValuesHolder(decorView,
+                    PropertyValuesHolder.ofFloat("scaleX", 1.0f, 15.0f),
+                    PropertyValuesHolder.ofFloat("scaleY", 1.0f, 15.0f),
+                    PropertyValuesHolder.ofFloat("alpha", 1.0f, 15.0f))
+            scaleDown.addListener(object : Animator.AnimatorListener {
+                override fun onAnimationEnd(animation: Animator) {
+                    val reportIntent = Intent(activity, BarChartActivity::class.java)
+                    startActivity(reportIntent)
+                }
+
+                override fun onAnimationStart(animation: Animator) {
+
+                }
+                override fun onAnimationCancel(animation: Animator) {}
+                override fun onAnimationRepeat(animation: Animator) {}
+            })
+            scaleDown.duration = 1500
+            scaleDown.start()
+        }
     }
 
     var endDate: DatePickerDialog.OnDateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
         var month = monthOfYear
         month++
-        end_date.setText("$dayOfMonth-$month-$year")
+        endDateStr = "$dayOfMonth-$month-$year"
+        end_date.setText(endDateStr)
     }
     var startDate: DatePickerDialog.OnDateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
         var month = monthOfYear
         month++
-        start_date.setText("$dayOfMonth-$month-$year")
+        startDatestr = "$dayOfMonth-$month-$year"
+        start_date.setText(startDatestr)
     }
+
+    override fun onStart() {
+        super.onStart()
+
+        val dialog = dialog as AlertDialog
+
+        val decorView = getDialog()
+                ?.window
+                ?.decorView
+
+        val scaleDown = ObjectAnimator.ofPropertyValuesHolder(decorView,
+                PropertyValuesHolder.ofFloat("scaleX", 0.0f, 1.0f),
+                PropertyValuesHolder.ofFloat("scaleY", 0.0f, 1.0f),
+                PropertyValuesHolder.ofFloat("alpha", 0.0f, 1.0f))
+        scaleDown.duration = 2000
+        scaleDown.start()
+    }
+
+
 
 
 }

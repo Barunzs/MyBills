@@ -155,8 +155,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(billPreviewIntent);
             break;
             case 6:
-                //Intent reportIntent = new Intent(getApplicationContext(), BarChartActivity.class);
-                //startActivity(reportIntent);
                 FragmentManager fm = getSupportFragmentManager();
                 CustomDateDialog editNameDialogFragment = CustomDateDialog.Companion.newInstance("kkkk");
                 editNameDialogFragment.show(fm, "fragment_edit_name");

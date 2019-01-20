@@ -95,4 +95,8 @@
 
     <string name="scrollViewStart">START OF SCROLLVIEW</string>
     <string name="scrollViewEnd">END OF SCROLLVIEW</string>
+    <string name="search">Search</string>
+    <string name="please_select_date_range_to_view_your_sale_amount">Please select date range to view your sale amount</string>
+    <string name="ornament_image">Ornament Image</string>
+    <string name="generate_bill">Generate Bill</string>
 </resources>

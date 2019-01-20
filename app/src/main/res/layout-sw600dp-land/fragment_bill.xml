@@ -339,7 +339,7 @@
                 android:layout_marginEnd="32dp"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
-                android:text="Generate Bill"
+                android:text="@string/generate_bill"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -353,7 +353,7 @@
                 android:id="@+id/productImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ornament Image"
+                android:text="@string/ornament_image"
                 android:textStyle="bold"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
@@ -370,7 +370,8 @@
                 app:layout_constraintHorizontal_bias="1"
                 app:layout_constraintStart_toEndOf="@+id/textView47"
                 app:layout_constraintTop_toBottomOf="@+id/shopAddress"
-                app:srcCompat="@android:drawable/ic_menu_camera" />
+                app:srcCompat="@android:drawable/ic_menu_camera"
+                android:contentDescription="@string/ornament_image" />
 
             <ProgressBar
                 android:id="@+id/productIconProgressBar"
