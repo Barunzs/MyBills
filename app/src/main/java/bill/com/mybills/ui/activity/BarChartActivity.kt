@@ -58,13 +58,13 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
     private val TAG = "BarChartActivity"
     private var user: FirebaseUser? = null
     private var db: FirebaseFirestore? = null
-    val myCalendar = Calendar.getInstance()
+    val values = ArrayList<BarEntry>()
+    val billitemList = mutableListOf<BillItem>()
+    val billNoList = mutableListOf<String>()
+    val billitemsMap = HashMap<String, ArrayList<BillItem>?>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val tabletSize = resources.getBoolean(R.bool.isTablet)
-        if (tabletSize) {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        }
+
         super.onCreate(savedInstanceState)
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -152,8 +152,8 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
 
     override fun onStart() {
         super.onStart()
-        user?.uid?.let { it ->
-            db?.collection(it)?.document("8080808033")?.collection("Bill Items")?.whereGreaterThanOrEqualTo("date", "2018-10-01")?.whereLessThanOrEqualTo("date", "2018-12-30")
+        user?.uid?.let {
+            /*db?.collection(it)?.document("")?.collection("Bill Items")?.whereGreaterThanOrEqualTo("date", "2018-10-01")?.whereLessThanOrEqualTo("date", "2018-12-30")
                     ?.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                         if (e != null) {
                             Log.e(TAG, "listen:error", e)
@@ -163,17 +163,44 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
                             setData(snapshots)
                             chart?.invalidate()
                         }
-                    })
+                    })*/
+
+            db?.collection("Barun")?.get()?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val document = task.result
+                    if (document != null) {
+                        val documentIdList = mutableListOf<String>()
+                        document.forEach { queryDocumentSnapshot: QueryDocumentSnapshot? ->
+                            queryDocumentSnapshot?.id?.let { docmentStr ->
+                                documentIdList.add(docmentStr)
+                                Log.d(TAG, "docmentStr::$docmentStr")
+                            }
+                        }
+                        db?.collection(it)?.document(documentIdList[0])?.collection("Bill Items")?.whereGreaterThanOrEqualTo("date", "2018-10-01")?.whereLessThanOrEqualTo("date", "2018-12-30")
+                                ?.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
+                                    if (e != null) {
+                                        Log.e(TAG, "listen:error", e)
+                                        return@EventListener
+                                    }
+                                    if (snapshots != null) {
+                                        setData(snapshots)
+                                        chart?.invalidate()
+                                    }
+                                })
+                    } else {
+                        Log.d(TAG, "No such document")
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.exception)
+                }
+            }
         }
     }
 
 
     private fun setData(snapshots: QuerySnapshot) {
 
-        val values = ArrayList<BarEntry>()
-        val billitemList = mutableListOf<BillItem>()
-        val billNoList = mutableListOf<String>()
-        val billitemsMap = HashMap<String, ArrayList<BillItem>?>()
+
         var start = 1f
         for (doc in snapshots) {
             val billItem = doc.toObject(BillItem::class.java)

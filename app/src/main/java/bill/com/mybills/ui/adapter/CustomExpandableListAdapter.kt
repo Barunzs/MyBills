@@ -139,7 +139,7 @@ class CustomExpandableListAdapter(val context: Context?, val expandableListTitle
         expandedListTextView.text = billItem.particulars
         weightTextView.text = "${billItem.weight}g"
         amountTextView.text = "₹ " + df.format(billItem.amtGold)
-        Picasso.with(context).load(billItem.itemUri).into(imageView)
+        Picasso.get().load(billItem.itemUri).into(imageView)
         return convertView
     }
 

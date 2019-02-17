@@ -1,16 +1,12 @@
 package bill.com.mybills.ui.fragment
 
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
 import android.view.*
 import android.widget.Toast
 import bill.com.mybills.R
 import bill.com.mybills.model.BusinessProfile
-import bill.com.mybills.model.Item
-import bill.com.mybills.ui.activity.BillPreviewActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
@@ -18,7 +14,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_bill.*
 import kotlinx.android.synthetic.main.fragment_myprofile.*
 
 
@@ -62,7 +57,7 @@ internal class MyProfileFragment : Fragment() {
             val name = user?.displayName
             val photoUrl = user?.photoUrl
             profilePictureUpdateProgressBar.visibility = View.GONE
-            Picasso.with(context).load(photoUrl).into(profilePictureImageView)
+            Picasso.get().load(photoUrl).into(profilePictureImageView)
             fullNameTextView.text = name
         }
         docRef?.get()?.addOnSuccessListener { documentSnapshot ->
@@ -85,7 +80,7 @@ internal class MyProfileFragment : Fragment() {
             Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
         }?.addOnSuccessListener {
             if (this.isVisible)
-                Picasso.with(context).load(it).into(businessPictureImageView)
+                Picasso.get().load(it).into(businessPictureImageView)
         }
     }
 
@@ -94,12 +89,5 @@ internal class MyProfileFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater);
         menu?.clear();
     }
-
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-    }
-
 
 }

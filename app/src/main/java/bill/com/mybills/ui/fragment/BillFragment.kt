@@ -262,7 +262,7 @@ internal class BillFragment : Fragment() {
                             Toast.makeText(context, "Upload Successfully", Toast.LENGTH_LONG).show()
                             productIconProgressBar.visibility = View.GONE
                             uriFirebase = it.uploadSessionUri
-                            Picasso.with(context).load(uriFirebase).into(image)
+                            Picasso.get().load(uriFirebase).into(image)
                         }
                     }
                 }

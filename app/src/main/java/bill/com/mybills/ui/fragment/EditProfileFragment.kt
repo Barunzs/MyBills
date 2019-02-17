@@ -78,7 +78,7 @@ internal class EditProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (user != null) {
-            Picasso.with(context).load(user?.photoUrl).into(editProfileImage)
+            Picasso.get().load(user?.photoUrl).into(editProfileImage)
             firstNameEditText.setText(user?.displayName)
             profilePictureUpdateProgressBar.visibility = View.GONE
         }
@@ -96,7 +96,7 @@ internal class EditProfileFragment : Fragment() {
                     businessPictureUpdateProgressBar.visibility = View.GONE
                 }?.addOnSuccessListener {
                     if (isVisible) {
-                        Picasso.with(context).load(it).into(editLogo)
+                        Picasso.get().load(it).into(editLogo)
                         businessPictureUpdateProgressBar.visibility = View.GONE
                     }
 
@@ -267,7 +267,7 @@ internal class EditProfileFragment : Fragment() {
                             businessLogoURI = Uri.EMPTY
                             businessLogoURI = it.uploadSessionUri
                             businessPictureUpdateProgressBar.visibility = View.GONE
-                            Picasso.with(context).load(it.uploadSessionUri).into(editLogo)
+                            Picasso.get().load(it.uploadSessionUri).into(editLogo)
                             val localFile = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "image.jpg")
                             storageReference?.child(user?.uid + "/businessLogo/businessLogo_image")?.getFile(localFile)?.addOnFailureListener {
                                 Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
@@ -311,7 +311,7 @@ internal class EditProfileFragment : Fragment() {
                                             profilePictureUpdateProgressBar.visibility = View.GONE
                                             if (task.isSuccessful) {
                                                 Toast.makeText(context, "Profile Picture Uploaded Successfully", Toast.LENGTH_LONG).show()
-                                                Picasso.with(context).load(uriFirebase).into(editProfileImage)
+                                                Picasso.get().load(uriFirebase).into(editProfileImage)
                                             } else {
                                                 Toast.makeText(context, "Error Try Again", Toast.LENGTH_LONG).show()
                                             }

@@ -21,7 +21,7 @@ internal class MyTransactionViewHolder(var parent: ViewGroup?) : RecyclerView.Vi
         val d = Date(billItem.date.toLong())
         val f = SimpleDateFormat("dd-MM-yyyy", Locale.US)
         itemView.activityDateTimeTextView.text = f.format(d)
-        Picasso.with(itemView.context).load(billItem.itemUri).into(itemView.voucherImage)
+        Picasso.get().load(billItem.itemUri).into(itemView.voucherImage)
     }
 
     fun setBillItemMap(billItemList: ArrayList<BillItem>) {
