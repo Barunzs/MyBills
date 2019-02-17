@@ -50,18 +50,18 @@ import java.util.HashMap
 class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartValueSelectedListener {
 
     private var chart: BarChart? = null
-    private var seekBarX: SeekBar? = null
-    private var seekBarY: SeekBar? = null
+    //private var seekBarX: SeekBar? = null
+    //private var seekBarY: SeekBar? = null
     private var tvX: TextView? = null
     private var tvY: TextView? = null
     private val onValueSelectedRectF = RectF()
     private val TAG = "BarChartActivity"
     private var user: FirebaseUser? = null
     private var db: FirebaseFirestore? = null
-    val values = ArrayList<BarEntry>()
-    val billitemList = mutableListOf<BillItem>()
-    val billNoList = mutableListOf<String>()
-    val billitemsMap = HashMap<String, ArrayList<BillItem>?>()
+    private val values = ArrayList<BarEntry>()
+    private val billitemList = mutableListOf<BillItem>()
+    private val billNoList = mutableListOf<String>()
+    private val billitemsMap = HashMap<String, Double?>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -78,11 +78,11 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
         tvX = findViewById(R.id.tvXMax)
         tvY = findViewById(R.id.tvYMax)
 
-        seekBarX = findViewById(R.id.seekBar1)
-        seekBarY = findViewById(R.id.seekBar2)
+        //seekBarX = findViewById(R.id.seekBar1)
+        //seekBarY = findViewById(R.id.seekBar2)
 
-        seekBarY?.setOnSeekBarChangeListener(this)
-        seekBarX?.setOnSeekBarChangeListener(this)
+        //seekBarY?.setOnSeekBarChangeListener(this)
+        //seekBarX?.setOnSeekBarChangeListener(this)
 
         chart = findViewById(R.id.chart1)
         chart?.setOnChartValueSelectedListener(this)
@@ -104,7 +104,7 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
 
         val xAxisFormatter = DayAxisValueFormatter(chart!!)
 
-        val xAxis = chart?.getXAxis()
+        val xAxis = chart?.xAxis
         xAxis?.position = XAxis.XAxisPosition.BOTTOM
         xAxis?.typeface = tfLight
         xAxis?.setDrawGridLines(false)
@@ -114,7 +114,7 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
 
         val custom = MyValueFormatter("$")
 
-        val leftAxis = chart?.getAxisLeft()
+        val leftAxis = chart?.axisLeft
         leftAxis?.typeface = tfLight
         leftAxis?.setLabelCount(8, false)
         leftAxis?.valueFormatter = custom
@@ -176,7 +176,7 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
                                 Log.d(TAG, "docmentStr::$docmentStr")
                             }
                         }
-                        db?.collection(it)?.document(documentIdList[0])?.collection("Bill Items")?.whereGreaterThanOrEqualTo("date", "2018-10-01")?.whereLessThanOrEqualTo("date", "2018-12-30")
+                        db?.collection(it)?.document(documentIdList[0])?.collection("Bill Items")?.whereGreaterThanOrEqualTo("date", "2018-07-01")?.whereLessThanOrEqualTo("date", "2018-12-31")
                                 ?.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                                     if (e != null) {
                                         Log.e(TAG, "listen:error", e)
@@ -199,8 +199,6 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
 
 
     private fun setData(snapshots: QuerySnapshot) {
-
-
         var start = 1f
         for (doc in snapshots) {
             val billItem = doc.toObject(BillItem::class.java)
@@ -209,22 +207,26 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
                 billNoList.add(billItem.billNo)
             }
             if (billitemsMap.containsKey(billItem.billNo)) {
-                val billItemsList = billitemsMap[billItem.billNo]
-                billItemsList?.add(billItem)
-                billitemsMap[billItem.billNo] = billItemsList
+                val billItemweight = billitemsMap[billItem.billNo]
+                billitemsMap[billItem.billNo] = billItemweight?.plus(billItem.weight)
             } else {
                 val billItemsList = ArrayList<BillItem>()
-                billItemsList.add(billItem)
-                billitemsMap[billItem.billNo] = billItemsList
+                billitemsMap[billItem.billNo] = billItem.weight
             }
         }
-        billitemsMap.forEach(fun(it: Map.Entry<String, ArrayList<BillItem>?>) {
+        billitemsMap.forEach {
+            (key, value) ->
+            println("$key = $value")
+            values.add(BarEntry(start, value!!.toFloat()))
+            start++
+        }
+        /*billitemsMap.forEach(fun(it: Map.Entry<String, Double?>) {
             billitemsMap[it.key]?.forEach {
                 values.add(BarEntry(start, it.weight.toFloat()))
                 Log.d(TAG, "weight::==>" + it.weight.toFloat())
             }
             start++
-        })
+        })*/
         val set1: BarDataSet
         if (chart?.data != null && chart?.data?.dataSetCount!! > 0) {
             set1 = chart?.data?.getDataSetByIndex(0) as BarDataSet
@@ -233,7 +235,7 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
             chart?.notifyDataSetChanged()
 
         } else {
-            set1 = BarDataSet(values, "The year 2017")
+            set1 = BarDataSet(values, "The year 2019")
             set1.setDrawIcons(false)
             val startColor1 = ContextCompat.getColor(this, android.R.color.holo_orange_light)
             val startColor2 = ContextCompat.getColor(this, android.R.color.holo_blue_light)
@@ -262,8 +264,8 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
             data.setValueTextSize(10f)
             data.setValueTypeface(tfLight)
             data.barWidth = 1f
-
             chart?.data = data
+
         }
     }
 
