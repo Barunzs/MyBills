@@ -1,27 +1,20 @@
 package bill.com.mybills.ui.fragment
 
-import android.support.v4.app.DialogFragment
-import android.view.WindowManager
-import android.widget.EditText
-import android.os.Bundle
-import android.view.ViewGroup
-import android.view.LayoutInflater
-import android.view.View
-import bill.com.mybills.R
+import android.animation.Animator
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.icu.util.Calendar
-import android.util.Log
-import android.widget.Toast
-import bill.com.mybills.ui.activity.BarChartActivity
-import com.google.firebase.firestore.QuerySnapshot
-import kotlinx.android.synthetic.main.custom_date.*
-import android.animation.PropertyValuesHolder
-import android.animation.ObjectAnimator
+import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
-import android.animation.Animator
-
-
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import bill.com.mybills.R
+import bill.com.mybills.ui.activity.BarChartActivity
+import kotlinx.android.synthetic.main.custom_date.*
 
 
 class CustomDateDialog : DialogFragment() {

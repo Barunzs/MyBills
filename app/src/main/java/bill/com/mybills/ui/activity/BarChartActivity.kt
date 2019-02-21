@@ -59,8 +59,6 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
     private var user: FirebaseUser? = null
     private var db: FirebaseFirestore? = null
     private val values = ArrayList<BarEntry>()
-    private val billitemList = mutableListOf<BillItem>()
-    private val billNoList = mutableListOf<String>()
     private val billitemsMap = HashMap<String, Double?>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -202,18 +200,16 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
         var start = 1f
         for (doc in snapshots) {
             val billItem = doc.toObject(BillItem::class.java)
-            billitemList.add(billItem)
-            if (!billNoList.contains(billItem.billNo)) {
-                billNoList.add(billItem.billNo)
-            }
             if (billitemsMap.containsKey(billItem.billNo)) {
+                Log.d(TAG,"date :: "+billItem.date)
                 val billItemweight = billitemsMap[billItem.billNo]
                 billitemsMap[billItem.billNo] = billItemweight?.plus(billItem.weight)
             } else {
-                val billItemsList = ArrayList<BillItem>()
                 billitemsMap[billItem.billNo] = billItem.weight
+                Log.d(TAG,"date :: "+billItem.date)
             }
         }
+        Log.d(TAG,"billitemsMap size "+billitemsMap.size)
         billitemsMap.forEach {
             (key, value) ->
             println("$key = $value")
