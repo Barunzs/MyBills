@@ -9,9 +9,11 @@ import android.icu.util.Calendar
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import bill.com.mybills.R
 import bill.com.mybills.ui.activity.BarChartActivity
 import kotlinx.android.synthetic.main.custom_date.*
@@ -22,6 +24,7 @@ class CustomDateDialog : DialogFragment() {
     val myCalendar = Calendar.getInstance()
     var endDateStr = ""
     var startDatestr = ""
+    val TAG = CustomDateDialog::class.java.simpleName
 
     companion object {
         fun newInstance(title: String): CustomDateDialog {
@@ -55,50 +58,74 @@ class CustomDateDialog : DialogFragment() {
                     myCalendar.get(Calendar.DAY_OF_MONTH)).show()
         }
         searchBtn.setOnClickListener {
-            //Toast.makeText(context,"startDatestr:"+startDatestr,Toast.LENGTH_LONG).show()
 
-            val decorView = dialog
-                    ?.window
-                    ?.decorView
+            if(endDateStr != "" && startDatestr !=""){
 
-            val scaleDown = ObjectAnimator.ofPropertyValuesHolder(decorView,
-                    PropertyValuesHolder.ofFloat("scaleX", 1.0f, 15.0f),
-                    PropertyValuesHolder.ofFloat("scaleY", 1.0f, 15.0f),
-                    PropertyValuesHolder.ofFloat("alpha", 1.0f, 15.0f))
-            scaleDown.addListener(object : Animator.AnimatorListener {
-                override fun onAnimationEnd(animation: Animator) {
-                    val reportIntent = Intent(activity, BarChartActivity::class.java)
-                    startActivity(reportIntent)
-                }
+                val decorView = dialog
+                        ?.window
+                        ?.decorView
 
-                override fun onAnimationStart(animation: Animator) {
+                val scaleDown = ObjectAnimator.ofPropertyValuesHolder(decorView,
+                        PropertyValuesHolder.ofFloat("scaleX", 1.0f, 15.0f),
+                        PropertyValuesHolder.ofFloat("scaleY", 1.0f, 15.0f),
+                        PropertyValuesHolder.ofFloat("alpha", 1.0f, 15.0f))
+                scaleDown.addListener(object : Animator.AnimatorListener {
+                    override fun onAnimationEnd(animation: Animator) {
+                        val reportIntent = Intent(activity, BarChartActivity::class.java)
+                        reportIntent.putExtra("start_date",startDatestr)
+                        Log.d(TAG, "start_date:$startDatestr")
+                        reportIntent.putExtra("end_date",endDateStr)
+                        Log.d(TAG, "end_date:$endDateStr")
+                        startActivity(reportIntent)
+                    }
 
-                }
-                override fun onAnimationCancel(animation: Animator) {}
-                override fun onAnimationRepeat(animation: Animator) {}
-            })
-            scaleDown.duration = 1500
-            scaleDown.start()
+                    override fun onAnimationStart(animation: Animator) {
+
+                    }
+                    override fun onAnimationCancel(animation: Animator) {}
+                    override fun onAnimationRepeat(animation: Animator) {}
+                })
+                scaleDown.duration = 1500
+                scaleDown.start()
+            } else {
+                Toast.makeText(context,"Please enter Dates for Report", Toast.LENGTH_LONG).show()
+            }
+
+
         }
     }
 
     var endDate: DatePickerDialog.OnDateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
         var month = monthOfYear
         month++
-        endDateStr = "$dayOfMonth-$month-$year"
+        if(monthOfYear.div(10f)<0.8){
+            Log.d(TAG, "0$month")
+            endDateStr = "$year-0$month-$dayOfMonth"
+        }else {
+            endDateStr = "$year-$month-$dayOfMonth"
+        }
+
         end_date.setText(endDateStr)
     }
     var startDate: DatePickerDialog.OnDateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
         var month = monthOfYear
+        Log.d(TAG,"monthOfYear div::"+monthOfYear.div(10f))
         month++
-        startDatestr = "$dayOfMonth-$month-$year"
+        if(monthOfYear.div(10f)<0.8){
+            Log.d(TAG, "0$month")
+            startDatestr = "$year-0$month-$dayOfMonth"
+        }else {
+            startDatestr = "$year-$month-$dayOfMonth"
+        }
+
         start_date.setText(startDatestr)
     }
 
     override fun onStart() {
         super.onStart()
 
-        val dialog = dialog as AlertDialog
+        endDateStr = ""
+        startDatestr = ""
 
         val decorView = getDialog()
                 ?.window

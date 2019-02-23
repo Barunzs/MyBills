@@ -45,6 +45,7 @@ import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.fragment_mytransaction.*
 import java.util.ArrayList
 import java.util.HashMap
+import java.util.function.Consumer
 
 
 class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartValueSelectedListener {
@@ -75,6 +76,8 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
 
         tvX = findViewById(R.id.tvXMax)
         tvY = findViewById(R.id.tvYMax)
+
+
 
         //seekBarX = findViewById(R.id.seekBar1)
         //seekBarY = findViewById(R.id.seekBar2)
@@ -151,18 +154,10 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
     override fun onStart() {
         super.onStart()
         user?.uid?.let {
-            /*db?.collection(it)?.document("")?.collection("Bill Items")?.whereGreaterThanOrEqualTo("date", "2018-10-01")?.whereLessThanOrEqualTo("date", "2018-12-30")
-                    ?.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
-                        if (e != null) {
-                            Log.e(TAG, "listen:error", e)
-                            return@EventListener
-                        }
-                        if (snapshots != null) {
-                            setData(snapshots)
-                            chart?.invalidate()
-                        }
-                    })*/
-
+            val startDate = intent.getStringExtra("start_date")
+            val endDate = intent.getStringExtra("end_date")
+            Log.d(TAG, "startDate::$startDate")
+            Log.d(TAG, "endDate::$endDate")
             db?.collection("Barun")?.get()?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val document = task.result
@@ -171,20 +166,25 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
                         document.forEach { queryDocumentSnapshot: QueryDocumentSnapshot? ->
                             queryDocumentSnapshot?.id?.let { docmentStr ->
                                 documentIdList.add(docmentStr)
-                                Log.d(TAG, "docmentStr::$docmentStr")
+
                             }
                         }
-                        db?.collection(it)?.document(documentIdList[0])?.collection("Bill Items")?.whereGreaterThanOrEqualTo("date", "2018-07-01")?.whereLessThanOrEqualTo("date", "2018-12-31")
-                                ?.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
-                                    if (e != null) {
-                                        Log.e(TAG, "listen:error", e)
-                                        return@EventListener
-                                    }
-                                    if (snapshots != null) {
-                                        setData(snapshots)
-                                        chart?.invalidate()
-                                    }
-                                })
+                        documentIdList.forEach(Consumer {
+                            t ->
+                            Log.d(TAG, "docmentStr::$t")
+                            db?.collection(it)?.document(t)?.collection("Bill Items")?.whereGreaterThanOrEqualTo("date", startDate)?.whereLessThanOrEqualTo("date", endDate)
+                                    ?.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
+                                        if (e != null) {
+                                            Log.e(TAG, "listen:error", e)
+                                            return@EventListener
+                                        }
+                                        if (snapshots != null) {
+                                            Log.d(TAG, "snapshots::${snapshots.size()}")
+                                            setData(snapshots)
+                                            chart?.invalidate()
+                                        }
+                                    })
+                        })
                     } else {
                         Log.d(TAG, "No such document")
                     }
