@@ -172,7 +172,7 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
                         documentIdList.forEach(Consumer {
                             t ->
                             Log.d(TAG, "docmentStr::$t")
-                            db?.collection(it)?.document(t)?.collection("Bill Items")?.whereGreaterThanOrEqualTo("date", startDate)?.whereLessThanOrEqualTo("date", endDate)
+                            db?.collection(it)?.document(documentIdList[0])?.collection("Bill Items")?.whereGreaterThanOrEqualTo("date", startDate)?.whereLessThanOrEqualTo("date", endDate)
                                     ?.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                                         if (e != null) {
                                             Log.e(TAG, "listen:error", e)
@@ -216,13 +216,7 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
             values.add(BarEntry(start, value!!.toFloat()))
             start++
         }
-        /*billitemsMap.forEach(fun(it: Map.Entry<String, Double?>) {
-            billitemsMap[it.key]?.forEach {
-                values.add(BarEntry(start, it.weight.toFloat()))
-                Log.d(TAG, "weight::==>" + it.weight.toFloat())
-            }
-            start++
-        })*/
+
         val set1: BarDataSet
         if (chart?.data != null && chart?.data?.dataSetCount!! > 0) {
             set1 = chart?.data?.getDataSetByIndex(0) as BarDataSet

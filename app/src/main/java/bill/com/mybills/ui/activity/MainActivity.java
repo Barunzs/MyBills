@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,6 +49,7 @@ import bill.com.mybills.ui.fragment.EditProfileFragment;
 import bill.com.mybills.ui.fragment.MyBillTransactionFragment;
 import bill.com.mybills.ui.fragment.MyProfileFragment;
 import bill.com.mybills.ui.fragment.ScanFragment;
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -66,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         appDAL = new AppDAL(getApplicationContext());
+        Fabric.with(this, new Crashlytics());
         mTitle = mDrawerTitle = getTitle();
         Toolbar topToolBar = findViewById(R.id.toolbar2);
         setSupportActionBar(topToolBar);

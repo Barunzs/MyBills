@@ -59,7 +59,7 @@ class CustomDateDialog : DialogFragment() {
         }
         searchBtn.setOnClickListener {
 
-            if(endDateStr != "" && startDatestr !=""){
+            if (endDateStr != "" && startDatestr != "") {
 
                 val decorView = dialog
                         ?.window
@@ -72,9 +72,9 @@ class CustomDateDialog : DialogFragment() {
                 scaleDown.addListener(object : Animator.AnimatorListener {
                     override fun onAnimationEnd(animation: Animator) {
                         val reportIntent = Intent(activity, BarChartActivity::class.java)
-                        reportIntent.putExtra("start_date",startDatestr)
+                        reportIntent.putExtra("start_date", startDatestr)
                         Log.d(TAG, "start_date:$startDatestr")
-                        reportIntent.putExtra("end_date",endDateStr)
+                        reportIntent.putExtra("end_date", endDateStr)
                         Log.d(TAG, "end_date:$endDateStr")
                         startActivity(reportIntent)
                     }
@@ -82,13 +82,14 @@ class CustomDateDialog : DialogFragment() {
                     override fun onAnimationStart(animation: Animator) {
 
                     }
+
                     override fun onAnimationCancel(animation: Animator) {}
                     override fun onAnimationRepeat(animation: Animator) {}
                 })
                 scaleDown.duration = 1500
                 scaleDown.start()
             } else {
-                Toast.makeText(context,"Please enter Dates for Report", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Please enter Dates for Report", Toast.LENGTH_LONG).show()
             }
 
 
@@ -98,10 +99,10 @@ class CustomDateDialog : DialogFragment() {
     var endDate: DatePickerDialog.OnDateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
         var month = monthOfYear
         month++
-        if(monthOfYear.div(10f)<0.8){
+        if (monthOfYear.div(10f) < 0.8) {
             Log.d(TAG, "0$month")
             endDateStr = "$year-0$month-$dayOfMonth"
-        }else {
+        } else {
             endDateStr = "$year-$month-$dayOfMonth"
         }
 
@@ -109,12 +110,12 @@ class CustomDateDialog : DialogFragment() {
     }
     var startDate: DatePickerDialog.OnDateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
         var month = monthOfYear
-        Log.d(TAG,"monthOfYear div::"+monthOfYear.div(10f))
+        Log.d(TAG, "monthOfYear div::" + monthOfYear.div(10f))
         month++
-        if(monthOfYear.div(10f)<0.8){
+        if (monthOfYear.div(10f) < 0.8) {
             Log.d(TAG, "0$month")
             startDatestr = "$year-0$month-$dayOfMonth"
-        }else {
+        } else {
             startDatestr = "$year-$month-$dayOfMonth"
         }
 
@@ -139,7 +140,11 @@ class CustomDateDialog : DialogFragment() {
         scaleDown.start()
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        start_date.setText("")
+        end_date.setText("")
+    }
 
 
 }
