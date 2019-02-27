@@ -158,10 +158,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(billPreviewIntent);
             break;
             case 6:
-                FragmentManager fm = getSupportFragmentManager();
+                /*FragmentManager fm = getSupportFragmentManager();
                 CustomDateDialog editNameDialogFragment = CustomDateDialog.Companion.newInstance("kkkk");
-                editNameDialogFragment.show(fm, "fragment_edit_name");
-
+                editNameDialogFragment.show(fm, "fragment_edit_name");*/
                 break;
             default:
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
