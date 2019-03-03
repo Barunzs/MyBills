@@ -78,7 +78,6 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
         tvY = findViewById(R.id.tvYMax)
 
 
-
         //seekBarX = findViewById(R.id.seekBar1)
         //seekBarY = findViewById(R.id.seekBar2)
 
@@ -153,6 +152,7 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
 
     override fun onStart() {
         super.onStart()
+        billitemsMap.clear()
         user?.uid?.let {
             val startDate = intent.getStringExtra("start_date")
             val endDate = intent.getStringExtra("end_date")
@@ -166,22 +166,30 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
                         document.forEach { queryDocumentSnapshot: QueryDocumentSnapshot? ->
                             queryDocumentSnapshot?.id?.let { docmentStr ->
                                 documentIdList.add(docmentStr)
-
                             }
                         }
-                        documentIdList.forEach(Consumer {
-                            t ->
-                            Log.d(TAG, "docmentStr::$t")
-                            db?.collection(it)?.document(documentIdList[0])?.collection("Bill Items")?.whereGreaterThanOrEqualTo("date", startDate)?.whereLessThanOrEqualTo("date", endDate)
+                        documentIdList.forEach(Consumer { t ->
+                            Log.d(TAG, "inside outer loop::"+t)
+                            db?.collection(it)?.document(t)?.collection("Bill Items")?.whereGreaterThanOrEqualTo("date", startDate)?.whereLessThanOrEqualTo("date", endDate)
                                     ?.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                                         if (e != null) {
                                             Log.e(TAG, "listen:error", e)
                                             return@EventListener
                                         }
                                         if (snapshots != null) {
-                                            Log.d(TAG, "snapshots::${snapshots.size()}")
-                                            setData(snapshots)
+                                            for (doc in snapshots) {
+                                                val billItem = doc.toObject(BillItem::class.java)
+                                                if (billitemsMap.containsKey(billItem.billNo)) {
+                                                    val billItemweight = billitemsMap[billItem.billNo]
+                                                    billitemsMap[billItem.billNo] = billItemweight?.plus(billItem.weight)
+                                                } else {
+                                                    billitemsMap[billItem.billNo] = billItem.weight
+                                                }
+                                                Log.d(TAG, "inside inner loop::"+billItem.billNo)
+                                            }
+                                            setData(billitemsMap)
                                             chart?.invalidate()
+
                                         }
                                     })
                         })
@@ -196,22 +204,9 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
     }
 
 
-    private fun setData(snapshots: QuerySnapshot) {
+    private fun setData(billitemsMap: HashMap<String, Double?>) {
         var start = 1f
-        for (doc in snapshots) {
-            val billItem = doc.toObject(BillItem::class.java)
-            if (billitemsMap.containsKey(billItem.billNo)) {
-                Log.d(TAG,"date :: "+billItem.date)
-                val billItemweight = billitemsMap[billItem.billNo]
-                billitemsMap[billItem.billNo] = billItemweight?.plus(billItem.weight)
-            } else {
-                billitemsMap[billItem.billNo] = billItem.weight
-                Log.d(TAG,"date :: "+billItem.date)
-            }
-        }
-        Log.d(TAG,"billitemsMap size "+billitemsMap.size)
-        billitemsMap.forEach {
-            (key, value) ->
+        billitemsMap.forEach { (key, value) ->
             println("$key = $value")
             values.add(BarEntry(start, value!!.toFloat()))
             start++
@@ -296,5 +291,6 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
     override fun onNothingSelected() {
 
     }
+
 
 }

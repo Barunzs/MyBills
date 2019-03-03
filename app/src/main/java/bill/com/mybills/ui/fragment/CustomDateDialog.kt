@@ -8,7 +8,6 @@ import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import bill.com.mybills.R
 import bill.com.mybills.ui.activity.BarChartActivity
+import com.airbnb.lottie.parser.IntegerParser
 import kotlinx.android.synthetic.main.custom_date.*
 
 
@@ -97,28 +97,28 @@ class CustomDateDialog : DialogFragment() {
     }
 
     var endDate: DatePickerDialog.OnDateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-        var month = monthOfYear
-        month++
+        var month = (monthOfYear+1).toString()
+        var day  = dayOfMonth.toString()
         if (monthOfYear.div(10f) < 0.8) {
-            Log.d(TAG, "0$month")
-            endDateStr = "$year-0$month-$dayOfMonth"
-        } else {
-            endDateStr = "$year-$month-$dayOfMonth"
+            month= month.prependIndent("0")
         }
-
+        if (dayOfMonth.div(10f) < 0.8) {
+            day= dayOfMonth.toString().prependIndent("0")
+        }
+        endDateStr = "$year-$month-$day"
         end_date.setText(endDateStr)
     }
-    var startDate: DatePickerDialog.OnDateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-        var month = monthOfYear
-        Log.d(TAG, "monthOfYear div::" + monthOfYear.div(10f))
-        month++
-        if (monthOfYear.div(10f) < 0.8) {
-            Log.d(TAG, "0$month")
-            startDatestr = "$year-0$month-$dayOfMonth"
-        } else {
-            startDatestr = "$year-$month-$dayOfMonth"
-        }
 
+    var startDate: DatePickerDialog.OnDateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+        var month = (monthOfYear+1).toString()
+        var day  = dayOfMonth.toString()
+        if (monthOfYear.div(10f) < 0.8) {
+            month= month.prependIndent("0")
+        }
+        if (dayOfMonth.div(10f) < 0.8) {
+            day= dayOfMonth.toString().prependIndent("0")
+        }
+        startDatestr = "$year-$month-$day"
         start_date.setText(startDatestr)
     }
 

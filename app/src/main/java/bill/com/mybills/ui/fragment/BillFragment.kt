@@ -126,7 +126,6 @@ internal class BillFragment : Fragment() {
                 val itemGson = Gson()
                 billitem = itemGson.fromJson<Item>(billItemList[0], type)
             }
-
         }
         return billitem
     }
@@ -298,9 +297,9 @@ internal class BillFragment : Fragment() {
                 billNo = timestamp.time.toString()
             }
             //var date = (Calendar.getInstance().time)
-            val item = Item(particularofitem?.text.toString(), weigh_of_gold_item.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weigh_of_gold_item.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(), customerPhoneField.text.toString(), timestamp.toString(), billNo)
+            val item = Item(particularofitem?.text.toString(), weigh_of_gold_item.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weigh_of_gold_item.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(), customerPhoneField.text.toString(), timestamp.toString(), billNo,otherCharge.text.toString().toDouble())
             /* val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst*/
-            val totalAmt = amountOfGold + makingCharge.text.toString().toDouble()
+            val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + item.other
             val df = DecimalFormat("#.##")
             df.roundingMode = RoundingMode.CEILING
             total.text = "₹ " + df.format(totalAmt)

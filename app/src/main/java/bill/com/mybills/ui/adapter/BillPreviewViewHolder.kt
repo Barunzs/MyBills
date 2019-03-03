@@ -16,9 +16,10 @@ internal class BillPreviewViewHolder(val parent: ViewGroup?) : RecyclerView.View
 		val df = DecimalFormat("#.##")
 		df.roundingMode = RoundingMode.CEILING
 		itemView.itemName?.text = billItem.particulars
-		itemView.itemWeight?.text = df.format(billItem.weight)
+		itemView.itemWeight?.text = df.format(billItem.weight) + "g"
 		itemView.goldAmt?.text = "₹ " + df.format(billItem.amtGold)
 		itemView.makingAmt?.text = "₹ " + df.format(billItem.makingCharge)
+		itemView.othersAmt?.text = "₹ " + df.format(billItem.other)
 		Picasso.get().load(billItem.itemUri).into(itemView.productUploadIcon)
 	}
 }

@@ -2,6 +2,7 @@ package bill.com.mybills.ui.activity
 
 import android.app.ActivityOptions
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
@@ -48,6 +49,10 @@ class BillPreviewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_preview)
+        val tabletSize = resources.getBoolean(R.bool.isTablet)
+        if (tabletSize) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
         val builder = StrictMode.VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
         appDAL = applicationContext?.let { AppDAL(it) }
@@ -82,7 +87,7 @@ class BillPreviewActivity : AppCompatActivity() {
         var cgst = 0.0
         var sgst = 0.0
         for (item in billItemList) {
-            totalAmt += (item.cgst + item.sgst + item.amtGold + item.makingCharge)
+            totalAmt += (item.amtGold + item.makingCharge + item.other)
             cgst += item.cgst
             sgst += item.sgst
         }

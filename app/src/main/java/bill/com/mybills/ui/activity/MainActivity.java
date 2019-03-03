@@ -122,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private void selectItemFragment(int position) {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -156,11 +155,11 @@ public class MainActivity extends AppCompatActivity {
             case 5:
                 Intent billPreviewIntent = new Intent(getApplicationContext(), BillPreviewActivity.class);
                 startActivity(billPreviewIntent);
-            break;
+                break;
             case 6:
-                /*FragmentManager fm = getSupportFragmentManager();
+                FragmentManager fm = getSupportFragmentManager();
                 CustomDateDialog editNameDialogFragment = CustomDateDialog.Companion.newInstance("kkkk");
-                editNameDialogFragment.show(fm, "fragment_edit_name");*/
+                editNameDialogFragment.show(fm, "fragment_edit_name");
                 break;
             default:
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -180,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
-        Objects.requireNonNull( getSupportActionBar() ).setTitle(mTitle);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(mTitle);
     }
 
     @Override
@@ -264,12 +263,14 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
         DocumentReference docref = db.collection(user.getUid()).document("Business Profile");
         docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
+                    assert document != null;
                     if (document.exists()) {
                         BusinessProfile businessProfile = document.toObject(BusinessProfile.class);
                         showalert(businessProfile.isActive);
