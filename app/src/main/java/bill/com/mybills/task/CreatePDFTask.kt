@@ -11,6 +11,7 @@ import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
 import bill.com.mybills.model.BusinessProfile
 import bill.com.mybills.model.Item
+import bill.com.mybills.ui.activity.BillPreviewActivity
 import bill.com.mybills.ui.fragment.MyProfileFragment
 import com.airbnb.lottie.LottieAnimationView
 import com.google.firebase.auth.FirebaseUser
@@ -35,7 +36,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-internal class CreatePDFTask(context: Context?, var file: File, var billItemList: ArrayList<Item>, var progress: LottieAnimationView, var businessProfile: BusinessProfile, var bitmapLogo: Bitmap, val db: FirebaseFirestore?, val user: FirebaseUser?) : AsyncTask<String, Void, String>() {
+internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var billItemList: ArrayList<Item>, var businessProfile: BusinessProfile, var bitmapLogo: Bitmap, val db: FirebaseFirestore?, val user: FirebaseUser?) : AsyncTask<String, Void, String>() {
 
     private var cell: PdfPCell? = null
     private var bgImage: Image? = null
@@ -47,7 +48,6 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
 
     override fun onPreExecute() {
         super.onPreExecute()
-        progress.visibility = View.VISIBLE
         appDAL = contextRef.get()?.let { AppDAL(it) }
     }
 
@@ -130,18 +130,18 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
             cell?.addElement(pt)
             pTable.addCell(cell)
 
-            val table = PdfPTable(6)
-            val columnWidth = floatArrayOf(25f, 10f, 30f, 30f, 30f, 25f)
+            val table = PdfPTable(7)
+            val columnWidth = floatArrayOf(25f, 15f, 30f, 30f, 30f,20f, 25f)
             table.setWidths(columnWidth)
             cell = PdfPCell()
             cell?.backgroundColor = primarylight
-            cell?.colspan = 6
+            cell?.colspan = 7
             cell?.addElement(pTable)
             table.addCell(cell)
             cell = PdfPCell()
-            cell?.colspan = 6
+            cell?.colspan = 7
             table.addCell(cell)
-            cell?.colspan = 6
+            cell?.colspan = 7
             cell?.backgroundColor = myColor1
             ph = selector.process("Ornament")
             cell = PdfPCell()
@@ -165,9 +165,15 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
             cell = PdfPCell()
             cell?.border = PdfPCell.ALIGN_CENTER
             cell?.addElement(ph)
-            cell?.setBackgroundColor(myColor1)
+            cell?.backgroundColor = myColor1
             table.addCell(cell)
             ph = selector.process("Making Charge")
+            cell = PdfPCell()
+            cell?.border = PdfPCell.ALIGN_CENTER
+            cell?.addElement(ph)
+            cell?.backgroundColor = myColor1
+            table.addCell(cell)
+            ph = selector.process("Other Charges")
             cell = PdfPCell()
             cell?.border = PdfPCell.ALIGN_CENTER
             cell?.addElement(ph)
@@ -182,7 +188,7 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
 
             //table.setHeaderRows(3);
             cell = PdfPCell()
-            cell?.colspan = 6
+            cell?.colspan = 7
 
             for (item in billItemList) {
                 val fontselector = FontSelector();
@@ -212,11 +218,15 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
                 cell?.addElement(ph)
                 table.addCell(cell)
                 cell = PdfPCell()
-                ph = fontselector.process(df.format(item.amtGold + item.makingCharge).toString())
+                ph = fontselector.process(item.other.toString())
+                cell?.addElement(ph)
+                table.addCell(cell)
+                cell = PdfPCell()
+                ph = fontselector.process(df.format(item.amtGold + item.makingCharge + item.other).toString())
                 cell?.addElement(ph)
                 table.addCell(cell)
                 //gst = (((item.amtGold + item.makingCharge) * 1.5) / 100)
-                totalAmt += (item.amtGold + item.makingCharge)
+                totalAmt += (item.amtGold + item.makingCharge + item.other)
             }
             /*val selectorGST = FontSelector();
             val fGST = FontFactory.getFont("MSung-Light",
@@ -299,17 +309,17 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
 
     override fun onPostExecute(result: String) {
         super.onPostExecute(result)
-        progress.visibility = View.GONE
         appDAL?.billItemJson = String()
         var count = 0
         for (item in billItemList) {
             user?.uid?.let {
                 db?.collection(it)?.document(billItemList[0].phoneNo)?.collection("Bill Items")?.document()?.set(item)?.addOnSuccessListener { void: Void? ->
-                    Toast.makeText(contextRef.get(), "Please share Bill to Customer", Toast.LENGTH_LONG).show()
                     count++
-                    if (count == billItemList.size)
+                    if (count == billItemList.size){
                         shareFile()
+                    }
                 }?.addOnFailureListener { exception: java.lang.Exception ->
+                    (contextRef.get() as BillPreviewActivity).dismiss()
                     Toast.makeText(contextRef.get(), "Failure", Toast.LENGTH_LONG).show()
                 }
             }
@@ -326,17 +336,21 @@ internal class CreatePDFTask(context: Context?, var file: File, var billItemList
         filePath = uri?.lastPathSegment?.let { it -> storageReference.child(user?.uid + "/" + billItemList[0].billNo + "/bills").child(it) }
         filePath?.putFile(uri)?.addOnFailureListener {
             Toast.makeText(contextRef.get(), "Error uploading bill" + it.localizedMessage, Toast.LENGTH_LONG).show()
+            (contextRef.get() as BillPreviewActivity).dismiss()
         }?.addOnSuccessListener {
             Toast.makeText(contextRef.get(), "Bill Uploaded Successfully", Toast.LENGTH_LONG).show()
+            (contextRef.get() as BillPreviewActivity).dismiss()
+            if (fileWithinMyDir.exists()) {
+                Toast.makeText(contextRef.get(), "Please share Bill to Customer", Toast.LENGTH_LONG).show()
+                intentShareFile.type = "application/pdf";
+                intentShareFile.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.absolutePath));
+                intentShareFile.putExtra(Intent.EXTRA_SUBJECT,
+                        "Sharing File...");
+                intentShareFile.putExtra(Intent.EXTRA_TEXT, "Sharing File...");
+                intentShareFile.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                contextRef.get()?.startActivity(Intent.createChooser(intentShareFile, "Share File"));
+            }
         }
-        if (fileWithinMyDir.exists()) {
-            intentShareFile.type = "application/pdf";
-            intentShareFile.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.absolutePath));
-            intentShareFile.putExtra(Intent.EXTRA_SUBJECT,
-                    "Sharing File...");
-            intentShareFile.putExtra(Intent.EXTRA_TEXT, "Sharing File...");
-            intentShareFile.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            contextRef.get()?.startActivity(Intent.createChooser(intentShareFile, "Share File"));
-        }
+
     }
 }

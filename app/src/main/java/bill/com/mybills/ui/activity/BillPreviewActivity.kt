@@ -96,11 +96,6 @@ class BillPreviewActivity : AppCompatActivity() {
         cgstAmt.text = "₹ " + df.format(cgst)
         sendBill.setOnClickListener {
             sendPDF(billItemList)
-            val intent = Intent(applicationContext, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-
-
         }
         docRef?.get()?.addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
@@ -116,12 +111,19 @@ class BillPreviewActivity : AppCompatActivity() {
             val fileimage = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "image.jpg")
             val bitmapLoga = BitmapFactory.decodeStream(FileInputStream(fileimage))
             val filepdf = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), businessProfile?.orgName?.trim() + "_" + itemList[0].customerName.trim() + ".pdf")
-            businessProfile?.let { CreatePDFTask(this@BillPreviewActivity, filepdf, itemList, progressPdf, it, bitmapLoga, db, user).execute() }
-            sendBill.visibility = View.GONE
+            businessProfile?.let { CreatePDFTask(this@BillPreviewActivity, filepdf, itemList, it, bitmapLoga, db, user).execute() }
+            progressPdf.visibility = View.VISIBLE
+            parent_main.visibility = View.GONE
         } catch (e: IOException) {
             Toast.makeText(applicationContext, "Please update your Logo before generating Bill", Toast.LENGTH_LONG).show()
         }
+    }
 
+    public fun dismiss(){
+        progressPdf.visibility = View.GONE
+        val intent = Intent(applicationContext, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     override fun onResume() {
