@@ -218,15 +218,15 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
                 cell?.addElement(ph)
                 table.addCell(cell)
                 cell = PdfPCell()
-                ph = fontselector.process(item.other.toString())
+                ph = fontselector.process(item.otherItemPrice.toString())
                 cell?.addElement(ph)
                 table.addCell(cell)
                 cell = PdfPCell()
-                ph = fontselector.process(df.format(item.amtGold + item.makingCharge + item.other).toString())
+                ph = fontselector.process(df.format(item.amtGold + item.makingCharge + item.otherItemPrice).toString())
                 cell?.addElement(ph)
                 table.addCell(cell)
                 //gst = (((item.amtGold + item.makingCharge) * 1.5) / 100)
-                totalAmt += (item.amtGold + item.makingCharge + item.other)
+                totalAmt += (item.amtGold + item.makingCharge + item.otherItemPrice)
             }
             /*val selectorGST = FontSelector();
             val fGST = FontFactory.getFont("MSung-Light",

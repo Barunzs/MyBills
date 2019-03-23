@@ -99,4 +99,5 @@
     <string name="please_select_date_range_to_view_your_sale_amount">Please select date range to view your sale amount</string>
     <string name="ornament_image">Ornament Image</string>
     <string name="generate_bill">Generate Bill</string>
+    <string name="making_charge">Making Charge (₹)</string>
 </resources>

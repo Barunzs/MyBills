@@ -3,7 +3,7 @@ package bill.com.mybills.model
 import android.os.Parcel
 import android.os.Parcelable
 
-internal data class Item( var particulars: String, var weight: Double, var goldRate: Double,var amtGold: Double,var makingCharge: Double,var cgst:Double,var sgst:Double,var customerName:String,var itemUri: String,var phoneNo : String,var date:String, var billNo: String, var other:Double):Parcelable{
+internal data class Item( var particulars: String, var weight: Double, var goldRate: Double,var amtGold: Double,var makingCharge: Double,var cgst:Double,var sgst:Double,var customerName:String,var itemUri: String,var phoneNo : String,var date:String, var billNo: String, var otherItemPrice:Double,var otherItemDesc:String):Parcelable{
 
     constructor(parcel: Parcel) : this(
             parcel.readString(),
@@ -18,7 +18,8 @@ internal data class Item( var particulars: String, var weight: Double, var goldR
             parcel.readString(),
             parcel.readString(),
             parcel.readString(),
-            parcel.readDouble()) {
+            parcel.readDouble(),
+            parcel.readString()) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -34,7 +35,8 @@ internal data class Item( var particulars: String, var weight: Double, var goldR
         parcel.writeString(phoneNo)
         parcel.writeString(date)
         parcel.writeString(billNo)
-        parcel.writeDouble(other)
+        parcel.writeDouble(otherItemPrice)
+        parcel.writeString(otherItemDesc)
     }
 
     override fun describeContents(): Int {

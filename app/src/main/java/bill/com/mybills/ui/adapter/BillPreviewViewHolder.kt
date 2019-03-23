@@ -19,7 +19,7 @@ internal class BillPreviewViewHolder(val parent: ViewGroup?) : RecyclerView.View
 		itemView.itemWeight?.text = df.format(billItem.weight) + "g"
 		itemView.goldAmt?.text = "₹ " + df.format(billItem.amtGold)
 		itemView.makingAmt?.text = "₹ " + df.format(billItem.makingCharge)
-		itemView.othersAmt?.text = "₹ " + df.format(billItem.other)
+		itemView.othersAmt?.text = "₹ " + df.format(billItem.otherItemPrice)
 		Picasso.get().load(billItem.itemUri).into(itemView.productUploadIcon)
 	}
 }

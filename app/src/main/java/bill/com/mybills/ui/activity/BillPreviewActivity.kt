@@ -87,7 +87,7 @@ class BillPreviewActivity : AppCompatActivity() {
         var cgst = 0.0
         var sgst = 0.0
         for (item in billItemList) {
-            totalAmt += (item.amtGold + item.makingCharge + item.other)
+            totalAmt += (item.amtGold + item.makingCharge + item.otherItemPrice)
             cgst += item.cgst
             sgst += item.sgst
         }

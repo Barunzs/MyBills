@@ -287,7 +287,6 @@ internal class BillFragment : Fragment() {
 
     private fun addBillItem() {
         try {
-            //val billdate = SimpleDateFormat("yyyy.MM.dd.HH.mm.ss")
             val timestamp = Timestamp(System.currentTimeMillis())
             val firstBillItem = getFirstBillItem()
             val billNo: String?
@@ -296,10 +295,9 @@ internal class BillFragment : Fragment() {
             } else {
                 billNo = timestamp.time.toString()
             }
-            //var date = (Calendar.getInstance().time)
-            val item = Item(particularofitem?.text.toString(), weigh_of_gold_item.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weigh_of_gold_item.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(), customerPhoneField.text.toString(), timestamp.toString(), billNo,otherCharge.text.toString().toDouble())
+            val item = Item(particularofitem?.text.toString(), weigh_of_gold_item.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weigh_of_gold_item.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(), customerPhoneField.text.toString(), timestamp.toString(), billNo,otherCharge.text.toString().toDouble(),otherItemDesc.text.toString())
             /* val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst*/
-            val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + item.other
+            val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + item.otherItemPrice
             val df = DecimalFormat("#.##")
             df.roundingMode = RoundingMode.CEILING
             total.text = "₹ " + df.format(totalAmt)
@@ -364,5 +362,4 @@ internal class BillFragment : Fragment() {
             }
         }
     }
-
 }
