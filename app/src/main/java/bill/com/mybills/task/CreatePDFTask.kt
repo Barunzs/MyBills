@@ -130,22 +130,28 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
             cell?.addElement(pt)
             pTable.addCell(cell)
 
-            val table = PdfPTable(7)
-            val columnWidth = floatArrayOf(25f, 15f, 30f, 30f, 30f,20f, 25f)
+            val table = PdfPTable(8)
+            val columnWidth = floatArrayOf(25f, 25f, 15f, 30f, 30f, 30f, 20f, 25f)
             table.setWidths(columnWidth)
             cell = PdfPCell()
             cell?.backgroundColor = primarylight
-            cell?.colspan = 7
+            cell?.colspan = 8
             cell?.addElement(pTable)
             table.addCell(cell)
             cell = PdfPCell()
-            cell?.colspan = 7
+            cell?.colspan = 8
             table.addCell(cell)
-            cell?.colspan = 7
+            cell?.colspan = 8
             cell?.backgroundColor = myColor1
-            ph = selector.process("Ornament")
+            ph = selector.process("Ornmt")
             cell = PdfPCell()
             cell?.fixedHeight = 50f
+            cell?.addElement(ph)
+            cell?.backgroundColor = myColor1
+            table.addCell(cell)
+            ph = selector.process("Others")
+            cell = PdfPCell()
+            cell?.border = PdfPCell.ALIGN_CENTER
             cell?.addElement(ph)
             cell?.backgroundColor = myColor1
             table.addCell(cell)
@@ -167,13 +173,13 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
             cell?.addElement(ph)
             cell?.backgroundColor = myColor1
             table.addCell(cell)
-            ph = selector.process("Making Charge")
+            ph = selector.process("Making Chrg")
             cell = PdfPCell()
             cell?.border = PdfPCell.ALIGN_CENTER
             cell?.addElement(ph)
             cell?.backgroundColor = myColor1
             table.addCell(cell)
-            ph = selector.process("Other Charges")
+            ph = selector.process("Other Chrg")
             cell = PdfPCell()
             cell?.border = PdfPCell.ALIGN_CENTER
             cell?.addElement(ph)
@@ -186,9 +192,10 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
             cell?.backgroundColor = myColor1
             table.addCell(cell)
 
+
             //table.setHeaderRows(3);
             cell = PdfPCell()
-            cell?.colspan = 7
+            cell?.colspan = 8
 
             for (item in billItemList) {
                 val fontselector = FontSelector();
@@ -199,6 +206,10 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
                 cell = PdfPCell()
                 cell?.fixedHeight = (300 / billItemList.size).toFloat()
                 var ph = fontselector.process(item.particulars)
+                cell?.addElement(ph)
+                table.addCell(cell)
+                cell = PdfPCell()
+                ph = fontselector.process(item.otherItemDesc.toString())
                 cell?.addElement(ph)
                 table.addCell(cell)
                 cell = PdfPCell()
@@ -219,6 +230,10 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
                 table.addCell(cell)
                 cell = PdfPCell()
                 ph = fontselector.process(item.otherItemPrice.toString())
+                cell?.addElement(ph)
+                table.addCell(cell)
+                cell = PdfPCell()
+                ph = fontselector.process(df.format(item.amtGold + item.makingCharge + item.otherItemPrice).toString())
                 cell?.addElement(ph)
                 table.addCell(cell)
                 cell = PdfPCell()
@@ -252,12 +267,12 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
             cell?.addElement(phGST)
             table.addCell(cell)*/
 
-            val ftable = PdfPTable(6)
+            val ftable = PdfPTable(7)
             ftable.widthPercentage = 100f
-            val columnWidthaa = floatArrayOf(30f, 5f, 5f, 5f, 25f, 30f)
+            val columnWidthaa = floatArrayOf(0f, 10f, 5f, 5f, 5f, 25f,40f)
             ftable.setWidths(columnWidthaa)
             cell = PdfPCell()
-            cell?.colspan = 6
+            cell?.colspan = 7
             cell?.backgroundColor = myColor1
             ph = selector.process("Total Amount")
             cell = PdfPCell()
@@ -265,6 +280,10 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
             cell?.border = Rectangle.NO_BORDER
             cell?.backgroundColor = myColor1
             cell?.fixedHeight = 50f
+            ftable.addCell(cell)
+            cell = PdfPCell(Phrase(""))
+            cell?.border = Rectangle.NO_BORDER
+            cell?.backgroundColor = myColor1
             ftable.addCell(cell)
             cell = PdfPCell(Phrase(""))
             cell?.border = Rectangle.NO_BORDER
@@ -290,11 +309,11 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
             cell?.backgroundColor = myColor1
             ftable.addCell(cell)
             cell = PdfPCell(Paragraph("This is a computer generated Bill"))
-            cell?.colspan = 6
+            cell?.colspan = 8
             cell?.fixedHeight = 50f
             ftable.addCell(cell)
             cell = PdfPCell()
-            cell?.colspan = 6
+            cell?.colspan = 8
             cell?.addElement(ftable)
             table.addCell(cell)
             doc.add(table)
@@ -315,7 +334,7 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
             user?.uid?.let {
                 db?.collection(it)?.document(billItemList[0].phoneNo)?.collection("Bill Items")?.document()?.set(item)?.addOnSuccessListener { void: Void? ->
                     count++
-                    if (count == billItemList.size){
+                    if (count == billItemList.size) {
                         shareFile()
                     }
                 }?.addOnFailureListener { exception: java.lang.Exception ->
