@@ -264,15 +264,16 @@ internal class EditProfileFragment : Fragment() {
                             Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
                             businessPictureUpdateProgressBar.visibility = View.GONE
                         }?.addOnSuccessListener {
-                            businessLogoURI = Uri.EMPTY
-                            businessLogoURI = it.uploadSessionUri
-                            businessPictureUpdateProgressBar.visibility = View.GONE
-                            Picasso.get().load(it.uploadSessionUri).into(editLogo)
-                            val localFile = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "image.jpg")
-                            storageReference?.child(user?.uid + "/businessLogo/businessLogo_image")?.getFile(localFile)?.addOnFailureListener {
-                                Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
-                            }?.addOnSuccessListener {
-                                Toast.makeText(context, "Profile iamge saved", Toast.LENGTH_LONG).show()
+                            filePath.downloadUrl.addOnSuccessListener {
+                                val businessLogoUri = it
+                                businessPictureUpdateProgressBar.visibility = View.GONE
+                                Picasso.get().load(businessLogoUri).into(editLogo)
+                                val localFile = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "image.jpg")
+                                storageReference?.child(user?.uid + "/businessLogo/businessLogo_image")?.getFile(localFile)?.addOnFailureListener {
+                                    Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
+                                }?.addOnSuccessListener {
+                                    Toast.makeText(context, "Business Logo saved", Toast.LENGTH_LONG).show()
+                                }
                             }
                         }
 

@@ -25,9 +25,8 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/productUploadIcon"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="64dp"
                 android:layout_weight=".5"
-                android:background="@drawable/ic_filled_circle_light_grey"
                 android:gravity="center"
                 android:src="@drawable/img_profile_picture_placeholder"
                 android:visibility="visible"
@@ -37,9 +36,9 @@
             <TextView
                 android:id="@+id/itemName"
                 android:layout_width="0dp"
-                android:layout_height="32dp"
+                android:layout_height="64dp"
                 android:layout_weight="2.5"
-                android:gravity="right"
+                android:gravity="center"
                 android:text="Ring"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textStyle="bold"

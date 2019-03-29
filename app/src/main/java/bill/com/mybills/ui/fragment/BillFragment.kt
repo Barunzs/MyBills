@@ -41,6 +41,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_bill.*
+import kotlinx.android.synthetic.main.fragment_editprofile.*
 import kotlinx.android.synthetic.main.list_item.*
 import java.io.File
 import java.io.FileOutputStream
@@ -258,10 +259,12 @@ internal class BillFragment : Fragment() {
                             Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
                             productIconProgressBar.visibility = View.GONE
                         }?.addOnSuccessListener {
-                            Toast.makeText(context, "Upload Successfully", Toast.LENGTH_LONG).show()
-                            productIconProgressBar.visibility = View.GONE
-                            uriFirebase = it.uploadSessionUri
-                            Picasso.get().load(uriFirebase).into(image)
+                            filePath.downloadUrl.addOnSuccessListener {
+                                uriFirebase = it
+                                Toast.makeText(context, "Upload Successfully", Toast.LENGTH_LONG).show()
+                                productIconProgressBar.visibility = View.GONE
+                                Picasso.get().load(uriFirebase).into(image)
+                            }
                         }
                     }
                 }
@@ -295,7 +298,13 @@ internal class BillFragment : Fragment() {
             } else {
                 billNo = timestamp.time.toString()
             }
-            val item = Item(particularofitem?.text.toString(), weigh_of_gold_item.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weigh_of_gold_item.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(), customerPhoneField.text.toString(), timestamp.toString(), billNo,otherCharge.text.toString().toDouble(),otherItemDesc.text.toString())
+            if (otherCharge.text.toString() == "") {
+                otherCharge?.setText("0")
+            }
+            if (otherItemDesc.text.toString() == "") {
+                otherCharge?.setText("N/A")
+            }
+            val item = Item(particularofitem?.text.toString(), weigh_of_gold_item.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weigh_of_gold_item.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(), customerPhoneField.text.toString(), timestamp.toString(), billNo, otherCharge.text.toString().toDouble(), otherItemDesc.text.toString())
             /* val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst*/
             val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + item.otherItemPrice
             val df = DecimalFormat("#.##")
