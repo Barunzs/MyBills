@@ -97,26 +97,26 @@ class CustomDateDialog : DialogFragment() {
     }
 
     var endDate: DatePickerDialog.OnDateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-        var month = (monthOfYear+1).toString()
-        var day  = dayOfMonth.toString()
+        var month = (monthOfYear + 1).toString()
+        var day = dayOfMonth.toString()
         if (monthOfYear.div(10f) < 0.8) {
-            month= month.prependIndent("0")
+            month = month.prependIndent("0")
         }
         if (dayOfMonth.div(10f) < 0.8) {
-            day= dayOfMonth.toString().prependIndent("0")
+            day = dayOfMonth.toString().prependIndent("0")
         }
         endDateStr = "$year-$month-$day"
         end_date.setText(endDateStr)
     }
 
     var startDate: DatePickerDialog.OnDateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-        var month = (monthOfYear+1).toString()
-        var day  = dayOfMonth.toString()
+        var month = (monthOfYear + 1).toString()
+        var day = dayOfMonth.toString()
         if (monthOfYear.div(10f) < 0.8) {
-            month= month.prependIndent("0")
+            month = month.prependIndent("0")
         }
         if (dayOfMonth.div(10f) < 0.8) {
-            day= dayOfMonth.toString().prependIndent("0")
+            day = dayOfMonth.toString().prependIndent("0")
         }
         startDatestr = "$year-$month-$day"
         start_date.setText(startDatestr)

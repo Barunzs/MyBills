@@ -77,7 +77,7 @@ internal class MyProfileFragment : Fragment() {
             }
         }
         storageReference?.child(user?.uid + "/businessLogo/businessLogo_image")?.downloadUrl?.addOnFailureListener {
-            Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Please Upload Your Business Logo", Toast.LENGTH_LONG).show()
         }?.addOnSuccessListener {
             if (this.isVisible)
                 Picasso.get().load(it).into(businessPictureImageView)

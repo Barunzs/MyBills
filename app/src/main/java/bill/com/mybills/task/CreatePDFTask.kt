@@ -266,57 +266,45 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
             phGST = selectorGST.process(df.format(gst))
             cell?.addElement(phGST)
             table.addCell(cell)*/
+            val tableDemo = PdfPTable(3); // 3 columns.
+            tableDemo.setWidthPercentage(100f); //Width 100%
+            tableDemo.setSpacingBefore(10f); //Space before tableDemoDemo
+            tableDemo.setSpacingAfter(10f); //Space after tableDemo
 
-            val ftable = PdfPTable(7)
-            ftable.widthPercentage = 100f
-            val columnWidthaa = floatArrayOf(0f, 10f, 5f, 5f, 5f, 25f,40f)
-            ftable.setWidths(columnWidthaa)
-            cell = PdfPCell()
-            cell?.colspan = 7
-            cell?.backgroundColor = myColor1
-            ph = selector.process("Total Amount")
-            cell = PdfPCell()
-            cell?.addElement(ph)
-            cell?.border = Rectangle.NO_BORDER
-            cell?.backgroundColor = myColor1
-            cell?.fixedHeight = 50f
-            ftable.addCell(cell)
-            cell = PdfPCell(Phrase(""))
-            cell?.border = Rectangle.NO_BORDER
-            cell?.backgroundColor = myColor1
-            ftable.addCell(cell)
-            cell = PdfPCell(Phrase(""))
-            cell?.border = Rectangle.NO_BORDER
-            cell?.backgroundColor = myColor1
-            ftable.addCell(cell)
-            cell = PdfPCell(Phrase(""))
-            cell?.border = Rectangle.NO_BORDER
-            cell?.backgroundColor = myColor1
-            ftable.addCell(cell)
-            cell = PdfPCell(Phrase(""))
-            cell?.border = Rectangle.NO_BORDER
-            cell?.backgroundColor = myColor1
-            ftable.addCell(cell)
-            cell = PdfPCell(Phrase(""))
-            cell?.border = Rectangle.NO_BORDER
-            cell?.backgroundColor = myColor1
-            ftable.addCell(cell)
-            ph = selector.process("Rs." + df.format(totalAmt).toString())
-            cell = PdfPCell()
-            cell?.addElement(ph)
-            table.addCell(cell)
-            cell?.border = Rectangle.NO_BORDER
-            cell?.backgroundColor = myColor1
-            ftable.addCell(cell)
-            cell = PdfPCell(Paragraph("This is a computer generated Bill"))
-            cell?.colspan = 8
-            cell?.fixedHeight = 50f
-            ftable.addCell(cell)
-            cell = PdfPCell()
-            cell?.colspan = 8
-            cell?.addElement(ftable)
-            table.addCell(cell)
+            //Set Column widths
+            val columnWidthDemo = floatArrayOf(1f, 1f, 1f)
+            tableDemo.setWidths(columnWidthDemo);
+
+            val cell1 = PdfPCell(Paragraph("Cell 1"));
+            cell1.setBorderColor(BaseColor.BLUE);
+            cell1.setPaddingLeft(10f);
+            cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+
+            val cell2 = PdfPCell(Paragraph("Cell 2"));
+            cell2.setBorderColor(BaseColor.GREEN);
+            cell2.setPaddingLeft(10f);
+            cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
+
+            val cell3 = PdfPCell(Paragraph("Cell 3"));
+            cell3.setBorderColor(BaseColor.RED);
+            cell3.setPaddingLeft(10f);
+            cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell3.setVerticalAlignment(Element.ALIGN_MIDDLE);
+
+            //To avoid having the cell border and the content overlap, if you are having thick cell borders
+            //cell1.setUserBorderPadding(true);
+            //cell2.setUserBorderPadding(true);
+            //cell3.setUserBorderPadding(true);
+
+            tableDemo.addCell(cell1);
+            tableDemo.addCell(cell2);
+            tableDemo.addCell(cell3);
+            table.addCell(tableDemo)
+            cell?.addElement(tableDemo)
             doc.add(table)
+
         } catch (e: Throwable) {
             e.printStackTrace()
         } finally {
