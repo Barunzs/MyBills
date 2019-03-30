@@ -302,7 +302,7 @@ internal class BillFragment : Fragment() {
                 otherCharge?.setText("0")
             }
             if (otherItemDesc.text.toString() == "") {
-                otherCharge?.setText("N/A")
+                otherItemDesc?.setText("N/A")
             }
             val item = Item(particularofitem?.text.toString(), weigh_of_gold_item.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weigh_of_gold_item.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(), customerPhoneField.text.toString(), timestamp.toString(), billNo, otherCharge.text.toString().toDouble(), otherItemDesc.text.toString())
             /* val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst*/
