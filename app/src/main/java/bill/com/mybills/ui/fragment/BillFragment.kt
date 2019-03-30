@@ -365,7 +365,6 @@ internal class BillFragment : Fragment() {
         return object : CountDownTimer(millisInFuture, countDownInterval) {
             override fun onTick(millisUntilFinished: Long) {
             }
-
             override fun onFinish() {
                 showalert(item)
             }
