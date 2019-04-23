@@ -5,7 +5,7 @@ import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.app.DatePickerDialog
 import android.content.Intent
-import android.icu.util.Calendar
+import java.util.Calendar
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.util.Log
@@ -35,7 +35,7 @@ class CustomDateDialog : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.AppTheme_Dark)
+        setStyle(STYLE_NO_FRAME, R.style.AppTheme_Dark)
 
 
     }
