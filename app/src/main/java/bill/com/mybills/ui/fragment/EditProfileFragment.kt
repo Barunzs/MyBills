@@ -20,8 +20,6 @@ import android.widget.Toast
 import bill.com.mybills.BuildConfig
 import bill.com.mybills.R
 import bill.com.mybills.model.BusinessProfile
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -108,7 +106,6 @@ internal class EditProfileFragment : Fragment() {
         }
         initEventListeners()
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -215,10 +212,10 @@ internal class EditProfileFragment : Fragment() {
     }
 
     private fun takeImage(isBusinessLogo: Boolean) {
-        if (isBusinessLogo) {
-            capturedImageFile = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "businessLogo_image")
+        capturedImageFile = if (isBusinessLogo) {
+            File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "businessLogo_image")
         } else {
-            capturedImageFile = File.createTempFile("user_image", ".jpg", context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
+            File.createTempFile("user_image", ".jpg", context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
         }
         if (capturedImageFile.exists()) {
             capturedImageFile.delete()
@@ -226,7 +223,7 @@ internal class EditProfileFragment : Fragment() {
         if (isBusinessLogo) {
             businessPictureUpdateProgressBar.visibility = View.VISIBLE
             val i = Intent(Intent.ACTION_PICK,
-                    android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+                    MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             startActivityForResult(i, REQUEST_IMAGE_BROWSER)
         } else {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
