@@ -2,7 +2,6 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -16,9 +15,9 @@
         android:layout_weight="1.5"
         android:ellipsize="end"
         android:maxLength="12"
-        android:paddingBottom="12dp"
         android:paddingStart="?android:attr/expandableListPreferredItemPaddingLeft"
         android:paddingTop="12dp"
+        android:paddingBottom="12dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/white"
         android:textStyle="bold" />
@@ -29,9 +28,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="2"
-        android:paddingBottom="12dp"
         android:paddingStart="?android:attr/expandableListPreferredItemPaddingLeft"
         android:paddingTop="12dp"
+        android:paddingBottom="12dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/white"
         android:textStyle="bold" />
@@ -49,16 +48,9 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/loadingdata"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1.1"
-        android:adjustViewBounds="true"
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
         android:visibility="gone"
-        app:lottie_autoPlay="true"
-        app:lottie_cacheStrategy="none"
-        app:lottie_fileName="Spinner.json"
-        app:lottie_loop="true"
-        tools:visibility="visible" />
+        app:lottie_fileName="Spinner.json" />
 
 </LinearLayout>

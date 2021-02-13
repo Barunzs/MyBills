@@ -323,14 +323,16 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
         var count = 0
         for (item in billItemList) {
             user?.uid?.let {
-                db?.collection(it)?.document(billItemList[0].phoneNo)?.collection("Bill Items")?.document()?.set(item)?.addOnSuccessListener { void: Void? ->
-                    count++
-                    if (count == billItemList.size) {
-                        shareFile()
+                billItemList[0].phoneNo?.let { it1 ->
+                    db?.collection(it)?.document(it1)?.collection("Bill Items")?.document()?.set(item)?.addOnSuccessListener { void: Void? ->
+                        count++
+                        if (count == billItemList.size) {
+                            shareFile()
+                        }
+                    }?.addOnFailureListener { exception: java.lang.Exception ->
+                        (contextRef.get() as BillPreviewActivity).dismiss()
+                        Toast.makeText(contextRef.get(), "Failure", Toast.LENGTH_LONG).show()
                     }
-                }?.addOnFailureListener { exception: java.lang.Exception ->
-                    (contextRef.get() as BillPreviewActivity).dismiss()
-                    Toast.makeText(contextRef.get(), "Failure", Toast.LENGTH_LONG).show()
                 }
             }
         }

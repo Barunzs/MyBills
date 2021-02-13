@@ -1,6 +1,6 @@
 package bill.com.mybills.ui.adapter
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import bill.com.mybills.model.BillItem
 import java.util.ArrayList

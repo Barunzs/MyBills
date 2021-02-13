@@ -6,20 +6,21 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -43,7 +44,6 @@ import bill.com.mybills.model.Item;
 import bill.com.mybills.model.MenuItemObject;
 import bill.com.mybills.ui.adapter.CustomAdapter;
 import bill.com.mybills.ui.fragment.BillFragment;
-import bill.com.mybills.ui.fragment.CustomDateDialog;
 import bill.com.mybills.ui.fragment.EditProfileFragment;
 import bill.com.mybills.ui.fragment.MyBillTransactionFragment;
 import bill.com.mybills.ui.fragment.MyProfileFragment;
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
             case 3:
                 fragment = new ScanFragment();
                 fragmentManager.beginTransaction().replace(R.id.main_fragment_container, fragment,
-                        ScanFragment.Companion.getTAG()).commit();
+                        ScanFragment.class.getCanonicalName());
                 break;
 
             case 4:

@@ -1,31 +1,15 @@
 package bill.com.mybills.ui.activity
 
-import android.Manifest
-import android.app.DatePickerDialog
-import android.app.Dialog
-import android.app.TimePickerDialog
-import android.content.Intent
-import android.content.pm.ActivityInfo
-import android.content.pm.PackageManager
 import android.graphics.RectF
-import android.icu.util.Calendar
-import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.text.format.DateFormat
 import android.util.Log
 import android.view.*
-import android.widget.DatePicker
 import android.widget.SeekBar
 import android.widget.TextView
-import android.widget.Toast
+import androidx.core.content.ContextCompat
 import bill.com.mybills.R
 import bill.com.mybills.model.BillItem
 import bill.com.mybills.reportdata.*
-import bill.com.mybills.ui.adapter.CustomExpandableListAdapter
-import bill.com.mybills.ui.fragment.MyBillTransactionFragment
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
@@ -42,15 +26,16 @@ import com.github.mikephil.charting.utils.MPPointF
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
+import com.google.firebase.firestore.EventListener
 import kotlinx.android.synthetic.main.fragment_mytransaction.*
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 import java.util.function.Consumer
 
 
 class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartValueSelectedListener {
 
     private var chart: BarChart? = null
+
     //private var seekBarX: SeekBar? = null
     //private var seekBarY: SeekBar? = null
     private var tvX: TextView? = null
@@ -169,29 +154,33 @@ class BarChartActivity : DemoBase(), SeekBar.OnSeekBarChangeListener, OnChartVal
                             }
                         }
                         documentIdList.forEach(Consumer { t ->
-                            Log.d(TAG, "inside outer loop::"+t)
-                            db?.collection(it)?.document(t)?.collection("Bill Items")?.whereGreaterThanOrEqualTo("date", startDate)?.whereLessThanOrEqualTo("date", endDate)
-                                    ?.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
-                                        if (e != null) {
-                                            Log.e(TAG, "listen:error", e)
-                                            return@EventListener
-                                        }
-                                        if (snapshots != null) {
-                                            for (doc in snapshots) {
-                                                val billItem = doc.toObject(BillItem::class.java)
-                                                if (billitemsMap.containsKey(billItem.billNo)) {
-                                                    val billItemweight = billitemsMap[billItem.billNo]
-                                                    billitemsMap[billItem.billNo] = billItemweight?.plus(billItem.weight)
-                                                } else {
-                                                    billitemsMap[billItem.billNo] = billItem.weight
+                            Log.d(TAG, "inside outer loop::$t")
+                            startDate?.let { it1 ->
+                                endDate?.let { it2 ->
+                                    db?.collection(it)?.document(t)?.collection("Bill Items")?.whereGreaterThanOrEqualTo("date", it1)?.whereLessThanOrEqualTo("date", it2)
+                                            ?.addSnapshotListener(EventListener { snapshots, e ->
+                                                if (e != null) {
+                                                    Log.e(TAG, "listen:error", e)
+                                                    return@EventListener
                                                 }
-                                                Log.d(TAG, "inside inner loop::"+billItem.billNo)
-                                            }
-                                            setData(billitemsMap)
-                                            chart?.invalidate()
+                                                if (snapshots != null) {
+                                                    for (doc in snapshots) {
+                                                        val billItem = doc.toObject(BillItem::class.java)
+                                                        if (billitemsMap.containsKey(billItem.billNo)) {
+                                                            val billItemweight = billitemsMap[billItem.billNo]
+                                                            billitemsMap[billItem.billNo] = billItemweight?.plus(billItem.weight)
+                                                        } else {
+                                                            billitemsMap[billItem.billNo] = billItem.weight
+                                                        }
+                                                        Log.d(TAG, "inside inner loop::" + billItem.billNo)
+                                                    }
+                                                    setData(billitemsMap)
+                                                    chart?.invalidate()
 
-                                        }
-                                    })
+                                                }
+                                            })
+                                }
+                            }
                         })
                     } else {
                         Log.d(TAG, "No such document")

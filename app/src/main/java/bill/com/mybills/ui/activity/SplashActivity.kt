@@ -3,7 +3,7 @@ package bill.com.mybills.ui.activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
 import bill.com.mybills.storage.PrefManager

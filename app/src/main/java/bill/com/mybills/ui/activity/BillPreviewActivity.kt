@@ -7,21 +7,20 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
 import android.os.StrictMode
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
 import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
 import bill.com.mybills.model.BusinessProfile
 import bill.com.mybills.model.Item
 import bill.com.mybills.task.CreatePDFTask
 import bill.com.mybills.ui.adapter.BillPreviewAdapter
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
@@ -91,7 +90,7 @@ class BillPreviewActivity : AppCompatActivity() {
             cgst += item.cgst
             sgst += item.sgst
         }
-        totalAmount.text = "₹ " + df.format(totalAmt)
+        totalAmount.text = "₹ ${df.format(totalAmt)}"
         sgstAmt.text = "₹ " + df.format(sgst)
         cgstAmt.text = "₹ " + df.format(cgst)
         sendBill.setOnClickListener {
@@ -110,17 +109,15 @@ class BillPreviewActivity : AppCompatActivity() {
         try {
             val fileimage = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "image.jpg")
             val bitmapLoga = BitmapFactory.decodeStream(FileInputStream(fileimage))
-            val filepdf = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), businessProfile?.orgName?.trim() + "_" + itemList[0].customerName.trim() + ".pdf")
+            val filepdf = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), businessProfile?.orgName?.trim() + "_" + itemList[0].customerName?.trim() + ".pdf")
             businessProfile?.let { CreatePDFTask(this@BillPreviewActivity, filepdf, itemList, it, bitmapLoga, db, user).execute() }
-            progressPdf.visibility = View.VISIBLE
             parent_main.visibility = View.GONE
         } catch (e: IOException) {
             Toast.makeText(applicationContext, "Please update your Logo before generating Bill", Toast.LENGTH_LONG).show()
         }
     }
 
-    public fun dismiss(){
-        progressPdf.visibility = View.GONE
+    fun dismiss() {
         val intent = Intent(applicationContext, MainActivity::class.java)
         startActivity(intent)
         finish()
@@ -167,5 +164,4 @@ class BillPreviewActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
 }

@@ -12,12 +12,12 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Environment
 import android.provider.MediaStore
-import android.support.design.widget.Snackbar
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
-import android.support.v4.content.FileProvider
-import android.support.v4.content.PermissionChecker
-import android.support.v7.app.AlertDialog
+import com.google.android.material.snackbar.Snackbar
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
+import androidx.core.content.FileProvider
+import androidx.core.content.PermissionChecker
+import androidx.appcompat.app.AlertDialog
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -213,7 +213,7 @@ internal class BillFragment : Fragment() {
         }
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         intent.putExtra(MediaStore.EXTRA_OUTPUT, context?.let { FileProvider.getUriForFile(it, BuildConfig.APPLICATION_ID + ".fileprovider", capturedImageFile) })
-        if (intent.resolveActivity(context?.packageManager) != null) {
+        if (context?.packageManager?.let { intent.resolveActivity(it) } != null) {
             startActivityForResult(intent, REQUEST_CAMERA)
         }
     }
@@ -224,7 +224,7 @@ internal class BillFragment : Fragment() {
             REQUEST_IMAGE_BROWSER -> {
                 if (resultCode == Activity.RESULT_OK) {
                     capturedImageFile.let {
-                        val openInputStream = context?.contentResolver?.openInputStream(data?.data)
+                        val openInputStream = data?.data?.let { it1 -> context?.contentResolver?.openInputStream(it1) }
                         val imageByteArray = openInputStream?.available()?.let { ByteArray(it) }
                         openInputStream?.read(imageByteArray)
                         val imageFileOutputStream = FileOutputStream(it)

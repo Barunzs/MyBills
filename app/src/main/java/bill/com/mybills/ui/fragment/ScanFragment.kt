@@ -2,7 +2,7 @@ package bill.com.mybills.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,10 +26,6 @@ internal class ScanFragment : Fragment() {
 		initEventListeners()
 	}
 
-	companion object {
-		val TAG = ScanFragment.javaClass.name
-
-	}
 
 	private fun initEventListeners() {
 		scan?.setOnClickListener { onClickScanButton(it) }
@@ -40,15 +36,6 @@ internal class ScanFragment : Fragment() {
 		intent.putExtra(BarcodeCaptureActivity.AutoFocus, true)
 		startActivityForResult(intent, 4)
 
-
-	}
-
-	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-		super.onActivityResult(requestCode, resultCode, data)
-		if (data != null) {
-			val barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject) as Barcode
-			Toast.makeText(context, barcode.displayValue, Toast.LENGTH_LONG).show()
-		}
 
 	}
 

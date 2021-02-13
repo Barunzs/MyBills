@@ -3,14 +3,14 @@ package bill.com.mybills.ui.activity
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
 import bill.com.mybills.storage.PrefManager
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
@@ -39,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
         initEventsListeners()
         val tabletSize = resources.getBoolean(R.bool.isTablet)
         if (tabletSize) {
-           requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         }
         mAuth = FirebaseAuth.getInstance()
         mCallbacks = object : OnVerificationStateChangedCallbacks() {
@@ -87,24 +87,6 @@ class LoginActivity : AppCompatActivity() {
                 // Show a message and update the UI
                 // [START_EXCLUDE]
                 //updateUI(STATE_VERIFY_FAILED)
-                // [END_EXCLUDE]
-            }
-
-            override fun onCodeSent(verificationId: String?,
-                                    token: PhoneAuthProvider.ForceResendingToken?) {
-                // The SMS verification code has been sent to the provided phone number, we
-                // now need to ask the user to enter the code and then construct a credential
-                // by combining the code with a verification ID.
-                Log.d(TAG, "onCodeSent:" + verificationId!!)
-
-                // Save verification ID and resending token so we can use them later
-                mVerificationId = verificationId
-                mResendToken = token
-
-
-                // [START_EXCLUDE]
-                // Update UI
-                //updateUI(STATE_CODE_SENT);
                 // [END_EXCLUDE]
             }
         }
@@ -173,43 +155,17 @@ class LoginActivity : AppCompatActivity() {
 
     private fun performLoginOrAccountCreation(email: String, password: String) {
 
-        mAuth?.fetchProvidersForEmail(email)?.addOnCompleteListener(
-                this) { task ->
-            if (task.isSuccessful) {
-                Log.d(TAG, "checking to see if user exists in firebase or not")
-                val result = task.result
-                if ((result != null && result.providers != null
-                                && result.providers!!.size > 0)) {
-                    Log.d(TAG, "User exists, trying to login using entered credentials")
-                    performLogin(email, password);
-                } else {
-                    Toast.makeText(this@LoginActivity,
-                            "User doesn't exist",
-                            Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                Log.e(TAG, "User check failed", task.exception)
-                Toast.makeText(this@LoginActivity,
-                        "There is a problem, please try again later.",
-                        Toast.LENGTH_SHORT).show()
-
-            }
-        }
-
-    }
-
-    private fun performLogin(email: String, password: String) {
         mAuth?.signInWithEmailAndPassword(email, password)
-                ?.addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        val user = task.result?.user
+                ?.addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        val user = it.result?.user
                         Log.d(TAG, "name::" + user?.displayName)
-                        val prefManager  = PrefManager()
+                        val prefManager = PrefManager()
                         prefManager.setup(applicationContext)
-                        if(prefManager.isFirstTimeLaunch()){
+                        if (prefManager.isFirstTimeLaunch()) {
                             startActivity(Intent(applicationContext, WelcomeActivity::class.java))
                             finish()
-                        }else{
+                        } else {
                             val intent = Intent(applicationContext, MainActivity::class.java)
                             startActivity(intent)
                             finish()
@@ -220,7 +176,13 @@ class LoginActivity : AppCompatActivity() {
                                 Toast.LENGTH_SHORT).show()
                     }
                     signin.visibility = View.GONE
+                }?.addOnFailureListener {
+                    Log.d(TAG, "Error${it.message}")
+                    Toast.makeText(this@LoginActivity,
+                            "There is a problem, please try again later.",
+                            Toast.LENGTH_SHORT).show()
                 }
+
     }
 
 }

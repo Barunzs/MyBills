@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:context="ai.wizely.android.core.goal.EditGoalActivity">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/wizelyCollectiveLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -154,10 +154,10 @@
                     app:layout_constraintStart_toEndOf="@+id/view"
                     app:layout_constraintTop_toBottomOf="@+id/editLogo" />
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!--  Email Label -->
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
@@ -172,9 +172,9 @@
                     android:layout_height="wrap_content"
                     android:hint="Name"
                     android:inputType="textEmailAddress" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
@@ -190,9 +190,9 @@
                     android:hint="Phone"
                     android:inputType="phone"
                     android:text="+91 " />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
@@ -207,9 +207,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/shop_name"
                     android:inputType="text" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
@@ -224,9 +224,9 @@
                     android:layout_height="wrap_content"
                     android:hint="GST IN"
                     android:inputType="text" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
@@ -241,8 +241,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Enter your Shop Address"
                     android:inputType="text" />
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
@@ -258,8 +258,8 @@
                     android:hint="@string/enter_pin_code"
                     android:maxLength="6"
                     android:inputType="number" />
-            </android.support.design.widget.TextInputLayout>
-            <android.support.v7.widget.AppCompatButton
+            </com.google.android.material.textfield.TextInputLayout>
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/updateprofileButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -274,25 +274,4 @@
 
         </LinearLayout>
     </ScrollView>
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/progressbarUpdateprofile"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:adjustViewBounds="true"
-        android:cropToPadding="true"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:lottie_autoPlay="true"
-        app:lottie_cacheStrategy="none"
-        app:lottie_fileName="Spinner.json"
-        app:lottie_loop="true"
-        tools:visibility="visible"/>
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

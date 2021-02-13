@@ -2,7 +2,7 @@ package bill.com.mybills.ui.fragment
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.*
 import android.widget.Toast
 import bill.com.mybills.R
@@ -73,7 +73,6 @@ internal class MyProfileFragment : Fragment() {
                 } else {
                     Toast.makeText(context, "No Profile Data Found", Toast.LENGTH_LONG).show()
                 }
-                businessViewProgressBar.visibility = View.GONE
             }
         }
         storageReference?.child(user?.uid + "/businessLogo/businessLogo_image")?.downloadUrl?.addOnFailureListener {
@@ -84,10 +83,9 @@ internal class MyProfileFragment : Fragment() {
         }
     }
 
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu?.clear();
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu.clear()
     }
 
 }

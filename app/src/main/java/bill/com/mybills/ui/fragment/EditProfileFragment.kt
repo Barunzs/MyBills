@@ -11,10 +11,10 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
-import android.support.v4.content.FileProvider
-import android.support.v4.content.PermissionChecker
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
+import androidx.core.content.FileProvider
+import androidx.core.content.PermissionChecker
 import android.view.*
 import android.widget.Toast
 import bill.com.mybills.BuildConfig
@@ -107,9 +107,9 @@ internal class EditProfileFragment : Fragment() {
         initEventListeners()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu?.clear();
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu.clear()
     }
 
     private fun initEventListeners() {
@@ -160,7 +160,6 @@ internal class EditProfileFragment : Fragment() {
             address.error = "Shop Address cannot be empty"
             return
         }
-        progressbarUpdateprofile.visibility = View.VISIBLE
         val profileUpdates = UserProfileChangeRequest.Builder()
                 .setDisplayName(firstNameEditText.text.toString())
                 .build()
@@ -186,7 +185,6 @@ internal class EditProfileFragment : Fragment() {
                     } else {
                         Toast.makeText(context, "Error Try Again", Toast.LENGTH_LONG).show()
                     }
-                    progressbarUpdateprofile.visibility = View.GONE
                 }
     }
 
@@ -227,7 +225,7 @@ internal class EditProfileFragment : Fragment() {
             startActivityForResult(i, REQUEST_IMAGE_BROWSER)
         } else {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            if (intent.resolveActivity(context?.packageManager) != null) {
+            if (context?.packageManager?.let { intent.resolveActivity(it) } != null) {
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, context?.let { FileProvider.getUriForFile(it, BuildConfig.APPLICATION_ID + ".fileprovider", capturedImageFile) })
                 startActivityForResult(intent, REQUEST_CAMERA)
             }
@@ -240,7 +238,7 @@ internal class EditProfileFragment : Fragment() {
             REQUEST_IMAGE_BROWSER -> {
                 if (resultCode == Activity.RESULT_OK) {
                     capturedImageFile.let {
-                        val openInputStream = context?.contentResolver?.openInputStream(data?.data)
+                        val openInputStream = data?.data?.let { it1 -> context?.contentResolver?.openInputStream(it1) }
                         val imageByteArray = openInputStream?.available()?.let { ByteArray(it) }
                         openInputStream?.read(imageByteArray)
                         val imageFileOutputStream = FileOutputStream(it)
@@ -289,8 +287,7 @@ internal class EditProfileFragment : Fragment() {
                         byteArrayOutputStream.flush()
                         byteArrayOutputStream.close()
                         val uri = Uri.fromFile(capturedImageFile)
-                        val filePath: StorageReference?
-                        filePath = uri?.lastPathSegment?.let { it1 -> storageReference?.child(user?.uid + "/" + "profileImage")?.child(it1) }
+                        val filePath: StorageReference? = uri?.lastPathSegment?.let { it1 -> storageReference?.child(user?.uid + "/" + "profileImage")?.child(it1) }
                         filePath?.putFile(uri)?.addOnFailureListener {
                             Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
                             profilePictureUpdateProgressBar.visibility = View.GONE

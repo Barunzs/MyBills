@@ -7,7 +7,7 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import java.util.Calendar
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -48,14 +48,18 @@ class CustomDateDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         start_date.setOnClickListener {
-            DatePickerDialog(context, startDate, myCalendar
-                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                    myCalendar.get(Calendar.DAY_OF_MONTH)).show()
+            context?.let { it1 ->
+                DatePickerDialog(it1, startDate, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show()
+            }
         }
         end_date.setOnClickListener {
-            DatePickerDialog(context, endDate, myCalendar
-                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                    myCalendar.get(Calendar.DAY_OF_MONTH)).show()
+            context?.let { it1 ->
+                DatePickerDialog(it1, endDate, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show()
+            }
         }
         searchBtn.setOnClickListener {
 
