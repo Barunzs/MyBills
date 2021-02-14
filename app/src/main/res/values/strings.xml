@@ -100,4 +100,5 @@
     <string name="ornament_image">Ornament Image</string>
     <string name="generate_bill">Generate Bill</string>
     <string name="making_charge">Making Charge (₹)</string>
+    <string name="report">report</string>
 </resources>

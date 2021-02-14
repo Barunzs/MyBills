@@ -192,7 +192,7 @@ class MyBillTransactionFragment : Fragment() {
                                 }
                             }
                         }
-                        expandableListAdapter = CustomExpandableListAdapter(context, billNoList, billitemsMap,expandableListTitle,user,businessprofile)
+                        expandableListAdapter = CustomExpandableListAdapter(context, billNoList, billitemsMap,expandableListTitle,user,businessprofile,requireActivity())
                         expandableListView.setAdapter(expandableListAdapter)
                         expandableListView.setOnGroupCollapseListener { groupPosition ->
                         }

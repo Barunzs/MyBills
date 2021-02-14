@@ -12,10 +12,11 @@ import android.widget.BaseExpandableListAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
 import bill.com.mybills.R
 import bill.com.mybills.model.BillItem
 import bill.com.mybills.model.BusinessProfile
-import com.airbnb.lottie.LottieAnimationView
+import bill.com.mybills.util.Util
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
@@ -24,8 +25,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class CustomExpandableListAdapter(val context: Context?, val expandableListTitle: List<String>,
-                                  val expandableListDetail: HashMap<String, ArrayList<BillItem>?>, val headerTitle: List<String>, val user: FirebaseUser?, val businessProfile: BusinessProfile?) : BaseExpandableListAdapter() {
+class CustomExpandableListAdapter(val context: Context?, private val expandableListTitle: List<String>,
+                                  private val expandableListDetail: HashMap<String, ArrayList<BillItem>?>,
+                                  private val headerTitle: List<String>, val user: FirebaseUser?,
+                                  private val businessProfile: BusinessProfile?,
+                                  private val  activity:FragmentActivity) : BaseExpandableListAdapter() {
 
 
     override fun hasStableIds(): Boolean {
@@ -38,9 +42,9 @@ class CustomExpandableListAdapter(val context: Context?, val expandableListTitle
     }
 
     override fun getGroupView(listPosition: Int, isExpanded: Boolean,
-                              convertView: View?, parent: ViewGroup): View {
+                              convertViewTyped: View?, parent: ViewGroup): View {
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
-        var convertView = convertView
+        var convertView = convertViewTyped
         val listTitle = getGroup(listPosition) as String
         val billDate = expandableListTitle[listPosition]
         val formattedDate = Date(billDate.toLong())
@@ -54,26 +58,36 @@ class CustomExpandableListAdapter(val context: Context?, val expandableListTitle
         val dateTextView = convertView
                 .findViewById<View>(R.id.billDate) as TextView
         val pdfDownload = convertView.findViewById<View>(R.id.pdf) as ImageView
-        val loadingData: LottieAnimationView = convertView.findViewById(R.id.loadingdata) as LottieAnimationView
+        //val loadingData: LottieAnimationView = convertView.findViewById(R.id.loadingdata) as LottieAnimationView
         pdfDownload.setOnClickListener { v: View? ->
-            loadingData.visibility = View.VISIBLE
+            //loadingData.visibility = View.VISIBLE
+            val loadingDialog = Util.showloading(activity)
             val storageReference = FirebaseStorage.getInstance().reference
             var billPdfFilePath = user?.uid + "/" + billDate + "/" + "/bills/" + businessProfile?.orgName?.trim() + "_" + listTitle.trim()
             storageReference.child("$billPdfFilePath.pdf").downloadUrl.addOnSuccessListener {
                 Toast.makeText(context, "success", Toast.LENGTH_LONG).show()
+                if(loadingDialog.isVisible){
+                    loadingDialog.dismiss()
+                }
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.setDataAndType(Uri.parse(it.toString()), "application/pdf")
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 val newIntent = Intent.createChooser(intent, "Open File")
-                loadingData.visibility = View.GONE
+                //loadingData.visibility = View.GONE
                 try {
                     context?.startActivity(intent)
                 } catch (e: ActivityNotFoundException) {
+                    if(loadingDialog.isVisible){
+                        loadingDialog.dismiss()
+                    }
                     // Instruct the user to install a PDF reader here, or something
                 }
 
             }.addOnFailureListener {
-                loadingData.visibility = View.GONE
+                //loadingData.visibility = View.GONE
+                if(loadingDialog.isVisible){
+                    loadingDialog.dismiss()
+                }
                 billPdfFilePath = user?.uid + "/" + billDate + "/" + "/bills/bill"
                 storageReference.child("$billPdfFilePath.pdf").downloadUrl.addOnSuccessListener {
                     Toast.makeText(context, "success", Toast.LENGTH_LONG).show()
@@ -81,7 +95,7 @@ class CustomExpandableListAdapter(val context: Context?, val expandableListTitle
                     intent.setDataAndType(Uri.parse(it.toString()), "application/pdf")
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                     val newIntent = Intent.createChooser(intent, "Open File")
-                    loadingData.visibility = View.GONE
+                    //loadingData.visibility = View.GONE
                     try {
                         context?.startActivity(intent)
                     } catch (e: ActivityNotFoundException) {
@@ -119,8 +133,8 @@ class CustomExpandableListAdapter(val context: Context?, val expandableListTitle
     }
 
     override fun getChildView(listPosition: Int, expandedListPosition: Int,
-                              isLastChild: Boolean, convertView: View?, parent: ViewGroup): View {
-        var convertView = convertView
+                              isLastChild: Boolean, convertViewTyped: View?, parent: ViewGroup): View {
+        var convertView = convertViewTyped
         val billItem = getChild(listPosition, expandedListPosition) as BillItem
         if (convertView == null) {
             val layoutInflater = this.context
