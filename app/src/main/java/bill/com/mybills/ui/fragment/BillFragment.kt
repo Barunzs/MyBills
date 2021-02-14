@@ -6,18 +6,13 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Environment
 import android.provider.MediaStore
-import com.google.android.material.snackbar.Snackbar
-import androidx.core.app.ActivityCompat
-import androidx.fragment.app.Fragment
-import androidx.core.content.FileProvider
-import androidx.core.content.PermissionChecker
-import androidx.appcompat.app.AlertDialog
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -25,12 +20,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
+import androidx.core.content.PermissionChecker
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import bill.com.mybills.BuildConfig
 import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
 import bill.com.mybills.model.BusinessProfile
 import bill.com.mybills.model.Item
 import bill.com.mybills.ui.activity.BillPreviewActivity
+import bill.com.mybills.util.Util
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
@@ -41,14 +44,11 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_bill.*
-import kotlinx.android.synthetic.main.fragment_editprofile.*
-import kotlinx.android.synthetic.main.list_item.*
 import java.io.File
 import java.io.FileOutputStream
 import java.math.RoundingMode
 import java.sql.Timestamp
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -61,6 +61,7 @@ internal class BillFragment : Fragment() {
     private val REQUEST_CAMERA = 2
     private val REQUEST_IMAGE_BROWSER = 1
     private lateinit var capturedImageFile: File
+
     //Firebase
     private var storage: FirebaseStorage? = null
     private var storageReference: StorageReference? = null
@@ -323,12 +324,13 @@ internal class BillFragment : Fragment() {
                 val arrayListType = object : TypeToken<ArrayList<String>>() {
                 }.type
                 val ArrayLisgson = Gson()
-                billItemList = ArrayLisgson.fromJson<java.util.ArrayList<String>>(arrayListJson, arrayListType)
+                billItemList = ArrayLisgson.fromJson(arrayListJson, arrayListType)
                 billItemList.add(itemJson)
             }
             val jsonItemArraylist = gson.toJson(billItemList)
             appDAL?.billItemJson = jsonItemArraylist
-            timer(2000, 1000, item).start()
+            val dialog = Util.showloading(requireActivity())
+            timer(2000, 1000, item,dialog).start()
         } catch (e: NumberFormatException) {
             view?.let {
                 Snackbar.make(it, "Please Enter all Fields", Snackbar.LENGTH_LONG)
@@ -344,14 +346,23 @@ internal class BillFragment : Fragment() {
         ft?.commit()
     }
 
-    private fun showalert(item: Item) {
+    private fun showalert(dialogFragment: DialogFragment) {
         val builder = context?.let { context?.let { it1 -> AlertDialog.Builder(it1, R.style.MyDialogTheme) } }
         builder?.setTitle("Generate Bill")
         builder?.setMessage("Do you want add next item to Bill?")
+        val mPlayer: MediaPlayer =
+                MediaPlayer.create(context, R.raw.next_item)
+        mPlayer.start()
         builder?.setPositiveButton("YES") { dialog, which ->
+            if(dialogFragment.isVisible){
+                dialogFragment.dismiss()
+            }
             addNewItem()
         }
         builder?.setNegativeButton("No") { dialog, which ->
+            if(dialogFragment.isVisible){
+                dialogFragment.dismiss()
+            }
             val intent = Intent(context, BillPreviewActivity::class.java)
             startActivity(intent)
             activity?.finish()
@@ -361,12 +372,17 @@ internal class BillFragment : Fragment() {
         dialog?.show()
     }
 
-    private fun timer(millisInFuture: Long, countDownInterval: Long, item: Item): CountDownTimer {
+    private fun timer(millisInFuture: Long, countDownInterval: Long, item: Item,dialogFragment: DialogFragment): CountDownTimer {
         return object : CountDownTimer(millisInFuture, countDownInterval) {
             override fun onTick(millisUntilFinished: Long) {
+                if (millisUntilFinished.toInt() == 1000) {
+                    if (dialogFragment.isVisible) {
+                        dialogFragment.dismiss()
+                    }
+                }
             }
             override fun onFinish() {
-                showalert(item)
+                showalert(dialogFragment)
             }
         }
     }

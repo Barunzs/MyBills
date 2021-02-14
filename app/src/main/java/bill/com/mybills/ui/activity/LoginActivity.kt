@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
 import bill.com.mybills.storage.PrefManager
+import bill.com.mybills.util.Util
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
@@ -93,16 +94,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-    private fun startPhoneNumberVerification(phoneNumber: String) {
-
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                phoneNumber, // Phone number to verify
-                60,             // Timeout duration
-                TimeUnit.SECONDS,   // Unit of timeout
-                this,           // Activity (for callback binding)
-                mCallbacks)      // OnVerificationStateChangedCallbacks
-    }
-
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
         mAuth?.signInWithCredential(credential)
                 ?.addOnCompleteListener(this) { task ->
@@ -124,7 +115,6 @@ class LoginActivity : AppCompatActivity() {
                             //mVerificationField.setError("Invalid code.")
                             // [END_EXCLUDE]
                         }
-                        signin.visibility = View.GONE
                         // [START_EXCLUDE silent]
                         // Update UI
                         //updateUI(STATE_SIGNIN_FAILED);
@@ -149,15 +139,17 @@ class LoginActivity : AppCompatActivity() {
             input_password.error = "Password cannot be empty"
             return
         }
-        signin.visibility = View.VISIBLE
         performLoginOrAccountCreation(input_email.text.toString(), input_password.text.toString())
     }
 
     private fun performLoginOrAccountCreation(email: String, password: String) {
-
+        val dialog = Util.showloading(this)
         mAuth?.signInWithEmailAndPassword(email, password)
                 ?.addOnCompleteListener {
                     if (it.isSuccessful) {
+                        if(dialog.isVisible){
+                            dialog.dismiss()
+                        }
                         val user = it.result?.user
                         Log.d(TAG, "name::" + user?.displayName)
                         val prefManager = PrefManager()
@@ -175,8 +167,10 @@ class LoginActivity : AppCompatActivity() {
                                 "Authentication failed.",
                                 Toast.LENGTH_SHORT).show()
                     }
-                    signin.visibility = View.GONE
                 }?.addOnFailureListener {
+                    if(dialog.isVisible){
+                        dialog.dismiss()
+                    }
                     Log.d(TAG, "Error${it.message}")
                     Toast.makeText(this@LoginActivity,
                             "There is a problem, please try again later.",

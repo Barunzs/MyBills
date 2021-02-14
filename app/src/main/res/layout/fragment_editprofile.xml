@@ -257,7 +257,7 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/updateprofileButton"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="?attr/actionBarSize"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:padding="8dp"
@@ -270,12 +270,4 @@
         </LinearLayout>
     </ScrollView>
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/progressbarUpdateprofile"
-        android:layout_width="0dp"
-        android:layout_height="96dp"
-        app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

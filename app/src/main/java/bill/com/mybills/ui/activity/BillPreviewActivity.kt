@@ -4,6 +4,7 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.BitmapFactory
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Environment
 import android.os.StrictMode
@@ -110,7 +111,9 @@ class BillPreviewActivity : AppCompatActivity() {
             val fileimage = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "image.jpg")
             val bitmapLoga = BitmapFactory.decodeStream(FileInputStream(fileimage))
             val filepdf = File(applicationContext?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), businessProfile?.orgName?.trim() + "_" + itemList[0].customerName?.trim() + ".pdf")
-            businessProfile?.let { CreatePDFTask(this@BillPreviewActivity, filepdf, itemList, it, bitmapLoga, db, user).execute() }
+            businessProfile?.let {
+                CreatePDFTask(this@BillPreviewActivity, filepdf, itemList, it, bitmapLoga, db, user).execute()
+            }
             parent_main.visibility = View.GONE
         } catch (e: IOException) {
             Toast.makeText(applicationContext, "Please update your Logo before generating Bill", Toast.LENGTH_LONG).show()

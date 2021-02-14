@@ -3,29 +3,25 @@ package bill.com.mybills.task
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.AsyncTask
-import android.view.View
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
 import bill.com.mybills.R
 import bill.com.mybills.config.AppDAL
 import bill.com.mybills.model.BusinessProfile
 import bill.com.mybills.model.Item
 import bill.com.mybills.ui.activity.BillPreviewActivity
-import bill.com.mybills.ui.fragment.MyProfileFragment
-import com.airbnb.lottie.LottieAnimationView
+import bill.com.mybills.util.Util
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.WriteBatch
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.itextpdf.text.*
 import com.itextpdf.text.BaseColor
 import com.itextpdf.text.html.WebColors
 import com.itextpdf.text.pdf.*
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_editprofile.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -264,7 +260,7 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
 
             val ftable = PdfPTable(8)
             ftable.widthPercentage = 100f
-            val columnWidthaa = floatArrayOf(20f, 5f, 5f, 5f, 25f, 20f,10f,10f)
+            val columnWidthaa = floatArrayOf(20f, 5f, 5f, 5f, 25f, 20f, 10f, 10f)
             ftable.setWidths(columnWidthaa)
             cell = PdfPCell()
             cell?.colspan = 8
@@ -329,6 +325,9 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
                         if (count == billItemList.size) {
                             shareFile()
                         }
+                        val mPlayer: MediaPlayer =
+                                MediaPlayer.create(contextRef.get()?.applicationContext, R.raw.bill)
+                        mPlayer.start()
                     }?.addOnFailureListener { exception: java.lang.Exception ->
                         (contextRef.get() as BillPreviewActivity).dismiss()
                         Toast.makeText(contextRef.get(), "Failure", Toast.LENGTH_LONG).show()
@@ -339,6 +338,7 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
     }
 
     private fun shareFile() {
+        val billUploadProgress = Util.showTaskComplete(contextRef.get() as FragmentActivity)
         val intentShareFile = Intent(Intent.ACTION_SEND);
         val fileWithinMyDir = File(file.absolutePath)
         val filePath: StorageReference?
@@ -350,6 +350,9 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
             Toast.makeText(contextRef.get(), "Error uploading bill" + it.localizedMessage, Toast.LENGTH_LONG).show()
             (contextRef.get() as BillPreviewActivity).dismiss()
         }?.addOnSuccessListener {
+            if (billUploadProgress.isVisible) {
+                billUploadProgress.dismiss()
+            }
             Toast.makeText(contextRef.get(), "Bill Uploaded Successfully", Toast.LENGTH_LONG).show()
             (contextRef.get() as BillPreviewActivity).dismiss()
             if (fileWithinMyDir.exists()) {
@@ -363,6 +366,5 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
                 contextRef.get()?.startActivity(Intent.createChooser(intentShareFile, "Share File"));
             }
         }
-
     }
 }

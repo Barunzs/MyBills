@@ -11,15 +11,16 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import androidx.core.app.ActivityCompat
-import androidx.fragment.app.Fragment
-import androidx.core.content.FileProvider
-import androidx.core.content.PermissionChecker
 import android.view.*
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
+import androidx.core.content.PermissionChecker
+import androidx.fragment.app.Fragment
 import bill.com.mybills.BuildConfig
 import bill.com.mybills.R
 import bill.com.mybills.model.BusinessProfile
+import bill.com.mybills.util.Util
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -80,7 +81,6 @@ internal class EditProfileFragment : Fragment() {
             firstNameEditText.setText(user?.displayName)
             profilePictureUpdateProgressBar.visibility = View.GONE
         }
-
         docRef?.get()?.addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
                 val businessProfile = documentSnapshot.toObject(BusinessProfile::class.java)
@@ -97,7 +97,6 @@ internal class EditProfileFragment : Fragment() {
                         Picasso.get().load(it).into(editLogo)
                         businessPictureUpdateProgressBar.visibility = View.GONE
                     }
-
                 }
 
             } else {
@@ -167,6 +166,7 @@ internal class EditProfileFragment : Fragment() {
     }
 
     private fun updateUserProfile(profileUpdates: UserProfileChangeRequest) {
+        val dialog = Util.showloading(requireActivity())
         user?.updateProfile(profileUpdates)
                 ?.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -178,11 +178,20 @@ internal class EditProfileFragment : Fragment() {
                                 val fragment = MyProfileFragment()
                                 fragmentManager?.beginTransaction()?.replace(R.id.main_fragment_container, fragment,
                                         MyProfileFragment.TAG)?.commit()
+                                if (dialog.isVisible) {
+                                    dialog.dismiss()
+                                }
                             }?.addOnFailureListener { exception: java.lang.Exception ->
+                                if (dialog.isVisible) {
+                                    dialog.dismiss()
+                                }
                                 Toast.makeText(context, "Failure", Toast.LENGTH_LONG).show()
                             }
                         }
                     } else {
+                        if (dialog.isVisible) {
+                            dialog.dismiss()
+                        }
                         Toast.makeText(context, "Error Try Again", Toast.LENGTH_LONG).show()
                     }
                 }

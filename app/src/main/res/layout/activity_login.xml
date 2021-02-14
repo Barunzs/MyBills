@@ -46,7 +46,7 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_login"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:padding="16dp"
@@ -57,20 +57,5 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.60" />
 
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/signin"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:lottie_autoPlay="true"
-        app:lottie_fileName="Spinner.json"
-        app:lottie_loop="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
