@@ -1,11 +1,13 @@
 package bill.com.mybills.task
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.AsyncTask
+import android.provider.DocumentsContract
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import bill.com.mybills.R
@@ -36,8 +38,8 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
 
     private var cell: PdfPCell? = null
     private var bgImage: Image? = null
-    private val primarylight = WebColors.getRGBColor("#2979FF");
-    private val myColor1 = WebColors.getRGBColor("#2979FF");
+    private val primarylight = WebColors.getRGBColor("#2979FF")
+    private val myColor1 = WebColors.getRGBColor("#2979FF")
     private var contextRef: WeakReference<Context?> = WeakReference(context)
     private var appDAL: AppDAL? = null
     private var gst: Double = 0.0
@@ -77,7 +79,7 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
 
             cell = PdfPCell()
             cell?.border = Rectangle.NO_BORDER
-            val selector = FontSelector();
+            val selector = FontSelector()
             val f1 = FontFactory.getFont("MSung-Light",
                     "UniCNS-UCS2-H", BaseFont.NOT_EMBEDDED)
             f1.color = BaseColor.WHITE
@@ -193,7 +195,7 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
 
 
             for (item in billItemList) {
-                val fontselector = FontSelector();
+                val fontselector = FontSelector()
                 val f1 = FontFactory.getFont("MSung-Light",
                         "UniCNS-UCS2-H", BaseFont.NOT_EMBEDDED)
                 f1.color = BaseColor.BLACK
@@ -308,7 +310,7 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
             e.printStackTrace()
         } finally {
             // close the document
-            doc.close();
+            doc.close()
         }
         return totalAmt.toString()
     }
@@ -325,9 +327,6 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
                         if (count == billItemList.size) {
                             shareFile()
                         }
-                        val mPlayer: MediaPlayer =
-                                MediaPlayer.create(contextRef.get()?.applicationContext, R.raw.bill)
-                        mPlayer.start()
                     }?.addOnFailureListener { exception: java.lang.Exception ->
                         (contextRef.get() as BillPreviewActivity).dismiss()
                         Toast.makeText(contextRef.get(), "Failure", Toast.LENGTH_LONG).show()
@@ -339,7 +338,6 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
 
     private fun shareFile() {
         val billUploadProgress = Util.showTaskComplete(contextRef.get() as FragmentActivity)
-        val intentShareFile = Intent(Intent.ACTION_SEND);
         val fileWithinMyDir = File(file.absolutePath)
         val filePath: StorageReference?
         val storage = FirebaseStorage.getInstance()
@@ -349,22 +347,33 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
         filePath?.putFile(uri)?.addOnFailureListener {
             Toast.makeText(contextRef.get(), "Error uploading bill" + it.localizedMessage, Toast.LENGTH_LONG).show()
             (contextRef.get() as BillPreviewActivity).dismiss()
-        }?.addOnSuccessListener {
+        }?.addOnSuccessListener { uploadTask ->
             if (billUploadProgress.isVisible) {
                 billUploadProgress.dismiss()
             }
-            Toast.makeText(contextRef.get(), "Bill Uploaded Successfully", Toast.LENGTH_LONG).show()
-            (contextRef.get() as BillPreviewActivity).dismiss()
-            if (fileWithinMyDir.exists()) {
-                Toast.makeText(contextRef.get(), "Please share Bill to Customer", Toast.LENGTH_LONG).show()
-                intentShareFile.type = "application/pdf";
-                intentShareFile.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.absolutePath));
-                intentShareFile.putExtra(Intent.EXTRA_SUBJECT,
-                        "Sharing File...");
-                intentShareFile.putExtra(Intent.EXTRA_TEXT, "Sharing File...");
-                intentShareFile.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                contextRef.get()?.startActivity(Intent.createChooser(intentShareFile, "Share File"));
+            filePath.downloadUrl.addOnSuccessListener {
+                Toast.makeText(contextRef.get(), "Bill Uploaded Successfully$it", Toast.LENGTH_LONG).show()
+                val mPlayer: MediaPlayer =
+                        MediaPlayer.create(contextRef.get()?.applicationContext, R.raw.bill)
+                mPlayer.start()
+                openFile(it)
+            }.addOnCanceledListener {
+                Toast.makeText(contextRef.get(), "Bill Upload Failed", Toast.LENGTH_LONG).show()
+            }.addOnFailureListener {
+                Toast.makeText(contextRef.get(), "Bill Upload Failed", Toast.LENGTH_LONG).show()
             }
+        }
+    }
+
+
+    private fun openFile(pickerInitialUri: Uri) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.setDataAndType(Uri.parse(pickerInitialUri.toString()), "application/pdf")
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        try {
+            contextRef.get()?.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(contextRef.get(),"Please Install PDF Viewer",Toast.LENGTH_LONG).show()
         }
     }
 }

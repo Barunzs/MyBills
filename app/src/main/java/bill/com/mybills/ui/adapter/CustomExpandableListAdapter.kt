@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
+import android.media.MediaPlayer
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +30,7 @@ class CustomExpandableListAdapter(val context: Context?, private val expandableL
                                   private val expandableListDetail: HashMap<String, ArrayList<BillItem>?>,
                                   private val headerTitle: List<String>, val user: FirebaseUser?,
                                   private val businessProfile: BusinessProfile?,
-                                  private val  activity:FragmentActivity) : BaseExpandableListAdapter() {
+                                  private val activity: FragmentActivity) : BaseExpandableListAdapter() {
 
 
     override fun hasStableIds(): Boolean {
@@ -58,34 +59,30 @@ class CustomExpandableListAdapter(val context: Context?, private val expandableL
         val dateTextView = convertView
                 .findViewById<View>(R.id.billDate) as TextView
         val pdfDownload = convertView.findViewById<View>(R.id.pdf) as ImageView
-        //val loadingData: LottieAnimationView = convertView.findViewById(R.id.loadingdata) as LottieAnimationView
         pdfDownload.setOnClickListener { v: View? ->
-            //loadingData.visibility = View.VISIBLE
             val loadingDialog = Util.showloading(activity)
             val storageReference = FirebaseStorage.getInstance().reference
             var billPdfFilePath = user?.uid + "/" + billDate + "/" + "/bills/" + businessProfile?.orgName?.trim() + "_" + listTitle.trim()
             storageReference.child("$billPdfFilePath.pdf").downloadUrl.addOnSuccessListener {
-                Toast.makeText(context, "success", Toast.LENGTH_LONG).show()
-                if(loadingDialog.isVisible){
+                val mPlayer: MediaPlayer =
+                        MediaPlayer.create(context, R.raw.bill_downloaded)
+                mPlayer.start()
+                if (loadingDialog.isVisible) {
                     loadingDialog.dismiss()
                 }
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.setDataAndType(Uri.parse(it.toString()), "application/pdf")
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                val newIntent = Intent.createChooser(intent, "Open File")
-                //loadingData.visibility = View.GONE
                 try {
                     context?.startActivity(intent)
                 } catch (e: ActivityNotFoundException) {
-                    if(loadingDialog.isVisible){
+                    if (loadingDialog.isVisible) {
                         loadingDialog.dismiss()
                     }
-                    // Instruct the user to install a PDF reader here, or something
+                    Toast.makeText(context, "Please Install PDF Viewer", Toast.LENGTH_LONG).show()
                 }
-
             }.addOnFailureListener {
-                //loadingData.visibility = View.GONE
-                if(loadingDialog.isVisible){
+                if (loadingDialog.isVisible) {
                     loadingDialog.dismiss()
                 }
                 billPdfFilePath = user?.uid + "/" + billDate + "/" + "/bills/bill"
@@ -94,14 +91,11 @@ class CustomExpandableListAdapter(val context: Context?, private val expandableL
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.setDataAndType(Uri.parse(it.toString()), "application/pdf")
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    val newIntent = Intent.createChooser(intent, "Open File")
-                    //loadingData.visibility = View.GONE
                     try {
                         context?.startActivity(intent)
                     } catch (e: ActivityNotFoundException) {
-                        // Instruct the user to install a PDF reader here, or something
+                        Toast.makeText(context, "Please Install PDF Viewer", Toast.LENGTH_LONG).show()
                     }
-
                 }.addOnFailureListener {
                     Toast.makeText(context, it.localizedMessage, Toast.LENGTH_LONG).show()
                 }
