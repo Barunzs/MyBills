@@ -352,7 +352,6 @@ internal class CreatePDFTask(context: BillPreviewActivity?, var file: File, var 
                 billUploadProgress.dismiss()
             }
             filePath.downloadUrl.addOnSuccessListener {
-                Toast.makeText(contextRef.get(), "Bill Uploaded Successfully$it", Toast.LENGTH_LONG).show()
                 val mPlayer: MediaPlayer =
                         MediaPlayer.create(contextRef.get()?.applicationContext, R.raw.bill)
                 mPlayer.start()
