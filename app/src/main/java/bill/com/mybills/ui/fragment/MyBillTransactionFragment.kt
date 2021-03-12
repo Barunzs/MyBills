@@ -207,7 +207,6 @@ class MyBillTransactionFragment : Fragment() {
                                     Log.d(TAG, "Modified city: " + dc.document.data)
                                 DocumentChange.Type.REMOVED ->
                                     Log.d(TAG, "Removed city: " + dc.document.data)
-
                             }
                         }
                     })
@@ -226,7 +225,7 @@ class MyBillTransactionFragment : Fragment() {
         builder?.setPositiveButton("Search") { dialog, which ->
             Log.d(TAG, "YES: ")
             val customerPhone = inputPhone.text.toString()
-            if (!customerPhone.isEmpty())
+            if (customerPhone.isNotEmpty())
                 getBillItemList(customerPhone)
         }
         val dialog: AlertDialog? = builder?.create()
@@ -237,5 +236,4 @@ class MyBillTransactionFragment : Fragment() {
         super.onStop()
         registration?.remove()
     }
-
 }
