@@ -93,7 +93,11 @@ internal class BillFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_bill, container, false)
     }
 
@@ -121,7 +125,10 @@ internal class BillFragment : Fragment() {
             val arrayListType = object : TypeToken<ArrayList<String>>() {
             }.type
             val ArrayLisgson = Gson()
-            billItemList = ArrayLisgson.fromJson<java.util.ArrayList<String>>(appDAL?.billItemJson, arrayListType)
+            billItemList = ArrayLisgson.fromJson<java.util.ArrayList<String>>(
+                appDAL?.billItemJson,
+                arrayListType
+            )
             if (billItemList.size > 0) {
                 val type = object : TypeToken<Item>() {
                 }.type
@@ -137,7 +144,8 @@ internal class BillFragment : Fragment() {
         makingCharge.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(makingCharge: Editable) {
                 try {
-                    gst = ((amtofgold.text.toString().toDouble() + makingCharge.toString().toDouble()) * 1.5) / 100
+                    gst = ((amtofgold.text.toString().toDouble() + makingCharge.toString()
+                        .toDouble()) * 1.5) / 100
                     sgstrate.setText(gst.toString())
                     cgstrate.setText(gst.toString())
                 } catch (e: NumberFormatException) {
@@ -159,7 +167,9 @@ internal class BillFragment : Fragment() {
             override fun afterTextChanged(rateOfGold: Editable) {
 
                 try {
-                    amountOfGold = weigh_of_gold_item.text.toString().toDouble() * (rateOfGold.toString().toDouble() / 10)
+                    amountOfGold =
+                        weigh_of_gold_item.text.toString().toDouble() * (rateOfGold.toString()
+                            .toDouble() / 10)
                     amtofgold.setText(amountOfGold.toString())
                 } catch (e: NumberFormatException) {
                     Toast.makeText(context, "Please enter all fields", Toast.LENGTH_LONG).show()
@@ -180,7 +190,8 @@ internal class BillFragment : Fragment() {
                 val businessProfile = documentSnapshot.toObject(BusinessProfile::class.java)
                 if (isVisible) {
                     shopNameHeader.text = businessProfile?.orgName
-                    shopAddress.text = businessProfile?.address + " Pincode:" + businessProfile?.pincode
+                    shopAddress.text =
+                        businessProfile?.address + " Pincode:" + businessProfile?.pincode
                 }
             } else {
                 Toast.makeText(context, "No Profile Data Found", Toast.LENGTH_LONG).show()
@@ -194,7 +205,12 @@ internal class BillFragment : Fragment() {
 
 
     private fun takeProductImage(view: View) {
-        if (context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.CAMERA) } == PermissionChecker.PERMISSION_DENIED) {
+        if (context?.let {
+                ActivityCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.CAMERA
+                )
+            } == PermissionChecker.PERMISSION_DENIED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(arrayOf(Manifest.permission.CAMERA), REQUEST_PERMISSION_CAMERA)
             }
@@ -205,15 +221,31 @@ internal class BillFragment : Fragment() {
 
     private fun startImageCapture() {
         if (particularofitem.text.toString().isEmpty()) {
-            Toast.makeText(context, "Please enter Ornament name before taking image", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                context,
+                "Please enter Ornament name before taking image",
+                Toast.LENGTH_LONG
+            ).show()
             return
         }
-        capturedImageFile = File.createTempFile("product_image", ".jpg", context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
+        capturedImageFile = File.createTempFile(
+            "product_image",
+            ".jpg",
+            context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        )
         if (capturedImageFile.exists()) {
             capturedImageFile.delete()
         }
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, context?.let { FileProvider.getUriForFile(it, BuildConfig.APPLICATION_ID + ".fileprovider", capturedImageFile) })
+        intent.putExtra(
+            MediaStore.EXTRA_OUTPUT,
+            context?.let {
+                FileProvider.getUriForFile(
+                    it,
+                    BuildConfig.APPLICATION_ID + ".fileprovider",
+                    capturedImageFile
+                )
+            })
         if (context?.packageManager?.let { intent.resolveActivity(it) } != null) {
             startActivityForResult(intent, REQUEST_CAMERA)
         }
@@ -225,7 +257,8 @@ internal class BillFragment : Fragment() {
             REQUEST_IMAGE_BROWSER -> {
                 if (resultCode == Activity.RESULT_OK) {
                     capturedImageFile.let {
-                        val openInputStream = data?.data?.let { it1 -> context?.contentResolver?.openInputStream(it1) }
+                        val openInputStream =
+                            data?.data?.let { it1 -> context?.contentResolver?.openInputStream(it1) }
                         val imageByteArray = openInputStream?.available()?.let { ByteArray(it) }
                         openInputStream?.read(imageByteArray)
                         val imageFileOutputStream = FileOutputStream(it)
@@ -236,7 +269,11 @@ internal class BillFragment : Fragment() {
                         it.delete()
                         it.createNewFile()
                         val byteArrayOutputStream = FileOutputStream(it)
-                        optimizeGoalImage.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+                        optimizeGoalImage.compress(
+                            Bitmap.CompressFormat.JPEG,
+                            100,
+                            byteArrayOutputStream
+                        )
                         byteArrayOutputStream.flush()
                         byteArrayOutputStream.close()
                     }
@@ -250,19 +287,31 @@ internal class BillFragment : Fragment() {
                         it.delete()
                         it.createNewFile()
                         val byteArrayOutputStream = FileOutputStream(it)
-                        optimizeGoalImage.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+                        optimizeGoalImage.compress(
+                            Bitmap.CompressFormat.JPEG,
+                            100,
+                            byteArrayOutputStream
+                        )
                         byteArrayOutputStream.flush()
                         byteArrayOutputStream.close()
                         val uri = Uri.fromFile(capturedImageFile)
                         val customerName = particularofitem.text.toString()
-                        val filePath = uri?.lastPathSegment?.let { it1 -> storageReference?.child(customerName + "/" + System.currentTimeMillis())?.child(it1) }
+                        val filePath = uri?.lastPathSegment?.let { it1 ->
+                            storageReference?.child(customerName + "/" + System.currentTimeMillis())
+                                ?.child(it1)
+                        }
                         filePath?.putFile(uri)?.addOnFailureListener {
-                            Toast.makeText(context, "Error" + it.localizedMessage, Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                context,
+                                "Error" + it.localizedMessage,
+                                Toast.LENGTH_LONG
+                            ).show()
                             productIconProgressBar.visibility = View.GONE
                         }?.addOnSuccessListener {
                             filePath.downloadUrl.addOnSuccessListener {
                                 uriFirebase = it
-                                Toast.makeText(context, "Upload Successfully", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, "Upload Successfully", Toast.LENGTH_LONG)
+                                    .show()
                                 productIconProgressBar.visibility = View.GONE
                                 Picasso.get().load(uriFirebase).into(image)
                             }
@@ -305,9 +354,26 @@ internal class BillFragment : Fragment() {
             if (otherItemDesc.text.toString() == "") {
                 otherItemDesc?.setText("N/A")
             }
-            val item = Item(particularofitem?.text.toString(), weigh_of_gold_item.text.toString().toDouble(), rateofgold.text.toString().toDouble(), weigh_of_gold_item.text.toString().toDouble() * (rateofgold.text.toString().toDouble() / 10), makingCharge.text.toString().toDouble(), gst, gst, customerField.text.toString(), uriFirebase.toString(), customerPhoneField.text.toString(), timestamp.toString(), billNo, otherCharge.text.toString().toDouble(), otherItemDesc.text.toString())
+            val item = Item(
+                particularofitem?.text.toString(),
+                weigh_of_gold_item.text.toString().toDouble(),
+                rateofgold.text.toString().toDouble(),
+                weigh_of_gold_item.text.toString().toDouble() * (rateofgold.text.toString()
+                    .toDouble() / 10),
+                makingCharge.text.toString().toDouble(),
+                gst,
+                gst,
+                customerField.text.toString(),
+                uriFirebase.toString(),
+                customerPhoneField.text.toString(),
+                timestamp.toString(),
+                billNo,
+                otherCharge.text.toString().toDouble(),
+                otherItemDesc.text.toString()
+            )
             /* val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + gst + gst*/
-            val totalAmt = amountOfGold + makingCharge.text.toString().toDouble() + item.otherItemPrice
+            val totalAmt =
+                amountOfGold + makingCharge.text.toString().toDouble() + item.otherItemPrice
             val df = DecimalFormat("#.##")
             df.roundingMode = RoundingMode.CEILING
             total.text = "₹ " + df.format(totalAmt)
@@ -330,37 +396,39 @@ internal class BillFragment : Fragment() {
             val jsonItemArraylist = gson.toJson(billItemList)
             appDAL?.billItemJson = jsonItemArraylist
             val dialog = Util.showloading(requireActivity())
-            timer(2000, 1000, item,dialog).start()
+            timer(2000, 1000, item, dialog).start()
         } catch (e: NumberFormatException) {
             view?.let {
                 Snackbar.make(it, "Please Enter all Fields", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show()
+                    .setAction("Action", null).show()
             }
         }
     }
 
     private fun addNewItem() {
-        val ft = fragmentManager?.beginTransaction()?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
+        val ft = fragmentManager?.beginTransaction()
+            ?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
         val fragment = BillFragment()
         ft?.add(R.id.main_fragment_container, fragment)
         ft?.commit()
     }
 
     private fun showalert(dialogFragment: DialogFragment) {
-        val builder = context?.let { context?.let { it1 -> AlertDialog.Builder(it1, R.style.MyDialogTheme) } }
+        val builder =
+            context?.let { context?.let { it1 -> AlertDialog.Builder(it1, R.style.MyDialogTheme) } }
         builder?.setTitle("Generate Bill")
         builder?.setMessage("Do you want add next item to Bill?")
         val mPlayer: MediaPlayer =
-                MediaPlayer.create(context, R.raw.next_item)
+            MediaPlayer.create(context, R.raw.next_item)
         mPlayer.start()
         builder?.setPositiveButton("YES") { dialog, which ->
-            if(dialogFragment.isVisible){
+            if (dialogFragment.isVisible) {
                 dialogFragment.dismiss()
             }
             addNewItem()
         }
         builder?.setNegativeButton("No") { dialog, which ->
-            if(dialogFragment.isVisible){
+            if (dialogFragment.isVisible) {
                 dialogFragment.dismiss()
             }
             val intent = Intent(context, BillPreviewActivity::class.java)
@@ -372,7 +440,12 @@ internal class BillFragment : Fragment() {
         dialog?.show()
     }
 
-    private fun timer(millisInFuture: Long, countDownInterval: Long, item: Item,dialogFragment: DialogFragment): CountDownTimer {
+    private fun timer(
+        millisInFuture: Long,
+        countDownInterval: Long,
+        item: Item,
+        dialogFragment: DialogFragment
+    ): CountDownTimer {
         return object : CountDownTimer(millisInFuture, countDownInterval) {
             override fun onTick(millisUntilFinished: Long) {
                 if (millisUntilFinished.toInt() == 1000) {
@@ -381,6 +454,7 @@ internal class BillFragment : Fragment() {
                     }
                 }
             }
+
             override fun onFinish() {
                 showalert(dialogFragment)
             }
